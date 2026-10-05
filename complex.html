@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Комплексные числа — геометрический смысл</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--pink:#ff7ab6;--warn:#ff8d6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6}
+  .app{display:flex;min-height:100vh}
+  aside{width:290px;flex:none;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow:auto}
+  .brand{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+  .brand a{color:var(--blue2);text-decoration:none;font-size:12.5px;font-weight:600}
+  .brand h1{margin:8px 0 0;font-size:17px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+  nav{padding:8px 8px 30px}
+  .grp{margin:6px 0}
+  .grp>button{width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:#fff;font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .grp>button:hover{border-color:var(--blue)}
+  .grp>button .arw{color:var(--muted);font-size:11px;transition:.15s}
+  .grp.open>button .arw{transform:rotate(90deg)}
+  .grp .items{display:none;margin:4px 0 8px 6px;padding-left:8px;border-left:1px solid var(--line)}
+  .grp.open .items{display:block}
+  .items a{display:block;color:var(--ink);text-decoration:none;font-size:13px;padding:6px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+  .items a:hover{background:var(--panel2)}
+  .items a.active{background:linear-gradient(92deg,#25335c,#20294a);border-color:var(--blue);color:#fff}
+  main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:26px 34px 90px}
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:18px}
+  .lead h2{margin:0 0 4px;font-size:22px}
+  .lead p{margin:0;color:var(--muted);font-size:14px}
+  .menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    .backdrop.show{display:block}
+    aside{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:25;box-shadow:4px 0 20px rgba(0,0,0,.55)}
+    aside.open{transform:translateX(0)}
+    main{padding:60px 16px 70px;max-width:100%}
+  }
+  section{display:none}section.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:22px;margin:6px 0 4px}
+  h3{color:var(--blue2);font-size:18px;margin:22px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  h4{margin:16px 0 6px;color:#fff;font-size:15px}
+  p{margin:8px 0}
+  .df{background:var(--panel);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .df .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--acc);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .intu{background:rgba(255,194,75,.10);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .intu .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--gold);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .lab{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0}
+  canvas{width:100%;max-width:520px;height:auto;display:block;margin:0 auto;background:#0b1020;border-radius:12px;border:1px solid var(--line);touch-action:none}
+  .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 4px;justify-content:center}
+  .ctl label{font-size:14px;color:var(--muted)}
+  input[type=range]{width:200px;accent-color:var(--blue)}
+  .val{font-family:ui-monospace,monospace;color:var(--gold);font-size:14px}
+  .readout{font-family:ui-monospace,monospace;font-size:13.5px;color:var(--ok);margin-top:8px;text-align:center;min-height:22px;white-space:pre-line}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer}
+  .btn:hover{border-color:var(--blue)}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:12px 0;text-align:center;font-size:16px;overflow-x:auto}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:2px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--gold);padding:8px 0}
+  ul{margin:8px 0 8px 2px;padding-left:20px}li{margin:5px 0}
+  sub,sup{font-size:.72em}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.12;font-size:.95em}
+  .frac>span{display:block;padding:0 .45em}
+  .frac>.num{padding-bottom:.06em}
+  .frac>.den{border-top:1.6px solid currentColor;padding-top:.08em}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th{background:var(--panel2);color:#fff;text-align:left;padding:7px 10px;border:1px solid var(--line)}
+  td{border:1px solid var(--line);padding:6px 10px}
+  .warnbox{background:rgba(255,141,107,.10);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .warnbox .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--warn);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .step{margin:6px 0;padding-left:12px;border-left:2px solid var(--line)}
+  .task{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:12px 0}
+  .task .q{font-weight:600}
+  .hint{font-size:13px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+<button class="menu-btn" id="menuBtn">☰ Разделы</button>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="brand">
+    <a href="index.html">← Портал</a>
+    <h1>Комплексные числа</h1>
+    <p>Мнимая единица · плоскость · умножение · Муавр · корни</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+  <div class="lead"><h2 id="secTitle"></h2><p id="secDesc"></p></div>
+
+<!-- ============ 0. Что такое i ============ -->
+<section data-group="1 · Основы" data-t="Что такое i" data-desc="Мнимая единица, алгебраическая форма, сопряжённое, модуль.">
+  <h2>Мнимая единица и алгебраическая форма</h2>
+  <div class="intu"><span class="tag">Зачем это придумали</span>
+    <p>Уравнение x² + 1 = 0 не имеет решений среди действительных чисел: квадрат никогда не бывает отрицательным. Чтобы такие уравнения всё же решались, вводят новое число — <b>мнимую единицу</b> i, у которой по определению i² = −1.</p>
+  </div>
+  <div class="df"><span class="tag">Определение</span>
+    <div class="formula">i² = −1</div>
+    <p>Степени i идут по кругу с периодом 4:</p>
+    <div class="formula">i¹ = i, &nbsp; i² = −1, &nbsp; i³ = −i, &nbsp; i⁴ = 1, &nbsp; i⁵ = i, …</div>
+    <p><b>Алгебраическая форма</b> комплексного числа: z = a + bi, где a = Re z (действительная часть), b = Im z (мнимая часть).</p>
+  </div>
+
+  <h3>Действия в алгебраической форме</h3>
+  <p><b>Сложение</b> — покомпонентно; <b>умножение</b> — раскрываем скобки и всюду заменяем i² на −1.</p>
+  <div class="step">(1 + 2i)(3 + i) = 3 + i + 6i + 2i² = 3 + 7i + 2·(−1) = <b>1 + 7i</b></div>
+
+  <h3>Сопряжённое число и модуль</h3>
+  <p><b>Сопряжённое</b> к z = a + bi — это z̄ = a − bi (отражение точки относительно оси Re). Его ключевое свойство:</p>
+  <div class="formula">z · z̄ = (a + bi)(a − bi) = a² − (bi)² = a² + b²</div>
+  <p>Результат — <b>действительное</b> число, равное квадрату длины вектора. Отсюда модуль:</p>
+  <div class="formula">|z| = √(a² + b²)</div>
+  <p class="note">Именно поэтому при делении домножают на сопряжённое знаменателя: <span class="frac"><span class="num">z<sub>1</sub></span><span class="den">z<sub>2</sub></span></span> = <span class="frac"><span class="num">z<sub>1</sub>·z̄<sub>2</sub></span><span class="den">z<sub>2</sub>·z̄<sub>2</sub></span></span> — знаменатель становится действительным.</p>
+</section>
+
+<!-- ============ 1. Плоскость ============ -->
+<section data-group="1 · Основы" data-t="Плоскость и триг. форма" data-desc="Число как точка/вектор, модуль и аргумент, ловушка arctg; интерактив.">
+  <h2>Число как точка и как вектор</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Комплексное число z = a + bi — это точка на плоскости с координатами (a; b), или вектор из начала координат в эту точку. Ось x — действительная часть (Re), ось y — мнимая (Im).</p>
+  </div>
+  <div class="df"><span class="tag">Формы записи</span>
+    <p><b>Алгебраическая:</b> z = a + bi. &nbsp; <b>Модуль</b> r = |z| = √(a² + b²) — длина вектора. &nbsp; <b>Аргумент</b> φ = arg z — угол вектора с осью Re.</p>
+    <div class="formula">z = r(cos φ + i·sin φ) &nbsp;— тригонометрическая форма</div>
+  </div>
+  <div class="lab">
+    <h4>Интерактив: тяни точку z по плоскости</h4>
+    <canvas id="cPlane" width="520" height="520"></canvas>
+    <div class="readout" id="planeOut"></div>
+    <p class="hint">Модуль — длина стрелки, аргумент — её угол. Точка притягивается к узлам сетки (шаг 0,25).</p>
+  </div>
+
+  <h3>Как из a + bi получить тригонометрическую форму</h3>
+  <p>Смотрим на прямоугольный треугольник со сторонами a и b и гипотенузой r. Из него:</p>
+  <div class="formula">a = r·cos φ, &nbsp; b = r·sin φ &nbsp; ⇒ &nbsp; z = a + bi = r·cos φ + i·r·sin φ = r(cos φ + i·sin φ)</div>
+  <p>Модуль берём по Пифагору: r = √(a² + b²). А угол — из отношения сторон: tg φ = <span class="frac"><span class="num">b</span><span class="den">a</span></span>.</p>
+
+  <div class="warnbox"><span class="tag">Ловушка аргумента</span>
+    <p>Формула φ = arctg(<span class="frac"><span class="num">b</span><span class="den">a</span></span>) даёт верный угол <b>только в правой полуплоскости</b> (a &gt; 0). Причина: arctg всегда возвращает угол в (−π/2, π/2), а точка может быть слева. Поэтому нужно смотреть на <b>четверть</b>:</p>
+    <table>
+      <tr><th>Где точка</th><th>Аргумент φ</th></tr>
+      <tr><td>a &gt; 0 (I и IV четв.)</td><td>arctg(b/a)</td></tr>
+      <tr><td>a &lt; 0, b ≥ 0 (II четв.)</td><td>arctg(b/a) + π</td></tr>
+      <tr><td>a &lt; 0, b &lt; 0 (III четв.)</td><td>arctg(b/a) − π</td></tr>
+    </table>
+  </div>
+
+  <h4>Пример, где наивный arctg обманывает</h4>
+  <div class="step">z = −1 − i &nbsp;(III четверть). r = √(1 + 1) = √2.</div>
+  <div class="step">Наивно: arctg(<span class="frac"><span class="num">−1</span><span class="den">−1</span></span>) = arctg(1) = <span class="frac"><span class="num">π</span><span class="den">4</span></span> — но это указывает в <b>I</b> четверть, а точка в III!</div>
+  <div class="step">Верно: φ = <span class="frac"><span class="num">π</span><span class="den">4</span></span> − π = −<span class="frac"><span class="num">3π</span><span class="den">4</span></span>. Итог: z = √2·(cos(−<span class="frac"><span class="num">3π</span><span class="den">4</span></span>) + i·sin(−<span class="frac"><span class="num">3π</span><span class="den">4</span></span>)).</div>
+  <p class="note">В твоём конспекте пример z = 1 + i дал φ = arctg 1 = π/4 — и это верно <b>именно потому</b>, что 1 + i лежит в I четверти. Проверяй четверть каждый раз (в интерактиве выше аргумент всегда считается правильно — можешь потянуть точку влево-вниз и сравнить).</p>
+</section>
+
+<!-- ============ 2. Умножение ============ -->
+<section data-group="2 · Операции" data-t="Умножение = поворот" data-desc="Умножение как поворот+растяжение, вывод через формулы сложения; интерактив.">
+  <h2>Умножение как поворот и растяжение</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Когда перемножают два комплексных числа, их <b>длины перемножаются</b>, а <b>углы складываются</b>. То есть умножение на число — это «повернуть и растянуть» вектор. Это и есть главная геометрическая идея комплексных чисел.</p>
+  </div>
+  <div class="formula">z<sub>1</sub>·z<sub>2</sub> = r<sub>1</sub>r<sub>2</sub>·(cos(φ<sub>1</sub>+φ<sub>2</sub>) + i·sin(φ<sub>1</sub>+φ<sub>2</sub>))</div>
+
+  <div class="df"><span class="tag">Почему так — вывод</span>
+    <p>Возьмём z<sub>1</sub> = r<sub>1</sub>(cos φ<sub>1</sub> + i·sin φ<sub>1</sub>), z<sub>2</sub> = r<sub>2</sub>(cos φ<sub>2</sub> + i·sin φ<sub>2</sub>) и просто перемножим скобки:</p>
+    <div class="step">z<sub>1</sub>z<sub>2</sub> = r<sub>1</sub>r<sub>2</sub>·(cos φ<sub>1</sub> + i·sin φ<sub>1</sub>)(cos φ<sub>2</sub> + i·sin φ<sub>2</sub>)</div>
+    <div class="step">= r<sub>1</sub>r<sub>2</sub>·[cos φ<sub>1</sub>cos φ<sub>2</sub> + i·cos φ<sub>1</sub>sin φ<sub>2</sub> + i·sin φ<sub>1</sub>cos φ<sub>2</sub> + i²·sin φ<sub>1</sub>sin φ<sub>2</sub>]</div>
+    <div class="step">= r<sub>1</sub>r<sub>2</sub>·[(cos φ<sub>1</sub>cos φ<sub>2</sub> − sin φ<sub>1</sub>sin φ<sub>2</sub>) + i·(sin φ<sub>1</sub>cos φ<sub>2</sub> + cos φ<sub>1</sub>sin φ<sub>2</sub>)] &nbsp; (использовали i² = −1)</div>
+    <div class="step">По формулам сложения углов скобки — это cos(φ<sub>1</sub>+φ<sub>2</sub>) и sin(φ<sub>1</sub>+φ<sub>2</sub>):</div>
+    <div class="step">= r<sub>1</sub>r<sub>2</sub>·(cos(φ<sub>1</sub>+φ<sub>2</sub>) + i·sin(φ<sub>1</sub>+φ<sub>2</sub>)) &nbsp; ∎</div>
+    <p>Видно прямо из выкладки: модули <b>перемножились</b> (r<sub>1</sub>r<sub>2</sub>), а аргументы <b>сложились</b> (φ<sub>1</sub>+φ<sub>2</sub>). Это и есть «повернуть и растянуть».</p>
+  </div>
+  <p class="note">Деление — наоборот: длины делятся, углы вычитаются: <span class="frac"><span class="num">z<sub>1</sub></span><span class="den">z<sub>2</sub></span></span> = <span class="frac"><span class="num">r<sub>1</sub></span><span class="den">r<sub>2</sub></span></span>·(cos(φ<sub>1</sub>−φ<sub>2</sub>) + i·sin(φ<sub>1</sub>−φ<sub>2</sub>)).</p>
+  <div class="lab">
+    <h4>Интерактив: тяни z₁ и z₂, смотри на произведение</h4>
+    <canvas id="cMul" width="520" height="520"></canvas>
+    <div class="readout" id="mulOut"></div>
+    <p class="hint">Синий — z₁, розовый — z₂, зелёный — произведение. Замечай: угол зелёного = сумма углов, длина = произведение длин.</p>
+  </div>
+</section>
+
+<!-- ============ 3. Муавр ============ -->
+<section data-group="2 · Операции" data-t="Формула Муавра" data-desc="Возведение в степень, вывод по шагам; интерактив степеней.">
+  <h2>Возведение в степень — формула Муавра</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Умножить число само на себя n раз — значит повернуть вектор на угол nφ и растянуть в r<sup>n</sup> раз. Если число лежит на единичной окружности (r = 1), степень — это чистый поворот по кругу.</p>
+  </div>
+  <div class="df"><span class="tag">Формула Муавра</span>
+    <div class="formula">z<sup>n</sup> = r<sup>n</sup>·(cos nφ + i·sin nφ)</div>
+  </div>
+  <div class="df"><span class="tag">Почему так — вывод</span>
+    <p>Степень — это повторное умножение, а при каждом умножении (см. предыдущий раздел) модули перемножаются, а аргументы складываются. Разгоним по шагам:</p>
+    <div class="step">z² = z·z: модуль r·r = r², аргумент φ + φ = 2φ &nbsp;→&nbsp; z² = r²(cos 2φ + i·sin 2φ).</div>
+    <div class="step">z³ = z²·z: модуль r²·r = r³, аргумент 2φ + φ = 3φ &nbsp;→&nbsp; z³ = r³(cos 3φ + i·sin 3φ).</div>
+    <div class="step">…и так далее: за n шагов модуль стал r<sup>n</sup>, аргумент — nφ (строго это доказывают по индукции). ∎</div>
+  </div>
+  <div class="lab">
+    <h4>Интерактив: степени числа z</h4>
+    <canvas id="cMoiv" width="520" height="520"></canvas>
+    <div class="ctl">
+      <label>|z| = <span class="val" id="rMoivV">1.00</span></label>
+      <input type="range" id="rMoiv" min="0.7" max="1.15" step="0.01" value="1">
+      <label>φ = <span class="val" id="phiMoivV">40°</span></label>
+      <input type="range" id="phiMoiv" min="10" max="120" step="1" value="40">
+      <label>n = <span class="val" id="nMoivV">3</span></label>
+      <input type="range" id="nMoiv" min="1" max="8" step="1" value="3">
+    </div>
+    <div class="readout" id="moivOut"></div>
+    <p class="hint">Точки z¹, z², … z<sup>n</sup> ложатся по спирали (или по окружности при r = 1). Последняя, z<sup>n</sup>, выделена.</p>
+  </div>
+</section>
+
+<!-- ============ 4. Корни ============ -->
+<section data-group="2 · Операции" data-t="Корни n-й степени" data-desc="Корни как правильный n-угольник, вывод формулы; интерактив.">
+  <h2>Корни — вершины правильного n-угольника</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>У числа ровно n корней n-й степени. Все они одной длины <sup>n</sup>√r, поэтому лежат на одной окружности и делят её на равные части — то есть образуют <b>правильный n-угольник</b>.</p>
+  </div>
+  <div class="df"><span class="tag">Формула корней</span>
+    <div class="formula"><sup>n</sup>√z = <sup>n</sup>√r ·(cos <span class="frac"><span class="num">φ+2πk</span><span class="den">n</span></span> + i·sin <span class="frac"><span class="num">φ+2πk</span><span class="den">n</span></span>), &nbsp; k = 0, 1, …, n−1</div>
+  </div>
+  <div class="df"><span class="tag">Откуда берётся формула — вывод</span>
+    <p>Корень n-й степени из z — это число w, для которого w<sup>n</sup> = z. Ищем его тоже в тригонометрической форме: w = ρ(cos ψ + i·sin ψ). По формуле Муавра:</p>
+    <div class="step">w<sup>n</sup> = ρ<sup>n</sup>(cos nψ + i·sin nψ), и это должно равняться z = r(cos φ + i·sin φ).</div>
+    <div class="step">Модули равны: ρ<sup>n</sup> = r &nbsp;⇒&nbsp; ρ = <sup>n</sup>√r (обычный арифметический корень из положительного числа — он единственный).</div>
+    <div class="step"><b>Ключевой момент:</b> углы у равных чисел совпадают <b>с точностью до 2π</b> (полный оборот ничего не меняет). Поэтому nψ = φ + 2πk, где k — любое целое.</div>
+    <div class="step">Отсюда ψ = <span class="frac"><span class="num">φ + 2πk</span><span class="den">n</span></span>.</div>
+    <div class="step">Разные k дают разные углы, пока k = 0, 1, …, n−1. При k = n угол вырастает на <span class="frac"><span class="num">2πn</span><span class="den">n</span></span> = 2π — то есть возвращается к корню с k = 0. Значит различных корней ровно <b>n</b>. ∎</div>
+    <p>Все корни имеют одинаковый модуль <sup>n</sup>√r (лежат на одной окружности), а их углы отличаются на <span class="frac"><span class="num">2π</span><span class="den">n</span></span> — вот почему они делят окружность поровну и образуют правильный n-угольник.</p>
+  </div>
+  <div class="lab">
+    <h4>Интерактив: корни числа z</h4>
+    <canvas id="cRoot" width="520" height="520"></canvas>
+    <div class="ctl">
+      <label>n = <span class="val" id="nRootV">4</span></label>
+      <input type="range" id="nRoot" min="2" max="8" step="1" value="4">
+      <button class="btn" id="exBtn">Пример из конспекта: ⁴√(1+i)</button>
+    </div>
+    <div class="readout" id="rootOut"></div>
+    <p class="hint">Тяни z (жёлтая точка), меняй n. Красные точки — корни, соединённые в n-угольник.</p>
+  </div>
+
+  <h4>Разобранный пример: ⁴√(1 + i)</h4>
+  <details><summary>Показать решение</summary>
+    <p>z = 1 + i: r = √(1²+1²) = √2, φ = arctg(1/1) = π/4.</p>
+    <p>Корней 4, они на окружности радиуса <sup>4</sup>√(√2) = 2<sup>1/8</sup> = <sup>8</sup>√2. Углы: (π/4 + 2πk)/4.</p>
+    <ul>
+      <li>k=0: угол π/16 → z<sub>0</sub> = <sup>8</sup>√2·(cos π/16 + i·sin π/16)</li>
+      <li>k=1: угол 9π/16 → z<sub>1</sub></li>
+      <li>k=2: угол 17π/16 → z<sub>2</sub></li>
+      <li>k=3: угол 25π/16 → z<sub>3</sub></li>
+    </ul>
+    <p>Четыре точки образуют квадрат — нажми кнопку выше, чтобы увидеть.</p>
+  </details>
+</section>
+
+<!-- ============ 5. Задачи ============ -->
+<section data-group="3 · Задачи" data-t="Задачи" data-desc="Задачи на модуль/аргумент, умножение, Муавр, корни.">
+  <h2>Задачи для студентки</h2>
+  <p style="color:var(--muted)">Сначала представь число на плоскости (куда смотрит вектор, какой длины), потом считай.</p>
+  <div class="task"><p class="q">1. Найди модуль и аргумент числа z = −1 + i√3.</p>
+    <details><summary>Ответ</summary><p>r = √(1 + 3) = <b>2</b>; точка во II четверти, φ = <b>2π/3</b> (120°).</p></details></div>
+  <div class="task"><p class="q">2. Перемножь z<sub>1</sub> = 2(cos 30° + i·sin 30°) и z<sub>2</sub> = 3(cos 60° + i·sin 60°).</p>
+    <details><summary>Ответ</summary><p>Длины: 2·3 = 6. Углы: 30° + 60° = 90°. Ответ: 6(cos 90° + i·sin 90°) = <b>6i</b>.</p></details></div>
+  <div class="task"><p class="q">3. Вычисли (1 + i)<sup>8</sup> по формуле Муавра.</p>
+    <details><summary>Ответ</summary><p>r = √2, φ = 45°. (1+i)<sup>8</sup> = (√2)<sup>8</sup>·(cos 360° + i·sin 360°) = 16·1 = <b>16</b>.</p></details></div>
+  <div class="task"><p class="q">4. Найди все корни ³√8 и покажи их на плоскости.</p>
+    <details><summary>Ответ</summary><p>r = 8, <sup>3</sup>√8 = 2; углы (0 + 2πk)/3, k = 0,1,2 → 0°, 120°, 240°. Корни: <b>2, −1 + i√3, −1 − i√3</b> — вершины равностороннего треугольника. Проверь в интерактиве (тяни z на 8 по оси Re, n = 3).</p></details></div>
+</section>
+
+</main>
+</div>
+<script>
+// ---------- sidebar nav ----------
+const secs=[...document.querySelectorAll('section')];
+const nav=document.getElementById('nav');
+const titleEl=document.getElementById('secTitle');
+const descEl=document.getElementById('secDesc');
+const groupOrder=['1 · Основы','2 · Операции','3 · Задачи'];
+const links=[];
+groupOrder.forEach(g=>{
+  const idxs=[]; secs.forEach((s,i)=>{ if((s.dataset.group||'')===g) idxs.push(i); });
+  if(!idxs.length) return;
+  const grp=document.createElement('div');grp.className='grp';grp.dataset.g=g;
+  const btn=document.createElement('button');btn.innerHTML='<span>'+g+'</span><span class="arw">▶</span>';
+  const items=document.createElement('div');items.className='items';
+  idxs.forEach(i=>{const a=document.createElement('a');a.textContent=secs[i].dataset.t;a.onclick=()=>show(i);items.appendChild(a);links[i]=a;});
+  btn.onclick=()=>grp.classList.toggle('open');
+  grp.appendChild(btn);grp.appendChild(items);nav.appendChild(grp);
+});
+const groupEls=[...document.querySelectorAll('.grp')];
+window.__start = secs.findIndex(s=>(s.dataset.group||'')===groupOrder[0]);
+function show(i){
+  secs.forEach((s,k)=>s.classList.toggle('show',k===i));
+  links.forEach((a,k)=>a&&a.classList.toggle('active',k===i));
+  const g=secs[i].dataset.group;
+  groupEls.forEach(el=>{ if(el.dataset.g===g) el.classList.add('open'); });
+  titleEl.textContent=secs[i].dataset.t;
+  descEl.textContent=secs[i].dataset.desc||'';
+  window.scrollTo({top:0,behavior:'smooth'});
+  const s=secs[i];
+  if(s.querySelector('#cPlane')&&typeof drawPlane==='function') drawPlane();
+  if(s.querySelector('#cMul')&&typeof drawMul==='function') drawMul();
+  if(s.querySelector('#cMoiv')&&typeof drawMoiv==='function') drawMoiv();
+  if(s.querySelector('#cRoot')&&typeof drawRoot==='function') drawRoot();
+}
+if(groupEls[0]) groupEls[0].classList.add('open');
+
+// ---------- shared plane drawing ----------
+function planeSetup(cv){
+  const W=cv.width,H=cv.height,cx=W/2,cy=H/2,scale=60; // 1 unit = 60px
+  return {W,H,cx,cy,scale,
+    SX:re=>cx+re*scale, SY:im=>cy-im*scale};
+}
+function drawAxes(ctx,S){
+  const {W,H,cx,cy,scale}=S;ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#1b2444';ctx.lineWidth=1;
+  for(let g=-4;g<=4;g++){
+    ctx.beginPath();ctx.moveTo(S.SX(g),0);ctx.lineTo(S.SX(g),H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,S.SY(g));ctx.lineTo(W,S.SY(g));ctx.stroke();
+  }
+  ctx.strokeStyle='#46567f';ctx.lineWidth=1.4;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.fillStyle='#9aa6c4';ctx.font='12px sans-serif';
+  ctx.fillText('Re',W-24,cy-6);ctx.fillText('Im',cx+6,14);
+}
+function vector(ctx,S,re,im,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;
+  ctx.beginPath();ctx.moveTo(S.cx,S.cy);ctx.lineTo(S.SX(re),S.SY(im));ctx.stroke();
+  // arrowhead
+  const ang=Math.atan2(-im,re),x=S.SX(re),y=S.SY(im),s=9;
+  ctx.beginPath();ctx.moveTo(x,y);
+  ctx.lineTo(x-s*Math.cos(ang-0.4),y-s*Math.sin(ang-0.4));
+  ctx.lineTo(x-s*Math.cos(ang+0.4),y-s*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+}
+function dot(ctx,S,re,im,color,r){ctx.fillStyle=color;ctx.beginPath();ctx.arc(S.SX(re),S.SY(im),r||4.5,0,7);ctx.fill();}
+function arc(ctx,S,r,a0,a1,color){ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(S.cx,S.cy,r,-a1,-a0);ctx.stroke();}
+function fmtDeg(rad){let d=rad*180/Math.PI;if(d<0)d+=360;return d.toFixed(0)+'°';}
+function snap(v){return Math.round(v/0.25)*0.25;}
+
+// ================= 1. PLANE =================
+const cPlane=document.getElementById('cPlane'),px=cPlane.getContext('2d');
+let zP={re:2,im:1};
+function drawPlane(){
+  const S=planeSetup(cPlane);drawAxes(px,S);
+  const r=Math.hypot(zP.re,zP.im),phi=Math.atan2(zP.im,zP.re);
+  if(r>0.05)arc(px,S,34,0,phi,'#ffc24b');
+  vector(px,S,zP.re,zP.im,'#5b8def');
+  dot(px,S,zP.re,zP.im,'#7aa5ff',6);
+  px.fillStyle='#e7ecf7';px.font='13px monospace';
+  px.fillText('z',S.SX(zP.re)+8,S.SY(zP.im)-8);
+  document.getElementById('planeOut').textContent=
+    'z = '+zP.re.toFixed(2)+' + '+zP.im.toFixed(2)+'i    |z| = '+r.toFixed(3)+'    φ = '+fmtDeg(phi)+
+    '\nz = '+r.toFixed(2)+'·(cos '+fmtDeg(phi)+' + i·sin '+fmtDeg(phi)+')';
+}
+dragify(cPlane,()=>[zP],drawPlane);
+
+// ================= 2. MULT =================
+const cMul=document.getElementById('cMul'),mx=cMul.getContext('2d');
+let z1={re:1,im:1}, z2={re:0.5,im:0.87};
+function drawMul(){
+  const S=planeSetup(cMul);drawAxes(mx,S);
+  const p={re:z1.re*z2.re-z1.im*z2.im, im:z1.re*z2.im+z1.im*z2.re};
+  vector(mx,S,z1.re,z1.im,'#5b8def');dot(mx,S,z1.re,z1.im,'#7aa5ff',5.5);
+  vector(mx,S,z2.re,z2.im,'#ff7ab6');dot(mx,S,z2.re,z2.im,'#ff7ab6',5.5);
+  vector(mx,S,p.re,p.im,'#39d98a',2.8);dot(mx,S,p.re,p.im,'#39d98a',6);
+  mx.font='13px monospace';
+  mx.fillStyle='#7aa5ff';mx.fillText('z₁',S.SX(z1.re)+7,S.SY(z1.im)-7);
+  mx.fillStyle='#ff7ab6';mx.fillText('z₂',S.SX(z2.re)+7,S.SY(z2.im)-7);
+  mx.fillStyle='#39d98a';mx.fillText('z₁z₂',S.SX(p.re)+7,S.SY(p.im)-7);
+  const r1=Math.hypot(z1.re,z1.im),r2=Math.hypot(z2.re,z2.im),rp=Math.hypot(p.re,p.im);
+  const a1=Math.atan2(z1.im,z1.re),a2=Math.atan2(z2.im,z2.re);
+  document.getElementById('mulOut').textContent=
+    '|z₁|='+r1.toFixed(2)+'  |z₂|='+r2.toFixed(2)+'  →  |z₁z₂|='+rp.toFixed(2)+' = '+r1.toFixed(2)+'·'+r2.toFixed(2)+
+    '\narg z₁='+fmtDeg(a1)+'  arg z₂='+fmtDeg(a2)+'  →  arg(z₁z₂)='+fmtDeg(a1+a2);
+}
+dragify(cMul,()=>[z1,z2],drawMul);
+
+// ================= 3. MOIVRE =================
+const cMoiv=document.getElementById('cMoiv'),vx=cMoiv.getContext('2d');
+const rM=document.getElementById('rMoiv'),phiM=document.getElementById('phiMoiv'),nM=document.getElementById('nMoiv');
+function drawMoiv(){
+  const S=planeSetup(cMoiv);drawAxes(vx,S);
+  const r=+rM.value, phi=(+phiM.value)*Math.PI/180, n=+nM.value;
+  document.getElementById('rMoivV').textContent=r.toFixed(2);
+  document.getElementById('phiMoivV').textContent=(+phiM.value)+'°';
+  document.getElementById('nMoivV').textContent=n;
+  // unit circle guide
+  vx.strokeStyle='#26325a';vx.lineWidth=1;vx.beginPath();vx.arc(S.cx,S.cy,S.scale,0,7);vx.stroke();
+  // powers
+  for(let k=1;k<=n;k++){
+    const rr=Math.pow(r,k),a=k*phi;
+    const re=rr*Math.cos(a),im=rr*Math.sin(a);
+    const last=(k===n);
+    if(k>1){vx.strokeStyle='rgba(122,165,255,.35)';vx.lineWidth=1;vx.beginPath();
+      vx.moveTo(S.SX(Math.pow(r,k-1)*Math.cos((k-1)*phi)),S.SY(Math.pow(r,k-1)*Math.sin((k-1)*phi)));
+      vx.lineTo(S.SX(re),S.SY(im));vx.stroke();}
+    dot(vx,S,re,im,last?'#39d98a':'#7aa5ff',last?7:4.5);
+    vx.fillStyle=last?'#39d98a':'#9aa6c4';vx.font='12px monospace';
+    vx.fillText('z'+(k===1?'':sup(k)),S.SX(re)+7,S.SY(im)-6);
+  }
+  vector(vx,S,r*Math.cos(phi),r*Math.sin(phi),'#5b8def',1.8);
+  const rn=Math.pow(r,n),an=n*phi;
+  document.getElementById('moivOut').textContent=
+    'zⁿ = '+rn.toFixed(2)+'·(cos '+fmtDeg(an)+' + i·sin '+fmtDeg(an)+')   (|z|ⁿ='+r.toFixed(2)+'^'+n+'='+rn.toFixed(2)+', угол n·φ='+fmtDeg(an)+')';
+}
+function sup(n){return (''+n).replace(/[0-9]/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);}
+[rM,phiM,nM].forEach(s=>s.oninput=drawMoiv);
+
+// ================= 4. ROOTS =================
+const cRoot=document.getElementById('cRoot'),rx=cRoot.getContext('2d');
+const nR=document.getElementById('nRoot');
+let zR={re:1,im:1};
+function drawRoot(){
+  const S=planeSetup(cRoot);drawAxes(rx,S);
+  const n=+nR.value;document.getElementById('nRootV').textContent=n;
+  const r=Math.hypot(zR.re,zR.im),phi=Math.atan2(zR.im,zR.re);
+  const rho=Math.pow(r,1/n);
+  // circle of roots
+  rx.strokeStyle='#26325a';rx.lineWidth=1.2;rx.beginPath();rx.arc(S.cx,S.cy,rho*S.scale,0,7);rx.stroke();
+  // target z
+  vector(rx,S,zR.re,zR.im,'#ffc24b',1.6);dot(rx,S,zR.re,zR.im,'#ffc24b',6);
+  rx.fillStyle='#ffc24b';rx.font='13px monospace';rx.fillText('z',S.SX(zR.re)+7,S.SY(zR.im)-7);
+  // roots
+  const pts=[];
+  for(let k=0;k<n;k++){const a=(phi+2*Math.PI*k)/n;pts.push([rho*Math.cos(a),rho*Math.sin(a)]);}
+  rx.strokeStyle='rgba(255,122,182,.5)';rx.lineWidth=1.4;rx.beginPath();
+  pts.forEach((p,k)=>{const X=S.SX(p[0]),Y=S.SY(p[1]);k?rx.lineTo(X,Y):rx.moveTo(X,Y);});
+  rx.closePath();rx.stroke();
+  pts.forEach((p,k)=>{dot(rx,S,p[0],p[1],'#ff7ab6',5.5);rx.fillStyle='#ff7ab6';rx.font='11px monospace';rx.fillText('z'+sub(k),S.SX(p[0])+6,S.SY(p[1])-5);});
+  document.getElementById('rootOut').textContent=
+    'z: r='+r.toFixed(3)+', φ='+fmtDeg(phi)+'   →   '+n+' корней на окружности радиуса ⁿ√r='+rho.toFixed(3)+', шаг угла '+(360/n).toFixed(0)+'°';
+}
+function sub(n){return (''+n).replace(/[0-9]/g,d=>'₀₁₂₃₄₅₆₇₈₉'[d]);}
+document.getElementById('exBtn').onclick=()=>{zR={re:1,im:1};nR.value=4;drawRoot();};
+nR.oninput=drawRoot;
+dragify(cRoot,()=>[zR],drawRoot);
+
+// ================= drag helper =================
+function dragify(cv,getPts,redraw){
+  let active=null;
+  function toWorld(ev){
+    const rect=cv.getBoundingClientRect();
+    const sx=cv.width/rect.width, sy=cv.height/rect.height;
+    const mx=(ev.clientX-rect.left)*sx, my=(ev.clientY-rect.top)*sy;
+    return {re:(mx-cv.width/2)/60, im:(cv.height/2-my)/60};
+  }
+  function pick(w){
+    const pts=getPts();let best=null,bd=0.6;
+    pts.forEach(p=>{const d=Math.hypot(p.re-w.re,p.im-w.im);if(d<bd){bd=d;best=p;}});
+    return best;
+  }
+  function down(ev){ev.preventDefault();const w=toWorld(ev);active=pick(w)||getPts()[0];move(ev);}
+  function move(ev){if(!active)return;ev.preventDefault();const w=toWorld(ev);active.re=snap(w.re);active.im=snap(w.im);redraw();}
+  function up(){active=null;}
+  cv.addEventListener('mousedown',down);window.addEventListener('mousemove',move);window.addEventListener('mouseup',up);
+  cv.addEventListener('touchstart',e=>down(e.touches[0]),{passive:false});
+  cv.addEventListener('touchmove',e=>{if(active){move(e.touches[0]);e.preventDefault();}},{passive:false});
+  cv.addEventListener('touchend',up);
+}
+
+show(window.__start||0);
+(function(){var mb=document.getElementById('menuBtn'),bd=document.getElementById('backdrop'),as=document.querySelector('aside');function cl(){if(as)as.classList.remove('open');if(bd)bd.classList.remove('show');}if(mb)mb.onclick=function(){as.classList.add('open');bd.classList.add('show');};if(bd)bd.onclick=cl;document.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',cl);});})();
+</script>
+</body>
+</html>

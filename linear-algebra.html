@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Линейная алгебра — Матрицы, определители, ранг</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--warn:#ff8d6b;--pink:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6}
+  .app{display:flex;min-height:100vh}
+  /* ---- sidebar ---- */
+  aside{width:290px;flex:none;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow:auto}
+  .brand{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+  .brand a{color:var(--blue2);text-decoration:none;font-size:12.5px;font-weight:600}
+  .brand h1{margin:8px 0 0;font-size:17px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+  nav{padding:8px 8px 30px}
+  .grp{margin:6px 0}
+  .grp>button{width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:#fff;
+     font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .grp>button:hover{border-color:var(--blue)}
+  .grp>button .arw{color:var(--muted);font-size:11px;transition:.15s}
+  .grp.open>button .arw{transform:rotate(90deg)}
+  .grp .items{display:none;margin:4px 0 8px 6px;padding-left:8px;border-left:1px solid var(--line)}
+  .grp.open .items{display:block}
+  .items a{display:block;color:var(--ink);text-decoration:none;font-size:13px;padding:6px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+  .items a:hover{background:var(--panel2)}
+  .items a.active{background:linear-gradient(92deg,#25335c,#20294a);border-color:var(--blue);color:#fff}
+  /* ---- content ---- */
+  main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:26px 34px 90px}
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:20px}
+  .lead h2{margin:0 0 4px;font-size:22px}
+  .lead p{margin:0;color:var(--muted);font-size:14px}
+  section{display:none}section.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h3{color:var(--blue2);font-size:19px;margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h4{color:#fff;font-size:15.5px;margin:16px 0 6px}
+  p{margin:8px 0}
+  .df{background:var(--panel);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .df .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--acc);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .intu{background:rgba(255,194,75,.10);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .intu .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--gold);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .ex{background:rgba(57,217,138,.08);border-left:3px solid var(--ok);border-radius:0 10px 10px 0;padding:10px 15px;margin:11px 0}
+  .ex .tag{display:inline-block;font-size:11px;font-weight:700;color:#04140c;background:var(--ok);padding:2px 9px;border-radius:20px;margin-bottom:5px}
+  .warnbox{background:rgba(255,141,107,.10);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .warnbox .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--warn);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .fix{background:rgba(57,217,138,.10);border:1px solid rgba(57,217,138,.4);border-radius:10px;padding:8px 13px;margin:10px 0;font-size:13px;color:#bff0d6}
+  .fix b{color:var(--ok)}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0;text-align:center;font-size:17px;overflow-x:auto}
+  .step{margin:7px 0;padding-left:12px;border-left:2px solid var(--line);font-size:15px;overflow-x:auto}
+  ul,ol{margin:8px 0 8px 4px;padding-left:22px}li{margin:5px 0}
+  code{background:var(--panel2);padding:1px 6px;border-radius:6px;font-size:14px}
+  sub,sup{font-size:.72em}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th{background:var(--panel2);color:#fff;text-align:left;padding:7px 10px;border:1px solid var(--line)}
+  td{border:1px solid var(--line);padding:6px 10px}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.12;font-size:.95em}
+  .frac>span{display:block;padding:0 .45em}.frac>.num{padding-bottom:.06em}.frac>.den{border-top:1.6px solid currentColor;padding-top:.08em}
+  .mat{display:inline-flex;align-items:center;position:relative;padding:4px 12px;margin:0 3px;vertical-align:middle;color:var(--ink)}
+  .mat::before,.mat::after{content:"";position:absolute;top:0;bottom:0;width:9px;border:2px solid var(--blue2)}
+  .mat::before{left:0;border-right:none;border-radius:9px 0 0 9px}
+  .mat::after{right:0;border-left:none;border-radius:0 9px 9px 0}
+  .grid{display:grid;gap:3px 16px;text-align:center;font-size:15px}
+  .det{display:inline-flex;align-items:center;position:relative;padding:4px 11px;margin:0 3px;vertical-align:middle;color:var(--ink)}
+  .det::before,.det::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:var(--gold)}
+  .det::before{left:2px}.det::after{right:2px}
+  .op{margin:0 8px;color:var(--muted)}
+  .leg{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0;font-size:13.5px;color:#cdd7ee}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:2px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--gold);padding:8px 0}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 14px;font-size:13px;cursor:pointer}
+  .btn:hover{border-color:var(--blue)}
+  .calc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;text-align:center}
+  .calc input{width:66px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px;text-align:center;font-size:15px;margin:3px}
+  .calc .res{font-size:19px;margin-top:10px;color:var(--ok);font-weight:700;min-height:24px}
+  .lab{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0}
+  canvas{width:100%;max-width:460px;height:auto;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid var(--line);touch-action:none}
+  .readout{font-family:ui-monospace,monospace;font-size:13.5px;color:var(--ok);margin-top:8px;text-align:center;min-height:22px;white-space:pre-line}
+  .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0;justify-content:center}
+  .pill{display:inline-block;font-size:11px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:2px 10px;margin-left:6px}
+  .menu-btn{display:none}
+  .menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    .backdrop.show{display:block}
+    aside{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:25;box-shadow:4px 0 20px rgba(0,0,0,.55)}
+    aside.open{transform:translateX(0)}
+    main{padding:60px 16px 70px;max-width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+<button class="menu-btn" id="menuBtn">☰ Разделы</button>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="brand">
+    <a href="index.html">← Портал</a>
+    <h1>Линейная алгебра</h1>
+    <p>Матрицы · определители · обратная · ранг · системы</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+  <div class="lead">
+    <h2 id="secTitle"></h2>
+    <p id="secDesc"></p>
+  </div>
+
+<!-- ================= ГЛАВА 1. МАТРИЦЫ ================= -->
+<section data-group="1 · Матрицы" data-t="Определение, размер, виды" data-desc="Что такое матрица, размер, диагонали, след и частные виды.">
+  <h3>Что такое матрица</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Матрица</b> — прямоугольная таблица чисел. Размер <b>m × n</b> (m строк, n столбцов); элемент a<sub>ij</sub> стоит в i-й строке, j-м столбце. Если m = n — матрица <b>квадратная</b>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>2</span><span>−1</span><span>0</span><span>5</span><span>3</span><span>7</span></span></span> — размер 2 × 3; здесь a<sub>21</sub> = 5, a<sub>13</sub> = 0.</div>
+
+  <h3>Диагонали и след</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Главная диагональ</b> — из левого верхнего угла в правый нижний, <b>побочная</b> — из правого верхнего в левый нижний. <b>След</b> tr A = a<sub>11</sub> + a<sub>22</sub> + … + a<sub>nn</sub>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> Для <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>2</span><span>1</span><span>4</span><span>0</span><span>5</span><span>6</span><span>7</span><span>8</span><span>3</span></span></span> след = 2 + 5 + 3 = <b>10</b>.</div>
+
+  <h3>Частные виды</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Нулевая</b> — все элементы 0. <b>Диагональная</b> — вне диагонали нули. <b>Скалярная</b> — диагональная с одинаковыми числами. <b>Единичная</b> E — с единицами на диагонали (δ<sub>ij</sub> = 1 при i=j, иначе 0). <b>Вектор-строка / вектор-столбец</b> — одна строка / один столбец.</p>
+  </div>
+  <div class="ex"><span class="tag">Примеры</span> E = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>0</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>1</span></span></span>, &nbsp; diag(2,−1,5) = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>2</span><span>0</span><span>0</span><span>0</span><span>−1</span><span>0</span><span>0</span><span>0</span><span>5</span></span></span>.</div>
+
+  <h3>Треугольные матрицы</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Верхняя треугольная</b>: под диагональю нули (a<sub>ij</sub> = 0 при i &gt; j). <b>Нижняя</b>: нули выше диагонали.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>0</span><span>4</span><span>5</span><span>0</span><span>0</span><span>6</span></span></span> — верхняя треугольная.</div>
+  <div class="fix">След определён только для квадратной матрицы, поэтому последний член — <b>a<sub>nn</sub></b>.</div>
+</section>
+
+<section data-group="1 · Матрицы" data-t="Транспонирование и симметрия" data-desc="Транспонированная матрица, симметрические и кососимметрические.">
+  <h3>Транспонирование</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Транспонированная</b> A<sup>T</sup> — строки становятся столбцами: A = (a<sub>ij</sub>)<sub>m×n</sub> → A<sup>T</sup> = (a<sub>ji</sub>)<sub>n×m</sub>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></span></span><sup>T</sup> = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>4</span><span>2</span><span>5</span><span>3</span><span>6</span></span></span> (2×3 → 3×2).</div>
+  <div class="fix">Размер A<sup>T</sup> — <b>n×m</b>: строки и столбцы меняются местами.</div>
+  <h3>Симметрические и кососимметрические</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Симметрическая</b>: a<sub>ij</sub> = a<sub>ji</sub> (A = A<sup>T</sup>). <b>Кососимметрическая</b>: a<sub>ij</sub> = −a<sub>ji</sub>, на диагонали нули.</p>
+  </div>
+  <div class="ex"><span class="tag">Примеры</span> симметрическая <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>2</span><span>4</span><span>5</span><span>3</span><span>5</span><span>6</span></span></span>; кососимметрическая <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>0</span><span>2</span><span>−3</span><span>−2</span><span>0</span><span>1</span><span>3</span><span>−1</span><span>0</span></span></span>.</div>
+  <p class="note">Транспонирование квадратной матрицы = отражение относительно главной диагонали.</p>
+</section>
+
+<section data-group="1 · Матрицы" data-t="Сложение и умножение на число" data-desc="Поэлементные действия и их свойства.">
+  <h3>Сумма и умножение на число</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Сумма/разность</b> матриц одинакового размера: c<sub>ij</sub> = a<sub>ij</sub> ± b<sub>ij</sub>. <b>Умножение на λ</b>: c<sub>ij</sub> = λ·a<sub>ij</sub>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>4</span></span></span> + <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>5</span><span>1</span><span>1</span></span></span> = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>7</span><span>4</span><span>5</span></span></span>, &nbsp; 3·<span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>0</span><span>4</span></span></span> = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>6</span><span>0</span><span>12</span></span></span>.</div>
+  <h4>Свойства</h4>
+  <ul>
+    <li>A + B = B + A <span class="pill">коммутативность</span>; &nbsp; A + (B + C) = (A + B) + C</li>
+    <li>A + Θ = A; &nbsp; A + (−A) = Θ; &nbsp; (α + β)A = αA + βA; &nbsp; α(A + B) = αA + αB</li>
+    <li>(λA)<sup>T</sup> = λA<sup>T</sup>, (A + B)<sup>T</sup> = A<sup>T</sup> + B<sup>T</sup>, (A<sup>T</sup>)<sup>T</sup> = A</li>
+  </ul>
+</section>
+
+<section data-group="1 · Матрицы" data-t="Умножение матриц" data-desc="Правило «строка на столбец», почему так, свойства.">
+  <h3>Произведение матриц</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p>A<sub>m×n</sub> · B<sub>n×p</sub> = C<sub>m×p</sub>, где c<sub>ij</sub> = ∑<sub>k</sub> a<sub>ik</sub>b<sub>kj</sub> — сумма произведений i-й строки A на j-й столбец B.</p>
+  </div>
+  <p class="note"><b>Условие согласованности:</b> число столбцов A = числу строк B.</p>
+  <div class="intu"><span class="tag">Почему «строка на столбец»</span>
+    <p>Матрица — это запись линейной замены переменных. Если (y₁,y₂) выражены через (x₁,x₂) матрицей A, а (z₁,z₂) через (y₁,y₂) матрицей B, то подстановка даёт z₁ = (b₁₁a₁₁ + b₁₂a₂₁)x₁ + … — коэффициент при x₁ и есть «строка B на столбец A». Отсюда и условие согласованности, и <b>некоммутативность</b> (порядок замен важен).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>4</span></span></span>·<span class="mat"><span class="grid" style="grid-template-columns:auto"><span>2</span><span>0</span></span></span> = <span class="mat"><span class="grid" style="grid-template-columns:auto"><span>1·2+2·0</span><span>3·2+4·0</span></span></span> = <span class="mat"><span class="grid" style="grid-template-columns:auto"><span>2</span><span>6</span></span></span></div>
+  <div class="warnbox"><span class="tag">Внимание</span><p>Обычно AB ≠ BA (полный разбор — в главе «Разборы задач»).</p></div>
+  <h4>Свойства</h4>
+  <ul>
+    <li>A(BC) = (AB)C; &nbsp; A(B + C) = AB + AC; &nbsp; (A + B)C = AC + BC</li>
+    <li>(A·B)<sup>T</sup> = B<sup>T</sup>·A<sup>T</sup> <span class="pill">порядок меняется</span></li>
+  </ul>
+</section>
+
+<section data-group="1 · Матрицы" data-t="Многочлен от матрицы" data-desc="Степени матрицы и значение многочлена от матрицы.">
+  <h3>Многочлен от матрицы</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p>A<sup>0</sup> = E, A<sup>2</sup> = A·A. Если f(x) = a<sub>0</sub>x<sup>n</sup> + … + a<sub>n</sub>, то f(A) = a<sub>0</sub>A<sup>n</sup> + … + a<sub>n−1</sub>A + a<sub>n</sub>E (свободный член умножается на E).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> f(x) = 3x² − 4, A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>3</span></span></span> → f(A) = 3A² − 4E. Полный расчёт — в главе «Разборы задач».</div>
+</section>
+
+<!-- ================= ГЛАВА 2. ОПРЕДЕЛИТЕЛИ ================= -->
+<section data-group="2 · Определители" data-t="Перестановки и определение" data-desc="Перестановки, инверсии, определение определителя через знак.">
+  <h3>Перестановки и инверсии</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Перестановка</b> — расположение n элементов; всего их n!. Пара образует <b>инверсию</b>, если бо́льший элемент стоит раньше меньшего. Перестановка <b>чётная</b>, если инверсий чётное число.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> В [3, 1, 2] инверсии: (3,1) и (3,2) — две ⟹ перестановка <b>чётная</b>.</div>
+  <div class="df"><span class="tag">Транспозиция</span><p>Перемена местами двух элементов; всякая транспозиция меняет чётность на противоположную.</p></div>
+  <h3>Определитель n-го порядка</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p>Определитель — сумма n! произведений, по одному элементу из каждой строки и столбца; знак «+» для чётной перестановки индексов строк, «−» для нечётной.</p>
+    <div class="formula">det A = ∑ (−1)<sup>[инверсии]</sup> · a<sub>i₁1</sub>·a<sub>i₂2</sub>·…·a<sub>iₙn</sub></div>
+  </div>
+  <p class="note">Обозначения: |A|, det A, Δ.</p>
+</section>
+
+<section data-group="2 · Определители" data-t="Вычисление 2×2 и 3×3" data-desc="Явные формулы, калькулятор 2×2, правило треугольника.">
+  <h3>Определитель 2-го порядка</h3>
+  <div class="formula">
+    <span style="font-size:20px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>a<sub>11</sub></span><span>a<sub>12</sub></span><span>a<sub>21</sub></span><span>a<sub>22</sub></span></span><span style="font-size:20px">|</span>
+    <span class="op">=</span> a<sub>11</sub>a<sub>22</sub> − a<sub>12</sub>a<sub>21</sub>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> <span style="font-size:18px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>3</span><span>2</span><span>1</span><span>4</span></span><span style="font-size:18px">|</span> = 3·4 − 2·1 = <b>10</b>.</div>
+  <div class="calc">
+    <div><span style="font-size:22px">|</span><span style="display:inline-grid;grid-template-columns:auto auto;vertical-align:middle"><input id="m11" value="3"><input id="m12" value="2"><input id="m21" value="1"><input id="m22" value="4"></span><span style="font-size:22px">|</span>
+      <button class="btn" style="margin-left:12px" onclick="calcDet()">Посчитать</button></div>
+    <div class="res" id="detRes"></div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">det = a₁₁·a₂₂ − a₁₂·a₂₁</div>
+  </div>
+  <h3>Определитель 3-го порядка</h3>
+  <p>Правило треугольника (Саррюса): три «прямых» произведения со знаком «+», три «обратных» со знаком «−». Полный разбор 3×3 двумя способами — в главе «Разборы задач».</p>
+</section>
+
+<section data-group="2 · Определители" data-t="Геометрический смысл" data-desc="Определитель как ориентированная площадь; интерактив.">
+  <h3>Что определитель означает геометрически</h3>
+  <div class="intu"><span class="tag">Главная идея</span>
+    <p>Определитель 2×2 — <b>ориентированная площадь параллелограмма</b> на строках-векторах; 3×3 — <b>объём</b> параллелепипеда. Отсюда: <b>det = 0 ⟺ строки линейно зависимы</b>.</p>
+  </div>
+  <div class="formula">det <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>a</span><span>b</span><span>c</span><span>d</span></span></span> = a·d − b·c = площадь параллелограмма на (a,b) и (c,d)</div>
+  <div class="lab">
+    <h4>Интерактив: определитель = площадь</h4>
+    <p style="text-align:center;font-size:14px;color:var(--muted)">Тяни концы векторов-строк. Площадь = |det|. Сделай их коллинеарными — det обнулится.</p>
+    <canvas id="cArea" width="460" height="460"></canvas>
+    <div class="ctl">
+      <button class="btn" id="areaSwap">Поменять строки (сменить знак)</button>
+      <button class="btn" id="areaDeg">Строки пропорциональны (det = 0)</button>
+    </div>
+    <div class="readout" id="areaOut"></div>
+  </div>
+</section>
+
+<section data-group="2 · Определители" data-t="Свойства определителей" data-desc="Восемь свойств и их геометрический смысл.">
+  <h3>Свойства</h3>
+  <p class="note">Всё, что верно для строк, верно и для столбцов (т.к. det A = det A<sup>T</sup>).</p>
+  <ol>
+    <li>Нулевая строка ⇒ det = 0.</li>
+    <li>Строку умножили на λ ⇒ det умножился на λ.</li>
+    <li>Поменяли две строки ⇒ det сменил знак.</li>
+    <li>Две одинаковые строки ⇒ det = 0.</li>
+    <li>Строка — линейная комбинация других ⇒ det = 0 (в частности, пропорциональные строки).</li>
+    <li>Прибавили к строке комбинацию других строк ⇒ det не изменился.</li>
+    <li>det A = det A<sup>T</sup>.</li>
+    <li>Строка — сумма двух слагаемых ⇒ det раскладывается в сумму двух определителей.</li>
+  </ol>
+  <div class="intu"><span class="tag">Почему — через площадь</span>
+    <ul>
+      <li><b>1:</b> нулевой вектор → вырождение → 0. &nbsp; <b>2:</b> растянули сторону в λ раз → площадь в λ раз.</li>
+      <li><b>3:</b> перестановка меняет ориентацию → знак. &nbsp; <b>4,5:</b> зависимые векторы на прямой → площадь 0.</li>
+      <li><b>6:</b> «скашивание» вдоль стороны не меняет площадь.</li>
+    </ul>
+  </div>
+</section>
+
+<section data-group="2 · Определители" data-t="Миноры и алг. дополнения" data-desc="Минор, алгебраическое дополнение, знак (−1)^(i+k).">
+  <h3>Миноры и алгебраические дополнения</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Минор</b> M<sub>ik</sub> элемента a<sub>ik</sub> — определитель (n−1)-го порядка, полученный вычёркиванием i-й строки и k-го столбца. <b>Алгебраическое дополнение</b> A<sub>ik</sub> = (−1)<sup>i+k</sup>·M<sub>ik</sub>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> Для <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>a<sub>11</sub></span><span>a<sub>12</sub></span><span>a<sub>13</sub></span><span>a<sub>21</sub></span><span>a<sub>22</sub></span><span>a<sub>23</sub></span><span>a<sub>31</sub></span><span>a<sub>32</sub></span><span>a<sub>33</sub></span></span></span> минор M<sub>32</sub> (вычёркиваем 3-ю строку и 2-й столбец) = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>a<sub>11</sub></span><span>a<sub>13</sub></span><span>a<sub>21</sub></span><span>a<sub>23</sub></span></span></span>, A<sub>32</sub> = (−1)<sup>5</sup>M<sub>32</sub> = −M<sub>32</sub>.</div>
+  <div class="intu"><span class="tag">Почему знак (−1)^(i+k)</span>
+    <p>Шахматный порядок плюсов и минусов: <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:14px"><span>+</span><span>−</span><span>+</span><span>−</span><span>+</span><span>−</span><span>+</span><span>−</span><span>+</span></span></span> — чтобы разложение согласовалось с чётностью перестановок.</p>
+  </div>
+</section>
+
+<section data-group="2 · Определители" data-t="Разложение по строке" data-desc="Индуктивное определение и практический счёт.">
+  <h3>Разложение определителя по строке</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p>При n = 1: |A| = a<sub>11</sub>. При n ≥ 2 раскладываем по любой i-й строке:</p>
+    <div class="formula">|A| = a<sub>i1</sub>A<sub>i1</sub> + a<sub>i2</sub>A<sub>i2</sub> + … + a<sub>in</sub>A<sub>in</sub>, &nbsp; A<sub>ij</sub> = (−1)<sup>i+j</sup>M<sub>ij</sub></div>
+  </div>
+  <div class="intu"><span class="tag">Зачем</span><p>Способ считать определитель любого порядка: n×n сводится к нескольким (n−1)×(n−1). Выгодно раскладывать по строке/столбцу с нулями. Полный пример 3×3 — в «Разборах задач».</p></div>
+</section>
+
+<section data-group="2 · Определители" data-t="Методы: треуг. вид, Вандермонд, det(AB)" data-desc="Приведение к треугольному виду, определитель Вандермонда, det(AB)=detA·detB.">
+  <h3>Приведение к треугольному виду</h3>
+  <div class="df"><span class="tag">Элементарные преобразования</span><p><b>1-й тип:</b> перестановка двух строк/столбцов. <b>2-й тип:</b> прибавление к строке другой строки ×k.</p></div>
+  <div class="warnbox"><span class="tag">Влияние на определитель</span><p>1-й тип <b>меняет знак</b>; 2-й тип <b>не меняет</b> определитель.</p></div>
+  <div class="df"><span class="tag">Теорема</span><p>Любой определитель приводится элементарными преобразованиями к треугольному виду, а он равен произведению диагонали:</p><div class="formula">Δ<sub>треуг</sub> = a<sub>11</sub>·a<sub>22</sub>·…·a<sub>nn</sub></div></div>
+  <p class="note">Обнуляем всё под диагональю (метод Гаусса), следя за знаком при перестановках. Разбор 4×4 — в «Разборах задач».</p>
+  <h3>Определитель Вандермонда</h3>
+  <div class="formula" style="font-size:15px">Δ(a<sub>1</sub>, …, a<sub>n</sub>) = <span style="font-size:20px">|</span><span class="grid" style="grid-template-columns:repeat(4,auto);display:inline-grid;vertical-align:middle;font-size:13px"><span>1</span><span>1</span><span>…</span><span>1</span><span>a<sub>1</sub></span><span>a<sub>2</sub></span><span>…</span><span>a<sub>n</sub></span><span>a<sub>1</sub>²</span><span>a<sub>2</sub>²</span><span>…</span><span>a<sub>n</sub>²</span><span>a<sub>1</sub><sup>n−1</sup></span><span>a<sub>2</sub><sup>n−1</sup></span><span>…</span><span>a<sub>n</sub><sup>n−1</sup></span></span><span style="font-size:20px">|</span> = ∏<sub>i&gt;j</sub>(a<sub>i</sub> − a<sub>j</sub>)</div>
+  <p class="note">Равен нулю ⟺ среди a<sub>i</sub> есть два одинаковых.</p>
+  <h3>Определитель произведения</h3>
+  <div class="df"><span class="tag">Теорема</span><div class="formula">det(A·B) = det A · det B</div></div>
+  <p class="note">Следствие: если det A ≠ 0, то det A⁻¹ = 1 / det A (из det(A·A⁻¹) = det E = 1).</p>
+</section>
+
+<!-- ================= ГЛАВА 3. ОБРАТНАЯ И СИСТЕМЫ ================= -->
+<section data-group="3 · Обратная и системы" data-t="Обратная матрица" data-desc="Невырожденность, критерий, союзная матрица, алгоритм.">
+  <h3>Основные определения</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Невырожденная</b> матрица — det A ≠ 0. <b>Обратная</b> A⁻¹ — матрица того же порядка, для которой A·A⁻¹ = A⁻¹·A = E.</p>
+  </div>
+  <div class="intu"><span class="tag">Аналогия с числами</span>
+    <p>У числа a ≠ 0 есть обратное 1/a. У матриц роль «обратного числа» играет A⁻¹ — она отменяет действие A. Деления матриц нет; обратная есть только у невырожденной (аналог a ≠ 0 — это det A ≠ 0).</p>
+  </div>
+  <div class="df"><span class="tag">Теоремы</span>
+    <p><b>Единственность:</b> если обратная есть, она единственна (B = B·E = B(AC) = (BA)C = E·C = C). <b>Критерий:</b> A⁻¹ существует ⟺ det A ≠ 0 (из A·A⁻¹ = E берём det: det A · det A⁻¹ = 1).</p>
+  </div>
+  <h3>Союзная матрица и формула</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Союзная</b> A* — матрица из алгебраических дополнений, <b>транспонированная</b>. Тогда</p>
+    <div class="formula">A⁻¹ = <span class="frac"><span class="num">1</span><span class="den">|A|</span></span>·A*</div>
+  </div>
+  <div class="intu"><span class="tag">Почему работает</span>
+    <p>Строка на свои дополнения = |A| (разложение по строке), на чужие = 0 (это определитель с двумя одинаковыми строками). Значит A·A* = |A|·E, откуда A·(A*/|A|) = E.</p>
+  </div>
+  <h3>Алгоритм нахождения A⁻¹</h3>
+  <ol>
+    <li>Проверить |A| ≠ 0.</li>
+    <li>Найти все алгебраические дополнения A<sub>ij</sub> = (−1)<sup>i+j</sup>M<sub>ij</sub>.</li>
+    <li>Составить союзную A* (матрицу дополнений транспонировать).</li>
+    <li>Умножить на 1/|A|.</li>
+  </ol>
+  <p class="note">Полный пример обратной 3×3 и 2×2 — в главе «Разборы задач».</p>
+  <h3>Свойства</h3>
+  <ul>
+    <li>(A⁻¹)⁻¹ = A; &nbsp; (λA)⁻¹ = <span class="frac"><span class="num">1</span><span class="den">λ</span></span>·A⁻¹ &nbsp;(λ ≠ 0); &nbsp; (A<sup>T</sup>)⁻¹ = (A⁻¹)<sup>T</sup>; &nbsp; |A⁻¹| = <span class="frac"><span class="num">1</span><span class="den">|A|</span></span></li>
+    <li>(A·B)⁻¹ = B⁻¹·A⁻¹ <span class="pill">порядок меняется</span></li>
+  </ul>
+  <div class="fix">Верно (A·B)⁻¹ = <b>B⁻¹·A⁻¹</b> (порядок множителей меняется, как при транспонировании).</div>
+</section>
+
+<section data-group="3 · Обратная и системы" data-t="Матричные уравнения" data-desc="AX=B и YA=B; важна сторона умножения.">
+  <h3>Матричные уравнения</h3>
+  <div class="df"><span class="tag">Определение</span><p>Уравнение с неизвестной матрицей X. Два типа (|A| ≠ 0):</p><div class="formula">Тип 1: A·X = B &nbsp;·&nbsp; Тип 2: Y·A = B</div></div>
+  <div class="intu"><span class="tag">Аналогия</span><p>Скалярное a·x = b решают как x = a⁻¹·b. У матриц так же, но важна <b>сторона</b>: домножать на A⁻¹ надо с той стороны, где стоит A.</p></div>
+  <div class="df"><span class="tag">Решения</span>
+    <p><b>Тип 1:</b> домножаем слева ⟹ X = A⁻¹·B. &nbsp; <b>Тип 2:</b> домножаем справа ⟹ Y = B·A⁻¹.</p>
+  </div>
+  <div class="warnbox"><span class="tag">Сторона умножения</span><p>Умножение не коммутативно — перепутаешь сторону, получишь неверный ответ. Примеры обоих типов — в «Разборах задач».</p></div>
+</section>
+
+<section data-group="3 · Обратная и системы" data-t="СЛАУ и правило Крамера" data-desc="Системы линейных уравнений, матричная форма, формулы Крамера, однородные системы.">
+  <h3>Системы линейных уравнений (СЛАУ)</h3>
+  <div class="df"><span class="tag">Матричная форма</span>
+    <p>Систему из n уравнений с n неизвестными записывают как <b>A·X = B</b>, где A — матрица коэффициентов, X — столбец неизвестных, B — столбец свободных членов.</p>
+    <div class="formula">A·X = B &nbsp;⟹&nbsp; если |A| ≠ 0, то X = A⁻¹·B (единственное решение)</div>
+  </div>
+
+  <h3>Правило Крамера</h3>
+  <div class="df"><span class="tag">Теорема</span>
+    <p>Если Δ = det A ≠ 0, система имеет единственное решение:</p>
+    <div class="formula">x<sub>i</sub> = <span class="frac"><span class="num">Δ<sub>i</sub></span><span class="den">Δ</span></span>, &nbsp; i = 1…n</div>
+    <p>где Δ<sub>i</sub> — определитель, полученный из Δ заменой <b>i-го столбца</b> на столбец свободных членов B.</p>
+  </div>
+  <details><summary>Показать идею доказательства</summary>
+    <div class="step">Из A·X = B при |A| ≠ 0: X = A⁻¹B = (1/|A|)·A*·B. Расписав произведение A*·B по строкам, i-я координата даёт a<sub>1i</sub>b<sub>1</sub>+…+a<sub>ni</sub>b<sub>n</sub> — это в точности разложение определителя Δ<sub>i</sub> по столбцу B. Значит x<sub>i</sub> = Δ<sub>i</sub>/Δ. ∎</div>
+  </details>
+
+  <h4>Разобранный пример</h4>
+  <p>Решить систему: &nbsp; 2x + y = 5, &nbsp; x + 3y = 10.</p>
+  <div class="step">Δ = <span style="font-size:16px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>2</span><span>1</span><span>1</span><span>3</span></span><span style="font-size:16px">|</span> = 6 − 1 = 5 ≠ 0 — решение единственно.</div>
+  <div class="step">Δ<sub>x</sub> — заменяем 1-й столбец на (5, 10): <span style="font-size:16px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>5</span><span>1</span><span>10</span><span>3</span></span><span style="font-size:16px">|</span> = 15 − 10 = 5 ⟹ x = 5/5 = <b>1</b>.</div>
+  <div class="step">Δ<sub>y</sub> — заменяем 2-й столбец на (5, 10): <span style="font-size:16px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>2</span><span>5</span><span>1</span><span>10</span></span><span style="font-size:16px">|</span> = 20 − 5 = 15 ⟹ y = 15/5 = <b>3</b>.</div>
+  <div class="step">Проверка: 2·1 + 3 = 5 ✓, &nbsp; 1 + 3·3 = 10 ✓.</div>
+
+  <h3>Однородные системы (B = 0)</h3>
+  <div class="df"><span class="tag">Свойство</span>
+    <p>Однородная система A·X = 0 всегда имеет нулевое решение. Если <b>det A ≠ 0</b> — оно <b>единственное</b> (только нулевое). Если <b>det A = 0</b> — есть и <b>ненулевые</b> решения.</p>
+  </div>
+  <p class="note">Случай неквадратных систем и det A = 0 разбирается через ранг (глава «Ранг»).</p>
+</section>
+
+<section data-group="3 · Обратная и системы" data-new="1" data-t="Совместность (Кронекер–Капелли)" data-desc="Когда у системы есть решение: ранг A = ранг расширенной матрицы.">
+  <h3>Когда у системы вообще есть решение?</h3>
+  <div class="intu"><span class="tag">Три исхода</span>
+    <p>У системы бывает три варианта: <b>решений нет</b> (уравнения противоречат друг другу — из них выводится неверное равенство вроде 0 = 2), <b>ровно одно</b> решение, или <b>бесконечно много</b>. Какой именно — показывает сравнение двух рангов.</p>
+  </div>
+  <div class="leg"><b>Обозначения:</b> <b>A</b> — матрица коэффициентов (числа при неизвестных). <b>B</b> — столбец правых частей. <b>(A | B)</b> — «расширенная» матрица: к A дописан столбец B. <b>rang A</b> и <b>rang(A|B)</b> — их ранги. <b>n</b> — число неизвестных.</div>
+  <div class="df"><span class="tag">Теорема Кронекера–Капелли</span>
+    <p>Система имеет решение (совместна) <b>тогда и только тогда</b>, когда <b>rang A = rang(A | B)</b>. А дальше:</p>
+    <ul>
+      <li>rang A ≠ rang(A|B) ⟹ <b>решений нет</b> (несовместна);</li>
+      <li>rang A = rang(A|B) = n ⟹ <b>одно</b> решение;</li>
+      <li>rang A = rang(A|B) = r &lt; n ⟹ <b>бесконечно много</b> решений (свободных переменных n − r).</li>
+    </ul>
+  </div>
+  <div class="ex"><span class="tag">Пример 1 — решения есть</span>
+    <p>x + y = 3, &nbsp; 2x + 2y = 6. Расширенная: (A|B) = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>1</span><span>3</span><span>2</span><span>2</span><span>6</span></span></span>. Вся вторая строка = 2·первой, поэтому rang A = 1 и rang(A|B) = 1 — <b>равны</b>. Система совместна; так как r = 1 &lt; n = 2 — решений <b>бесконечно много</b> (второе уравнение ничего нового не даёт).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример 2 — решений нет</span>
+    <p>x + y = 3, &nbsp; 2x + 2y = 5. Расширенная: (A|B) = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>1</span><span>3</span><span>2</span><span>2</span><span>5</span></span></span>. В матрице A строки пропорциональны (rang A = 1), а в (A|B) из-за столбца (3, 5) — уже нет (rang(A|B) = 2). Ранги <b>разные</b> ⟹ решений нет.</p>
+    <p style="padding-left:12px"><b>Видно и напрямую:</b> вычтем из 2-го уравнения удвоенное 1-е: (2x + 2y) − 2(x + y) = 5 − 2·3 ⟹ <b>0 = −1</b> — противоречие. Решений нет.</p>
+  </div>
+</section>
+
+<section data-group="3 · Обратная и системы" data-new="1" data-t="Решение СЛАУ (r = n и r &lt; n)" data-desc="Алгоритм: квадратный случай по Крамеру и случай со свободными переменными.">
+  <h3>Случай r = n (Крамер)</h3>
+  <p>Если ранг равен числу неизвестных — квадратная матрица при неизвестных невырождена, и система решается по правилу Крамера: x<sub>i</sub> = Δ<sub>i</sub>/Δ. Решение единственное. Полные разборы 3×3 и 4×4 — в главе «Разборы задач».</p>
+
+  <h3>Случай r &lt; n (главные и свободные)</h3>
+  <div class="df"><span class="tag">Что делаем</span>
+    <p>Неизвестных больше, чем «реальных» уравнений (r). Часть неизвестных берём <b>главными</b> (их r — те, при которых стоит ненулевой минор), а остальные (n − r) объявляем <b>свободными</b> — им можно давать любые значения. Главные выражаем через свободные. Ответ — <b>общее решение</b> с параметрами.</p>
+  </div>
+  <h4>Разобранный пример</h4>
+  <p>Решим систему: &nbsp; x + 2y + z = 4, &nbsp; 2x + y − z = 5.</p>
+
+  <div class="step"><b>Шаг 0. Что за ситуация.</b> Уравнений <b>2</b>, а неизвестных <b>3</b> (x, y, z). Неизвестных больше, чем уравнений — одного решения быть не может, их <b>бесконечно много</b>. Значит одну переменную сделаем «свободной» (дадим ей любое значение), а две — «главными» (они подстроятся под свободную).</div>
+
+  <div class="step"><b>Шаг 1. Выбираем главные и свободную.</b> Главными берём те неизвестные, при которых получается ненулевой определитель. Попробуем x и y — их коэффициенты в двух уравнениях (1, 2 и 2, 1) дают:
+    <br>&nbsp;&nbsp;<span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>2</span><span>1</span></span></span> = 1·1 − 2·2 = −3 ≠ 0.
+    <br>Определитель не ноль ⟹ берём <b>x, y главными</b>, а оставшуюся <b>z — свободной</b>. (Главных должно быть r = 2, свободных n − r = 1.)</div>
+
+  <div class="step"><b>Шаг 2. Свободную z — в правую часть.</b> Чтобы относительно x, y осталась обычная система 2×2, переносим всё с z вправо:
+    <br>&nbsp;&nbsp;из 1-го: &nbsp;x + 2y + z = 4 &nbsp;→&nbsp; <b>x + 2y = 4 − z</b>;
+    <br>&nbsp;&nbsp;из 2-го: &nbsp;2x + y − z = 5 &nbsp;→&nbsp; <b>2x + y = 5 + z</b>.
+    <br>Теперь z сидит в правой части как <b>параметр</b> — число, которое мы пока не фиксируем.</div>
+
+  <div class="step"><b>Шаг 3. Главный определитель Δ.</b> Из коэффициентов при x, y (тот же, что в шаге 1):
+    <br>&nbsp;&nbsp;Δ = <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>2</span><span>1</span></span></span> = 1·1 − 2·2 = <b>−3</b>.</div>
+
+  <div class="step"><b>Шаг 4. Находим x.</b> В определителе Δ заменяем <b>1-й столбец</b> (коэффициенты при x) на правые части (4−z и 5+z):
+    <br>&nbsp;&nbsp;Δ<sub>x</sub> = <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>4−z</span><span>2</span><span>5+z</span><span>1</span></span></span> = (4−z)·1 − 2·(5+z) = 4 − z − 10 − 2z = <b>−6 − 3z</b>.
+    <br>&nbsp;&nbsp;x = <span class="frac"><span class="num">Δ<sub>x</sub></span><span class="den">Δ</span></span> = <span class="frac"><span class="num">−6 − 3z</span><span class="den">−3</span></span> = <b>2 + z</b>.</div>
+
+  <div class="step"><b>Шаг 5. Находим y.</b> Теперь заменяем <b>2-й столбец</b> (при y) на правые части:
+    <br>&nbsp;&nbsp;Δ<sub>y</sub> = <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>4−z</span><span>2</span><span>5+z</span></span></span> = 1·(5+z) − 2·(4−z) = 5 + z − 8 + 2z = <b>−3 + 3z</b>.
+    <br>&nbsp;&nbsp;y = <span class="frac"><span class="num">Δ<sub>y</sub></span><span class="den">Δ</span></span> = <span class="frac"><span class="num">−3 + 3z</span><span class="den">−3</span></span> = <b>1 − z</b>.</div>
+
+  <div class="step"><b>Шаг 6. Записываем общее решение.</b> Получили x = 2 + z, y = 1 − z, а z осталась свободной (z = z). Итог:
+    <br>&nbsp;&nbsp;<b>(x, y, z) = (2 + z, &nbsp; 1 − z, &nbsp; z)</b>, &nbsp; где z — любое число.</div>
+
+  <div class="step"><b>Шаг 7. Откуда берутся конкретные решения.</b> Подставляем в формулу разные z — и каждый раз получаем готовое решение. Их бесконечно много:
+    <br>&nbsp;&nbsp;z = 0 &nbsp;→&nbsp; (2, 1, 0); &nbsp;&nbsp; z = 1 &nbsp;→&nbsp; (3, 0, 1); &nbsp;&nbsp; z = −1 &nbsp;→&nbsp; (1, 2, −1).</div>
+
+  <div class="step"><b>Шаг 8. Проверка.</b> Берём (2, 1, 0): 2 + 2·1 + 0 = 4 ✓, &nbsp; 2·2 + 1 − 0 = 5 ✓. Берём (3, 0, 1): 3 + 0 + 1 = 4 ✓, &nbsp; 2·3 + 0 − 1 = 5 ✓. Оба подходят — значит формула верна.</div>
+</section>
+
+<!-- ================= ГЛАВА 4. РАНГ И ПРЕОБРАЗОВАНИЯ ================= -->
+<section data-group="4 · Ранг и преобразования" data-new="1" data-t="Линейная зависимость строк" data-desc="Линейная комбинация, ЛНЗ/ЛЗ системы, теорема «одна строка = комбинация остальных».">
+  <h3>Что значит «зависимы» — на числах</h3>
+  <div class="intu"><span class="tag">Идея</span>
+    <p>Строки <b>зависимы</b>, если одна из них «повторяет» другие — выражается через них. Тогда она не несёт новой информации. Если же ни одна не выражается через другие — строки <b>независимы</b>. Сначала два примера с числами, потом аккуратные определения.</p>
+  </div>
+
+  <div class="ex"><span class="tag">Пример 1 — ЗАВИСИМЫЕ</span>
+    <p>Строки a = (1, 2) и b = (2, 4). Видно, что b = 2·a. Проверим, что их комбинация может обнулиться не тривиально:</p>
+    <p style="padding-left:12px">2·a − 1·b = 2·(1, 2) − 1·(2, 4) = (2, 4) − (2, 4) = (0, 0).</p>
+    <p>Коэффициенты (2, −1) <b>не нулевые</b>, а сумма = 0 ⟹ строки <b>линейно зависимы</b>.</p>
+  </div>
+
+  <div class="ex"><span class="tag">Пример 2 — НЕЗАВИСИМЫЕ</span>
+    <p>Строки a = (1, 2) и b = (3, 1). Попробуем подобрать α, β так, чтобы α·a + β·b = (0, 0):</p>
+    <p style="padding-left:12px">α·(1, 2) + β·(3, 1) = (α + 3β, &nbsp; 2α + β) = (0, 0) ⟹ &nbsp; α + 3β = 0 &nbsp;и&nbsp; 2α + β = 0.</p>
+    <p style="padding-left:12px">Из первого: α = −3β. Подставляем во второе: 2·(−3β) + β = −5β = 0 ⟹ β = 0, тогда и α = 0.</p>
+    <p>Обнулить можно <b>только нулевыми</b> коэффициентами ⟹ строки <b>линейно независимы</b>.</p>
+  </div>
+
+  <h3>Теперь строгие определения</h3>
+  <div class="df"><span class="tag">Линейная комбинация</span>
+    <p>Для строк a<sub>1</sub>, …, a<sub>n</sub> выражение α<sub>1</sub>a<sub>1</sub> + α<sub>2</sub>a<sub>2</sub> + … + α<sub>n</sub>a<sub>n</sub> (α<sub>i</sub> — числа) — их <b>линейная комбинация</b>. В примерах это было «2a − 1b» и «αa + βb».</p>
+  </div>
+  <div class="df"><span class="tag">Независимость и зависимость</span>
+    <p><b>Линейно независимы</b> (ЛНЗ): равенство α<sub>1</sub>a<sub>1</sub> + … + α<sub>n</sub>a<sub>n</sub> = 0 возможно <b>только при всех α<sub>i</sub> = 0</b> (как в примере 2). Такая «нулевая» комбинация — <b>тривиальная</b>.</p>
+    <p><b>Линейно зависимы</b> (ЛЗ): нашлись коэффициенты, <b>не все нулевые</b>, с нулевой суммой (как в примере 1 — коэффициенты 2 и −1). Такая комбинация — <b>нетривиальная</b>.</p>
+  </div>
+  <div class="note">Если среди строк есть <b>нулевая</b> строка (0, 0, …) — система всегда зависима: берём её с коэффициентом 1, остальные с нулями, сумма = 0 при ненулевом коэффициенте.</div>
+
+  <div class="df"><span class="tag">Теорема</span>
+    <p>Строки линейно зависимы <b>тогда и только тогда</b>, когда <b>одна из них выражается через остальные</b> (является их линейной комбинацией).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример к теореме — три строки</span>
+    <p>Матрица A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(4,auto)"><span>3</span><span>2</span><span>1</span><span>2</span><span>2</span><span>0</span><span>−1</span><span>1</span><span>0</span><span>4</span><span>5</span><span>1</span></span></span>, строки: e<sub>1</sub> = (3,2,1,2), e<sub>2</sub> = (2,0,−1,1), e<sub>3</sub> = (0,4,5,1).</p>
+    <p style="padding-left:12px">2·e<sub>1</sub> − 3·e<sub>2</sub> = (6,4,2,4) − (6,0,−3,3) = (0, 4, 5, 1) = e<sub>3</sub>.</p>
+    <p>Значит e<sub>3</sub> = 2e<sub>1</sub> − 3e<sub>2</sub> — третья строка выражается через первые две ⟹ строки <b>зависимы</b>. Независимых строк всего две — поэтому у матрицы ранг = 2.</p>
+  </div>
+</section>
+
+<!-- ранее: Ранг: что это -->
+<section data-group="4 · Ранг и преобразования" data-t="Ранг: что это (на примере)" data-desc="Ранг, минор порядка r, главный и базисный минор — каждое понятие на конкретной матрице.">
+  <h3>Что такое ранг</h3>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Ранг показывает, сколько в матрице <b>«независимых» строк (или столбцов)</b> — сколько реальной информации в ней после отбрасывания строк, которые выражаются через другие. От него зависит число решений системы.</p>
+  </div>
+  <p>Будем всё показывать на одной матрице. Возьмём <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>2</span><span>1</span><span>3</span><span>0</span><span>1</span><span>1</span><span>2</span><span>3</span><span>5</span></span></span> — заметим, что 3-я строка = 1-я + 2·(2-я): (2, 3, 5) = (2, 1, 3) + 2·(0, 1, 1). То есть одна строка «лишняя».</p>
+
+  <div class="df"><span class="tag">Определение 1 — ранг</span>
+    <p><b>Ранг</b> матрицы — <b>наивысший порядок её минора, отличного от нуля</b>. (Минор — это определитель квадратного «кусочка» матрицы.) Обозначение: rang A, rg A, r.</p>
+  </div>
+  <div class="ex"><span class="tag">Что значит «минор порядка r»</span>
+    <p><b>Минор порядка 1</b> — просто один элемент, например a<sub>11</sub> = 2.</p>
+    <p><b>Минор порядка 2</b> — определитель из любых 2 строк и 2 столбцов. Например, строки 1,2 и столбцы 1,3: <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>3</span><span>0</span><span>1</span></span></span> = 2·1 − 3·0 = <b>2</b>.</p>
+    <p><b>Минор порядка 3</b> — весь определитель (строки и столбцы 1,2,3): он равен <b>0</b> (третья строка зависима).</p>
+  </div>
+
+  <div class="df"><span class="tag">Определение 2 — главный минор</span>
+    <p><b>Главный минор</b> — тот, что стоит в <b>левом верхнем углу</b> (строки и столбцы 1…r).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> Главный минор порядка 2 нашей матрицы: <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>1</span></span></span> = 2·1 − 1·0 = <b>2</b> ≠ 0.</div>
+
+  <h3>Находим ранг нашей матрицы</h3>
+  <div class="step">Есть ненулевой минор порядка 2 (=2), значит ранг ≥ 2.</div>
+  <div class="step">Единственный минор порядка 3 (весь определитель) = 0. Минора порядка 3, отличного от нуля, нет.</div>
+  <div class="step">Значит наивысший порядок ненулевого минора = 2 ⟹ <b>ранг = 2</b> (как и ожидали: две независимые строки, третья лишняя).</div>
+
+  <div class="df"><span class="tag">Определение 3 — базисный минор</span>
+    <p><b>Базисный минор</b> — любой ненулевой минор порядка r (равного рангу). Все миноры бо́льших порядков — нулевые.</p>
+  </div>
+  <div class="ex"><span class="tag">Базисный минор — не один</span>
+    <p>У нас r = 2. Базисным будет, например, <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>1</span></span></span> = 2 (строки 1,2, столбцы 1,2).</p>
+    <p>Но подойдёт и другой — из строк 2,3 и столбцов 2,3: <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>1</span><span>3</span><span>5</span></span></span> = 5 − 3 = 2 ≠ 0. Тоже базисный.</p>
+    <p>Поэтому базисный минор определяется <b>не единственным образом</b> — их может быть несколько.</p>
+  </div>
+</section>
+
+<section data-group="4 · Ранг и преобразования" data-t="Вычисление ранга (окаймляющие)" data-desc="Метод окаймляющих миноров: полный разбор на матрице 3×4.">
+  <h3>Правило окаймляющих миноров</h3>
+  <div class="df"><span class="tag">Правило</span>
+    <p>Идём от малых порядков к бо́льшим. Нашли ненулевой минор порядка r — проверяем только те миноры порядка r+1, что <b>окаймляют</b> его (добавляют к нему одну строку и один столбец). Если <b>все</b> окаймляющие миноры порядка r+1 равны нулю — ранг = r. Это экономит перебор.</p>
+  </div>
+
+  <h4>Полный разбор</h4>
+  <p>Найти ранг A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(4,auto)"><span>3</span><span>2</span><span>1</span><span>2</span><span>2</span><span>0</span><span>−1</span><span>1</span><span>0</span><span>4</span><span>5</span><span>1</span></span></span> &nbsp;(3 строки, 4 столбца ⟹ ранг ≤ 3).</p>
+  <div class="step"><b>Порядок 1:</b> элемент 3 ≠ 0 ⟹ ранг ≥ 1.</div>
+  <div class="step"><b>Порядок 2:</b> берём строки 1,2 и столбцы 1,2: <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>2</span><span>2</span><span>0</span></span></span> = 3·0 − 2·2 = −4 ≠ 0 ⟹ ранг ≥ 2. Это наш «опорный» (базисный) минор.</div>
+  <div class="step"><b>Порядок 3:</b> окаймляем его — берём все 3 строки и добавляем к столбцам 1,2 по одному из оставшихся (3 или 4). Плюс проверим и другие тройки столбцов. Всего 4 минора 3×3:</div>
+  <div class="step">столбцы (1,2,3): <span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:13px"><span>3</span><span>2</span><span>1</span><span>2</span><span>0</span><span>−1</span><span>0</span><span>4</span><span>5</span></span></span> = 3·(0·5 − (−1)·4) − 2·(2·5 − (−1)·0) + 1·(2·4 − 0·0) = 12 − 20 + 8 = <b>0</b></div>
+  <div class="step">столбцы (1,2,4): = −12 − 4 + 16 = 0; &nbsp; столбцы (1,3,4): = −18 − 2 + 20 = 0; &nbsp; столбцы (2,3,4): = −12 + 4 + 8 = 0.</div>
+  <div class="step"><b>Все</b> миноры 3-го порядка равны нулю ⟹ наивысший ненулевой порядок = 2 ⟹ <b>ранг = 2</b>.</div>
+  <p class="note">Смысл: третья строка выражается через первые две, «новой информации» она не несёт — поэтому независимых строк ровно 2.</p>
+</section>
+
+<section data-group="4 · Ранг и преобразования" data-new="1" data-t="Теорема о ранге (базисный минор)" data-desc="Ранг = число независимых строк; теорема о базисном миноре; критерий det A = 0.">
+  <h3>Связь ранга с линейной зависимостью</h3>
+  <div class="df"><span class="tag">Теорема о базисном миноре</span>
+    <p>Строки (и столбцы), на которых стоит <b>базисный минор</b>, <b>линейно независимы</b>, а <b>каждая другая</b> строка — их линейная комбинация.</p>
+  </div>
+  <div class="ex"><span class="tag">Покажем на числах</span>
+    <p>Берём A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(4,auto)"><span>3</span><span>2</span><span>1</span><span>2</span><span>2</span><span>0</span><span>−1</span><span>1</span><span>0</span><span>4</span><span>5</span><span>1</span></span></span>. Ранг = 2, значит базисный минор — порядка 2. Возьмём его на <b>строках 1, 2</b> и <b>столбцах 1, 2</b> (левый верхний угол, выделен):</p>
+    <p style="padding-left:12px">базисный минор = <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>2</span><span>2</span><span>0</span></span></span> = 3·0 − 2·2 = −4 ≠ 0.</p>
+    <p>Он стоит на строках 1 и 2 — по теореме <b>эти две строки независимы</b>. А строка 3 выражается через них:</p>
+    <p style="padding-left:12px">строка 3 = 2·(строка 1) − 3·(строка 2): &nbsp; 2·(3,2,1,2) − 3·(2,0,−1,1) = (0, 4, 5, 1) ✓ — это и есть строка 3.</p>
+  </div>
+  <div class="df"><span class="tag">Теорема о ранге</span>
+    <p>Ранг = <b>максимальному числу линейно независимых строк</b> (= независимых столбцов).</p>
+    <div class="formula">макс. число ЛНЗ строк = макс. число ЛНЗ столбцов = rang A</div>
+    <p>В нашем примере: независимых строк 2 (строки 1 и 2), значит ранг = 2.</p>
+  </div>
+
+  <h3>Критерий det A = 0</h3>
+  <div class="df"><span class="tag">Теорема</span>
+    <p>Для квадратной матрицы: <b>det A = 0 ⟺ строки (столбцы) линейно зависимы</b>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример — на числах</span>
+    <p>Матрица B = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>2</span><span>4</span><span>6</span><span>0</span><span>1</span><span>2</span></span></span>. Посчитаем определитель (Саррюс):</p>
+    <p style="padding-left:12px">det B = (1·4·2 + 2·6·0 + 3·2·1) − (3·4·0 + 1·6·1 + 2·2·2) = (8 + 0 + 6) − (0 + 6 + 8) = 14 − 14 = <b>0</b>.</p>
+    <p>И правда: строка 2 = 2·(строка 1), ведь (2, 4, 6) = 2·(1, 2, 3) — строки <b>зависимы</b>. Как и говорит критерий: det = 0 ⟺ строки зависимы.</p>
+  </div>
+  <div class="intu"><span class="tag">Почему так</span>
+    <p>Если det A ≠ 0, весь определитель — базисный минор порядка n, и все n строк независимы. Если det A = 0, то ранг &lt; n — независимых строк меньше, какая-то выражается через другие (зависимость). Это связывает свойство 5 определителей, ранг и линейную зависимость в одно.</p>
+  </div>
+</section>
+
+<section data-group="4 · Ранг и преобразования" data-t="Элементарные преобразования" data-desc="Четыре типа — каждый с примером; эквивалентные матрицы; ранг не меняется.">
+  <h3>Четыре типа преобразований</h3>
+  <p>Это «разрешённые» действия над матрицей, которыми её упрощают. Покажем каждый на числах.</p>
+  <div class="ex"><span class="tag">Тип 1 — перестановка строк/столбцов</span>
+    <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>4</span></span></span> <span class="op">→ (поменяли строки) →</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>4</span><span>1</span><span>2</span></span></span>
+  </div>
+  <div class="ex"><span class="tag">Тип 2 — умножение строки/столбца на λ ≠ 0</span>
+    <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>4</span><span>1</span><span>3</span></span></span> <span class="op">→ (1-ю строку ×½) →</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>1</span><span>3</span></span></span>
+  </div>
+  <div class="ex"><span class="tag">Тип 3 — прибавление другой строки, умноженной на λ</span>
+    <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>4</span></span></span> <span class="op">→ (R₂ − 3·R₁) →</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>0</span><span>−2</span></span></span> &nbsp;(это главный рабочий приём — им «зануляют»)
+  </div>
+  <div class="ex"><span class="tag">Тип 4 — транспонирование</span>
+    <span class="mat"><span class="grid" style="grid-template-columns:auto auto auto"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></span></span> <span class="op">→</span> <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>4</span><span>2</span><span>5</span><span>3</span><span>6</span></span></span>
+  </div>
+  <div class="df"><span class="tag">Эквивалентные матрицы</span>
+    <p>Матрицы A и B <b>эквивалентны</b> (A ~ B), если одна получается из другой конечным числом таких преобразований.</p>
+  </div>
+  <div class="df"><span class="tag">Ключевая теорема</span>
+    <p>Элементарные преобразования <b>не меняют ранг</b> матрицы. Поэтому ими можно свободно упрощать матрицу и считать ранг у простой — он будет тот же.</p>
+  </div>
+</section>
+
+<section data-group="4 · Ранг и преобразования" data-t="Канонический вид и ранг" data-desc="Приведение к ступенчатому/каноническому виду и подсчёт ранга — полный пример.">
+  <h3>Канонический вид</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Каноническая</b> матрица — та, у которой в начале главной диагонали стоят несколько единиц, а всё остальное — нули. Например <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>0</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span></span></span> — две единицы.</p>
+  </div>
+  <div class="df"><span class="tag">Утверждение</span>
+    <p>Любую матрицу элементарными преобразованиями приводят к каноническому (или ступенчатому) виду, и тогда <b>ранг = числу единиц</b> на диагонали = числу <b>ненулевых строк</b>. Это второй способ считать ранг — обычно быстрее перебора миноров.</p>
+  </div>
+
+  <h4>Полный разбор: приводим к ступенчатому виду</h4>
+  <p>Найти ранг B = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>1</span><span>2</span><span>3</span><span>3</span><span>3</span><span>5</span><span>4</span></span></span>.</p>
+  <div class="step"><b>Шаг 1.</b> Обнуляем первый столбец под единицей (тип 3): R₂ − 2·R₁ = (0, −1, 1); R₃ − 3·R₁ = (0, −1, 1). Получаем <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>1</span><span>0</span><span>−1</span><span>1</span><span>0</span><span>−1</span><span>1</span></span></span></div>
+  <div class="step"><b>Шаг 2.</b> Вторая и третья строки стали одинаковыми: R₃ − R₂ = (0, 0, 0). Получаем ступенчатый вид <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>1</span><span>0</span><span>−1</span><span>1</span><span>0</span><span>0</span><span>0</span></span></span></div>
+  <div class="step"><b>Шаг 3.</b> Ненулевых строк — <b>две</b> ⟹ <b>ранг B = 2</b>.</div>
+  <p class="note">Одна нулевая строка появилась не случайно: строка (3, 5, 4) выражалась через первые две. Именно такие «лишние» строки метод и обнуляет. Хочешь совсем канонический вид — домножь 2-ю строку на −1 и вычисти двойку в первой строке; единиц по-прежнему две, ранг 2.</p>
+</section>
+
+<!-- ================= ГЛАВА 5. РАЗБОРЫ ЗАДАЧ ================= -->
+<section data-group="5 · Разборы задач" data-t="Действия и умножение" data-desc="Сложение, умножение матриц поэлементно, некоммутативность, многочлен от матрицы.">
+  <h3>Задача 1. Сложение и умножение на число</h3>
+  <p>Найти 2A − B, A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>0</span><span>3</span></span></span>, B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>4</span><span>1</span><span>2</span><span>5</span></span></span>.</p>
+  <div class="step">2A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>4</span><span>0</span><span>6</span></span></span>; &nbsp; 2A − B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2−4</span><span>4−1</span><span>0−2</span><span>6−5</span></span></span> = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−2</span><span>3</span><span>−2</span><span>1</span></span></span></b></div>
+
+  <h3>Задача 2. Умножение A·B (поэлементно)</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>4</span></span></span>, B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−1</span><span>0</span><span>2</span><span>3</span></span></span>.</p>
+  <div class="step">c₁₁ = 1·(−1)+2·2 = 3; &nbsp; c₁₂ = 1·0+2·3 = 6; &nbsp; c₂₁ = 3·(−1)+4·2 = 5; &nbsp; c₂₂ = 3·0+4·3 = 12.</div>
+  <div class="step">A·B = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>6</span><span>5</span><span>12</span></span></span></b></div>
+
+  <h3>Задача 3. Некоммутативность: B·A</h3>
+  <div class="step">c₁₁ = −1·1+0·3 = −1; c₁₂ = −1·2+0·4 = −2; c₂₁ = 2·1+3·3 = 11; c₂₂ = 2·2+3·4 = 16.</div>
+  <div class="step">B·A = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−1</span><span>−2</span><span>11</span><span>16</span></span></span></b> ≠ A·B — умножение <b>не коммутативно</b>.</div>
+
+  <h3>Задача 4. Прямоугольные 2×3 · 3×2</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></span></span>, B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span></span></span>.</p>
+  <div class="step">c₁₁ = 1+0+3 = 4; c₁₂ = 0+2+3 = 5; c₂₁ = 4+0+6 = 10; c₂₂ = 0+5+6 = 11 ⟹ <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>4</span><span>5</span><span>10</span><span>11</span></span></span></b></div>
+
+  <h3>Задача 5. Многочлен f(A) = 3A² − 4</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>3</span></span></span>.</p>
+  <div class="step">A² = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>4</span><span>5</span><span>0</span><span>9</span></span></span>; &nbsp; 3A² = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>12</span><span>15</span><span>0</span><span>27</span></span></span>; &nbsp; 4E = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>4</span><span>0</span><span>0</span><span>4</span></span></span>.</div>
+  <div class="step">f(A) = 3A² − 4E = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>8</span><span>15</span><span>0</span><span>23</span></span></span></b></div>
+</section>
+
+<section data-group="5 · Разборы задач" data-t="Определители (в т.ч. 4×4)" data-desc="Уравнение с 2×2, 3×3 двумя способами, свойства, 4×4 приёмы (2.56, 2.58).">
+  <h3>Задача 6. Уравнение с определителем 2×2</h3>
+  <p>Решить <span style="font-size:18px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>x</span><span>x+1</span><span>−4</span><span>x+1</span></span><span style="font-size:18px">|</span> = 0.</p>
+  <div class="step">x(x+1) − (x+1)(−4) = 0 ⟹ x² + 5x + 4 = 0 ⟹ D = 9 ⟹ x₁ = <b>−1</b>, x₂ = <b>−4</b>.</div>
+
+  <h3>Задача 7. Определитель 3×3 двумя способами</h3>
+  <p>Δ = <span style="font-size:18px">|</span><span class="grid" style="grid-template-columns:repeat(3,auto);display:inline-grid;vertical-align:middle"><span>2</span><span>1</span><span>0</span><span>1</span><span>3</span><span>1</span><span>0</span><span>2</span><span>1</span></span><span style="font-size:18px">|</span></p>
+  <div class="step"><b>Саррюс:</b> прямые 6 + 0 + 0 = 6, обратные 0 + 4 + 1 = 5 ⟹ Δ = 6 − 5 = <b>1</b>.</div>
+  <div class="step"><b>Разложение по 1-й строке:</b> 2·(3·1−1·2) − 1·(1·1−1·0) + 0 = 2·1 − 1 = <b>1</b>.</div>
+
+  <h3>Задача 8. Быстрый счёт через свойства</h3>
+  <div class="step"><span style="font-size:16px">|</span><span class="grid" style="grid-template-columns:auto auto;display:inline-grid;vertical-align:middle"><span>2</span><span>4</span><span>3</span><span>6</span></span><span style="font-size:16px">|</span>: строки (2,4) и (3,6) пропорциональны ⟹ по свойству 5 определитель = <b>0</b>.</div>
+
+  <h3>Задача 9. Критерий det = 0 (доказательство)</h3>
+  <details><summary>Показать</summary>
+    <div class="step"><b>Достаточность:</b> c = ka, d = kb ⟹ ad − bc = a·kb − b·ka = 0.</div>
+    <div class="step"><b>Необходимость:</b> ad = bc; при a ≠ 0 берём k = c/a, тогда c = ka, d = kb — строки пропорциональны.</div>
+  </details>
+
+  <h3>Задача 10. Определитель 4×4 (№ 2.56)</h3>
+  <p>Δ = <span style="font-size:16px">|</span><span class="grid" style="grid-template-columns:repeat(4,auto);display:inline-grid;vertical-align:middle;font-size:13px"><span>2</span><span>3</span><span>−3</span><span>4</span><span>2</span><span>1</span><span>−1</span><span>2</span><span>6</span><span>2</span><span>1</span><span>0</span><span>2</span><span>3</span><span>0</span><span>−5</span></span><span style="font-size:16px">|</span></p>
+  <div class="step"><b>Приём:</b> обнуляем первый столбец строкой IV. I−IV = (0,0,−3,9); II−IV = (0,−2,−1,7); III−3·IV = (0,−7,1,15); IV остаётся.</div>
+  <div class="step">Раскладываем по 1-му столбцу (ненулевая только 2 в позиции (4,1), знак минус): Δ = 2·(−1)·<span style="font-size:15px">|</span><span class="grid" style="grid-template-columns:repeat(3,auto);display:inline-grid;vertical-align:middle;font-size:13px"><span>0</span><span>−3</span><span>9</span><span>−2</span><span>−1</span><span>7</span><span>−7</span><span>1</span><span>15</span></span><span style="font-size:15px">|</span>.</div>
+  <div class="step">3×3 = 129 − 153 = −24 ⟹ Δ = −2·(−24) = <b>48</b>.</div>
+
+  <h3>Задача 11. Определитель 4×4 с корнями (№ 2.58)</h3>
+  <details><summary>Показать (приём «вынести общий множитель»)</summary>
+    <div class="step">Из столбцов выносим √2, √3, √5, √3 (всего √90 = 3√10). Остаётся 4×4 с числами 1, √3, √7 …</div>
+    <div class="step">В строке единиц вычитаем 1-й столбец из остальных ⟹ появляются нули ⟹ раскладываем ⟹ сводится к 2×2, который даёт 3.</div>
+    <div class="step">Δ = 3√10 · 3(√3 − √2) = <b>9√30 − 18√5</b> = 9√5(√6 − 2) ≈ 9,05.</div>
+    <div class="step">⚠ Типичная ошибка: после выноса множителей строки 3 и 4 <b>не</b> становятся одинаковыми (последние элементы √2/√5 ≠ √5/√2) — значит ответ не 0.</div>
+  </details>
+</section>
+
+<section data-group="5 · Разборы задач" data-t="Обратная и уравнения" data-desc="Обратная 2×2 и 3×3, матричные уравнения обоих типов.">
+  <h3>Задача 12. Обратная 2×2</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>5</span><span>3</span></span></span>. |A| = 2·3 − 1·5 = 1.</p>
+  <div class="step">Дополнения: A₁₁=3, A₁₂=−5, A₂₁=−1, A₂₂=2. Союзная A* = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>−1</span><span>−5</span><span>2</span></span></span>.</div>
+  <div class="step">A⁻¹ = <span class="frac"><span class="num">1</span><span class="den">1</span></span>·A* = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>−1</span><span>−5</span><span>2</span></span></span></b>. Проверка A·A⁻¹ = E ✓.</div>
+  <p class="note">Быстрая формула 2×2: A⁻¹ = <span class="frac"><span class="num">1</span><span class="den">ad−bc</span></span>·<span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>d</span><span>−b</span><span>−c</span><span>a</span></span></span>.</p>
+
+  <h3>Задача 13. Обратная 3×3</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>0</span><span>1</span><span>4</span><span>5</span><span>6</span><span>0</span></span></span>.</p>
+  <div class="step"><b>Шаг 1.</b> |A| = 1·(0−24) − 2·(0−20) + 3·(0−5) = −24 + 40 − 15 = <b>1</b>.</div>
+  <div class="step"><b>Шаг 2.</b> Дополнения: A₁₁=−24, A₁₂=20, A₁₃=−5; A₂₁=18, A₂₂=−15, A₂₃=4; A₃₁=5, A₃₂=−4, A₃₃=1.</div>
+  <div class="step"><b>Шаг 3.</b> Союзная (транспонируем матрицу дополнений): A* = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>−24</span><span>18</span><span>5</span><span>20</span><span>−15</span><span>−4</span><span>−5</span><span>4</span><span>1</span></span></span>.</div>
+  <div class="step"><b>Шаг 4.</b> A⁻¹ = A*/1 = <b><span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>−24</span><span>18</span><span>5</span><span>20</span><span>−15</span><span>−4</span><span>−5</span><span>4</span><span>1</span></span></span></b>. Проверка: 1-я строка A × 1-й столбец A⁻¹ = −24+40−15 = 1 ✓.</div>
+
+  <h3>Задача 14. Уравнение A·X = B (тип 1)</h3>
+  <p>A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>5</span></span></span>, B = <span class="mat"><span class="grid" style="grid-template-columns:auto"><span>1</span><span>2</span></span></span>. A слева ⟹ X = A⁻¹·B.</p>
+  <div class="step">|A| = −1 ⟹ A⁻¹ = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−5</span><span>2</span><span>3</span><span>−1</span></span></span>.</div>
+  <div class="step">X = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−5</span><span>2</span><span>3</span><span>−1</span></span></span>·<span class="mat"><span class="grid" style="grid-template-columns:auto"><span>1</span><span>2</span></span></span> = <b><span class="mat"><span class="grid" style="grid-template-columns:auto"><span>−1</span><span>1</span></span></span></b>. Проверка A·X = B ✓.</div>
+
+  <h3>Задача 15. Уравнение Y·A = B (тип 2)</h3>
+  <p>Та же A, B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>0</span></span></span>. A справа ⟹ Y = B·A⁻¹.</p>
+  <div class="step">Y = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>0</span></span></span>·<span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−5</span><span>2</span><span>3</span><span>−1</span></span></span> = <b><span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−5</span><span>2</span></span></span></b>. Проверка Y·A = B ✓.</div>
+  <p class="note">Сравни 14 и 15: A и B похожие, но домножение слева/справа даёт разные ответы — вот важность стороны.</p>
+</section>
+
+<section data-group="5 · Разборы задач" data-new="1" data-t="Система по Крамеру 3×3" data-desc="Полный разбор системы из трёх уравнений по правилу Крамера.">
+  <h2>Система 3×3 по правилу Крамера</h2>
+  <p>Решим систему:</p>
+  <div class="formula" style="font-size:16px">
+    x + y + z = 6<br>2x − y + z = 3<br>x + 2y − z = 2
+  </div>
+  <div class="leg"><b>Что за обозначения:</b> <b>Δ</b> — определитель из коэффициентов при x, y, z (матрица системы). <b>Δ<sub>x</sub></b> — тот же определитель, но первый столбец заменён на столбец правых частей (6, 3, 2); аналогично Δ<sub>y</sub> (заменяем 2-й столбец), Δ<sub>z</sub> (3-й). Тогда <b>x = Δ<sub>x</sub>/Δ</b>, y = Δ<sub>y</sub>/Δ, z = Δ<sub>z</sub>/Δ.</div>
+
+  <h4>Шаг 1. Главный определитель Δ</h4>
+  <p>Выписываем коэффициенты (по столбцам — при x, при y, при z) и считаем определитель разложением по первой строке:</p>
+  <div class="step">Δ = <span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>1</span><span>1</span><span>2</span><span>−1</span><span>1</span><span>1</span><span>2</span><span>−1</span></span></span> = 1·<span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>−1</span><span>1</span><span>2</span><span>−1</span></span></span> − 1·<span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>1</span><span>−1</span></span></span> + 1·<span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>−1</span><span>1</span><span>2</span></span></span></div>
+  <div class="step">= 1·(1 − 2) − 1·(−2 − 1) + 1·(4 + 1) = −1 + 3 + 5 = <b>7</b>. Δ ≠ 0 — значит решение единственно.</div>
+
+  <h4>Шаг 2. Δ<sub>x</sub> (1-й столбец → правые части 6, 3, 2)</h4>
+  <div class="step">Δ<sub>x</sub> = <span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>6</span><span>1</span><span>1</span><span>3</span><span>−1</span><span>1</span><span>2</span><span>2</span><span>−1</span></span></span> = 6·(1 − 2) − 1·(−3 − 2) + 1·(6 + 2) = −6 + 5 + 8 = <b>7</b></div>
+  <div class="step">⟹ x = <span class="frac"><span class="num">Δ<sub>x</sub></span><span class="den">Δ</span></span> = <span class="frac"><span class="num">7</span><span class="den">7</span></span> = <b>1</b>.</div>
+
+  <h4>Шаг 3. Δ<sub>y</sub> (2-й столбец → 6, 3, 2)</h4>
+  <div class="step">Δ<sub>y</sub> = <span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>6</span><span>1</span><span>2</span><span>3</span><span>1</span><span>1</span><span>2</span><span>−1</span></span></span> = 1·(−3 − 2) − 6·(−2 − 1) + 1·(4 − 3) = −5 + 18 + 1 = <b>14</b> ⟹ y = <span class="frac"><span class="num">14</span><span class="den">7</span></span> = <b>2</b>.</div>
+
+  <h4>Шаг 4. Δ<sub>z</sub> (3-й столбец → 6, 3, 2)</h4>
+  <div class="step">Δ<sub>z</sub> = <span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>1</span><span>6</span><span>2</span><span>−1</span><span>3</span><span>1</span><span>2</span><span>2</span></span></span> = 1·(−2 − 6) − 1·(4 − 3) + 6·(4 + 1) = −8 − 1 + 30 = <b>21</b> ⟹ z = <span class="frac"><span class="num">21</span><span class="den">7</span></span> = <b>3</b>.</div>
+
+  <div class="step"><b>Ответ:</b> (x, y, z) = (1, 2, 3). <b>Проверка:</b> 1 + 2 + 3 = 6 ✓, &nbsp; 2 − 2 + 3 = 3 ✓, &nbsp; 1 + 4 − 3 = 2 ✓.</div>
+</section>
+
+<section data-group="5 · Разборы задач" data-new="1" data-t="Система по Крамеру 4×4" data-desc="Полный разбор системы из четырёх уравнений: как считать определители 4×4.">
+  <h2>Система 4×4 по правилу Крамера</h2>
+  <p>Решим систему из четырёх уравнений:</p>
+  <div class="formula" style="font-size:15px">
+    2x₁ + x₂ = 4<br>x₁ + 2x₂ + x₃ = 8<br>x₂ + 2x₃ + x₄ = 12<br>x₃ + 2x₄ = 11
+  </div>
+  <p>Матрица коэффициентов A и правые части B:</p>
+  <div class="step">A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(4,auto)"><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span></span></span>, &nbsp; B = (4, 8, 12, 11). &nbsp; Та же схема: x<sub>i</sub> = Δ<sub>i</sub>/Δ, где Δ<sub>i</sub> — Δ с i-м столбцом, заменённым на B.</div>
+
+  <h4>Шаг 1. Главный определитель Δ</h4>
+  <div class="step">Δ = <span class="det"><span class="grid" style="grid-template-columns:repeat(4,auto);font-size:14px"><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>0</span><span>1</span><span>2</span></span></span>. Раскладываем по первой строке (два нуля): Δ = 2·<span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:13px"><span>2</span><span>1</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>1</span><span>2</span></span></span> − 1·<span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:13px"><span>1</span><span>1</span><span>0</span><span>0</span><span>2</span><span>1</span><span>0</span><span>1</span><span>2</span></span></span></div>
+  <div class="step">Первый 3×3 = 2·(4−1) − 1·(2−0) + 0 = 6 − 2 = 4; второй 3×3 = 1·(4−1) − 1·(0−0) + 0 = 3. Значит Δ = 2·4 − 1·3 = <b>5</b> ≠ 0.</div>
+
+  <h4>Шаг 2. Δ₁ (1-й столбец → B)</h4>
+  <div class="step">Δ₁ = <span class="det"><span class="grid" style="grid-template-columns:repeat(4,auto);font-size:14px"><span>4</span><span>1</span><span>0</span><span>0</span><span>8</span><span>2</span><span>1</span><span>0</span><span>12</span><span>1</span><span>2</span><span>1</span><span>11</span><span>0</span><span>1</span><span>2</span></span></span> = 4·<span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:13px"><span>2</span><span>1</span><span>0</span><span>1</span><span>2</span><span>1</span><span>0</span><span>1</span><span>2</span></span></span> − 1·<span class="det"><span class="grid" style="grid-template-columns:repeat(3,auto);font-size:13px"><span>8</span><span>1</span><span>0</span><span>12</span><span>2</span><span>1</span><span>11</span><span>1</span><span>2</span></span></span></div>
+  <div class="step">= 4·4 − 1·(8·3 − 1·13) = 16 − 1·(24 − 13) = 16 − 11 = <b>5</b> ⟹ x₁ = <span class="frac"><span class="num">5</span><span class="den">5</span></span> = <b>1</b>.</div>
+
+  <h4>Шаг 3. Остальные столбцы</h4>
+  <div class="step">Δ₂ = 10, Δ₃ = 15, Δ₄ = 20 (считаются точно так же — разложением по столбцу с нулями).</div>
+  <div class="step"><b>Ответ:</b> x = (Δ₁, Δ₂, Δ₃, Δ₄)/Δ = (5, 10, 15, 20)/5 = <b>(1, 2, 3, 4)</b>. Проверка в 1-м уравнении: 2·1 + 2 = 4 ✓, в последнем: 3 + 2·4 = 11 ✓.</div>
+  <p class="note">Для 4×4 всё то же самое — формула x<sub>i</sub> = Δ<sub>i</sub>/Δ. Пять определителей 4×4 раскрываем <b>разложением по строке/столбцу с нулями</b> — так они сводятся к 3×3 (глава «Определители» → «Методы»).</p>
+</section>
+
+<section data-group="5 · Разборы задач" data-new="1" data-t="Задачи: системы и ранг" data-desc="Практика: совместность, свободные переменные, ранг, линейная зависимость.">
+  <h2>Задачи для разбора: системы и ранг</h2>
+  <p class="blurb">Сначала реши сам, потом раскрой ответ.</p>
+
+  <div class="task"><p class="q">1. Совместна ли система? &nbsp; x + y = 1, &nbsp; 2x + 2y = 3.</p>
+    <details><summary>Ответ</summary><div class="step">rang A = 1, но rang(A|B) = 2 (строки в (A|B) не пропорциональны). Ранги разные ⟹ по Кронекеру–Капелли система <b>несовместна</b>, решений нет.</div></details></div>
+
+  <div class="task"><p class="q">2. Реши систему и запиши общее решение: &nbsp; x + y + z = 3, &nbsp; x − y + 2z = 0.</p>
+    <details><summary>Ответ</summary>
+      <div class="step">Ранг = 2, неизвестных 3 ⟹ одна свободная. Главные x, y; свободная z. Переносим z: x + y = 3 − z; x − y = −2z.</div>
+      <div class="step">Складываем/вычитаем: 2x = 3 − 3z ⟹ x = (3 − 3z)/2; y = 3 − z − x = (3 + z)/2.</div>
+      <div class="step"><b>Общее решение:</b> (x, y, z) = ((3−3z)/2, (3+z)/2, z), z — любое. При z = 1: (0, 2, 1).</div>
+    </details></div>
+
+  <div class="task"><p class="q">3. Найди ранг <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>2</span><span>3</span><span>2</span><span>4</span><span>6</span><span>1</span><span>1</span><span>1</span></span></span>.</p>
+    <details><summary>Ответ</summary><div class="step">2-я строка = 2·(1-я) — зависима. Останутся две независимые строки (1-я и 3-я), минор <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>1</span><span>1</span></span></span> = 1·1 − 2·1 = −1 ≠ 0. Ранг = <b>2</b>.</div></details></div>
+
+  <div class="task"><p class="q">4. Линейно зависимы ли строки (1, 2), (3, 6)?</p>
+    <details><summary>Ответ</summary><div class="step">(3, 6) = 3·(1, 2) ⟹ 3·(1,2) − 1·(3,6) = 0, коэффициенты ненулевые ⟹ <b>линейно зависимы</b>. Определитель <span class="det"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>2</span><span>3</span><span>6</span></span></span> = 1·6 − 2·3 = 0 это подтверждает.</div></details></div>
+</section>
+
+</main>
+</div>
+<script>
+  const secs=[...document.querySelectorAll('section')];
+  const nav=document.getElementById('nav');
+  const titleEl=document.getElementById('secTitle');
+  const descEl=document.getElementById('secDesc');
+  const areaSec=secs.findIndex(s=>s.querySelector('#cArea'));
+
+  // group sections by data-group, preserving order
+  const order=[]; const map={};
+  secs.forEach((s,i)=>{const g=s.dataset.group||'Разное'; if(!map[g]){map[g]=[];order.push(g);} map[g].push(i);});
+  const links=[];
+  order.forEach(g=>{
+    const grp=document.createElement('div');grp.className='grp';
+    const btn=document.createElement('button');btn.innerHTML='<span>'+g+'</span><span class="arw">▶</span>';
+    const items=document.createElement('div');items.className='items';
+    map[g].forEach(i=>{const a=document.createElement('a');a.textContent=secs[i].dataset.t;if(secs[i].dataset.new){const nb=document.createElement('span');nb.textContent=' NEW';nb.style.cssText='color:#39d98a;font-size:9px;font-weight:700;vertical-align:super';a.appendChild(nb);}a.dataset.i=i;a.onclick=()=>show(i);items.appendChild(a);links[i]=a;});
+    btn.onclick=()=>grp.classList.toggle('open');
+    grp.appendChild(btn);grp.appendChild(items);nav.appendChild(grp);grp._btn=btn;
+  });
+  const groupEls=[...document.querySelectorAll('.grp')];
+
+  function show(i){
+    secs.forEach((s,k)=>s.classList.toggle('show',k===i));
+    links.forEach((a,k)=>a&&a.classList.toggle('active',k===i));
+    // open the group of the active section, keep others as user left them but ensure active visible
+    const g=secs[i].dataset.group;
+    groupEls.forEach(el=>{ if(el._btn.textContent.startsWith(g)) el.classList.add('open'); });
+    titleEl.textContent=secs[i].dataset.t;
+    descEl.textContent=secs[i].dataset.desc||'';
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(i===areaSec && typeof drawArea==='function') drawArea();
+  }
+
+  function calcDet(){
+    const v=id=>parseFloat(document.getElementById(id).value)||0;
+    const d=v('m11')*v('m22')-v('m12')*v('m21');
+    const el=document.getElementById('detRes'); if(el) el.textContent='det = '+v('m11')+'·'+v('m22')+' − '+v('m12')+'·'+v('m21')+' = '+d;
+  }
+
+  // ==== determinant = area interactive ====
+  let U={x:2,y:1}, V={x:1,y:3}; const SCL=45; let cArea,ax;
+  const aX=x=>cArea.width/2 + x*SCL, aY=y=>cArea.height/2 - y*SCL;
+  function drawArea(){
+    cArea=document.getElementById('cArea'); if(!cArea) return; ax=cArea.getContext('2d');
+    const W=cArea.width,H=cArea.height,cx=W/2,cy=H/2;
+    ax.clearRect(0,0,W,H);
+    ax.strokeStyle='#1b2444';ax.lineWidth=1;
+    for(let g=-5;g<=5;g++){ax.beginPath();ax.moveTo(aX(g),0);ax.lineTo(aX(g),H);ax.stroke();ax.beginPath();ax.moveTo(0,aY(g));ax.lineTo(W,aY(g));ax.stroke();}
+    ax.strokeStyle='#46567f';ax.lineWidth=1.3;ax.beginPath();ax.moveTo(0,cy);ax.lineTo(W,cy);ax.stroke();ax.beginPath();ax.moveTo(cx,0);ax.lineTo(cx,H);ax.stroke();
+    const det=U.x*V.y-U.y*V.x;
+    ax.beginPath();ax.moveTo(aX(0),aY(0));ax.lineTo(aX(U.x),aY(U.y));ax.lineTo(aX(U.x+V.x),aY(U.y+V.y));ax.lineTo(aX(V.x),aY(V.y));ax.closePath();
+    ax.fillStyle=det>=0?'rgba(91,141,239,.22)':'rgba(255,141,107,.22)';ax.fill();ax.strokeStyle=det>=0?'#5b8def':'#ff8d6b';ax.lineWidth=1.4;ax.stroke();
+    function vec(v,color,label){ax.strokeStyle=color;ax.fillStyle=color;ax.lineWidth=2.6;ax.beginPath();ax.moveTo(aX(0),aY(0));ax.lineTo(aX(v.x),aY(v.y));ax.stroke();
+      const ang=Math.atan2(-(v.y),v.x),X=aX(v.x),Y=aY(v.y),s=9;ax.beginPath();ax.moveTo(X,Y);ax.lineTo(X-s*Math.cos(ang-0.4),Y-s*Math.sin(ang-0.4));ax.lineTo(X-s*Math.cos(ang+0.4),Y-s*Math.sin(ang+0.4));ax.closePath();ax.fill();
+      ax.font='13px monospace';ax.fillText(label,X+7,Y-7);}
+    vec(U,'#7aa5ff','строка 1');vec(V,'#ff7ab6','строка 2');
+    const sign=det>0?'ориентация (+)':det<0?'ориентация (−)':'вырождение';
+    const out=document.getElementById('areaOut'); if(out) out.textContent='строки: ('+U.x+', '+U.y+') и ('+V.x+', '+V.y+')\ndet = a·d − b·c = '+U.x+'·'+V.y+' − '+U.y+'·'+V.x+' = '+det+'\nплощадь = |det| = '+Math.abs(det)+'   ·   '+sign;
+  }
+  function areaSetup(){
+    cArea=document.getElementById('cArea'); if(!cArea) return;
+    const sw=document.getElementById('areaSwap'), dg=document.getElementById('areaDeg');
+    if(sw) sw.onclick=()=>{const t=U;U=V;V=t;drawArea();};
+    if(dg) dg.onclick=()=>{V={x:U.x*1.5,y:U.y*1.5};drawArea();};
+    let active=null;const snap=v=>Math.round(v/0.5)*0.5;
+    function world(ev){const r=cArea.getBoundingClientRect();const sx=cArea.width/r.width,sy=cArea.height/r.height;return {x:((ev.clientX-r.left)*sx-cArea.width/2)/SCL,y:(cArea.height/2-(ev.clientY-r.top)*sy)/SCL};}
+    function pick(w){let best=null,bd=0.8;[U,V].forEach(p=>{const d=Math.hypot(p.x-w.x,p.y-w.y);if(d<bd){bd=d;best=p;}});return best;}
+    function down(ev){ev.preventDefault();active=pick(world(ev))||U;mv(ev);}
+    function mv(ev){if(!active)return;ev.preventDefault();const w=world(ev);active.x=snap(w.x);active.y=snap(w.y);drawArea();}
+    function up(){active=null;}
+    cArea.addEventListener('mousedown',down);window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up);
+    cArea.addEventListener('touchstart',e=>down(e.touches[0]),{passive:false});
+    cArea.addEventListener('touchmove',e=>{if(active){mv(e.touches[0]);e.preventDefault();}},{passive:false});
+    cArea.addEventListener('touchend',up);
+  }
+
+  // open first group, show first section
+  if(groupEls[0]) groupEls[0].classList.add('open');
+  areaSetup();
+  show(0);
+  calcDet();
+(function(){var mb=document.getElementById('menuBtn'),bd=document.getElementById('backdrop'),as=document.querySelector('aside');function cl(){if(as)as.classList.remove('open');if(bd)bd.classList.remove('show');}if(mb)mb.onclick=function(){as.classList.add('open');bd.classList.add('show');};if(bd)bd.onclick=cl;document.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',cl);});})();
+</script>
+</body>
+</html>

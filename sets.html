@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Множества и функции — мат. анализ</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--warn:#ff8d6b;--pink:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6}
+  .app{display:flex;min-height:100vh}
+  aside{width:290px;flex:none;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow:auto}
+  .brand{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+  .brand a{color:var(--blue2);text-decoration:none;font-size:12.5px;font-weight:600}
+  .brand h1{margin:8px 0 0;font-size:17px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+  nav{padding:8px 8px 30px}
+  .grp{margin:6px 0}
+  .grp>button{width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:#fff;font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .grp>button:hover{border-color:var(--blue)}
+  .grp>button .arw{color:var(--muted);font-size:11px;transition:.15s}
+  .grp.open>button .arw{transform:rotate(90deg)}
+  .grp .items{display:none;margin:4px 0 8px 6px;padding-left:8px;border-left:1px solid var(--line)}
+  .grp.open .items{display:block}
+  .items a{display:block;color:var(--ink);text-decoration:none;font-size:13px;padding:6px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+  .items a:hover{background:var(--panel2)}
+  .items a.active{background:linear-gradient(92deg,#25335c,#20294a);border-color:var(--blue);color:#fff}
+  main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:24px 34px 90px}
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:18px}
+  .lead h2{margin:0 0 4px;font-size:22px}
+  .lead p{margin:0;color:var(--muted);font-size:14px}
+  .menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    .backdrop.show{display:block}
+    aside{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:25;box-shadow:4px 0 20px rgba(0,0,0,.55)}
+    aside.open{transform:translateX(0)}
+    main{padding:60px 16px 70px;max-width:100%}
+  }
+  section{display:none}section.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:23px;margin:4px 0 2px}
+  .blurb{color:var(--muted);font-size:14px;margin:0 0 8px}
+  h3{color:var(--blue2);font-size:19px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h4{color:#fff;font-size:15.5px;margin:16px 0 6px}
+  p{margin:8px 0}
+  .df{background:var(--panel);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .df .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--acc);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .intu{background:rgba(255,194,75,.10);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .intu .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--gold);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .ex{background:rgba(57,217,138,.08);border-left:3px solid var(--ok);border-radius:0 10px 10px 0;padding:10px 15px;margin:11px 0}
+  .ex .tag{display:inline-block;font-size:11px;font-weight:700;color:#04140c;background:var(--ok);padding:2px 9px;border-radius:20px;margin-bottom:5px}
+  .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .fix{background:rgba(57,217,138,.10);border:1px solid rgba(57,217,138,.4);border-radius:10px;padding:8px 13px;margin:10px 0;font-size:13px;color:#bff0d6}
+  .fix b{color:var(--ok)}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 16px;margin:12px 0;text-align:center;font-size:16px;overflow-x:auto}
+  ul,ol{margin:8px 0 8px 4px;padding-left:22px}li{margin:5px 0}
+  code{background:var(--panel2);padding:1px 6px;border-radius:6px;font-size:14px}
+  sub,sup{font-size:.72em}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.12;font-size:.95em}
+  .frac>span{display:block;padding:0 .45em}.frac>.num{padding-bottom:.06em}.frac>.den{border-top:1.6px solid currentColor;padding-top:.08em}
+  .lab{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0}
+  canvas{width:100%;height:auto;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid var(--line);touch-action:none}
+  .readout{font-family:ui-monospace,monospace;font-size:13.5px;color:var(--ok);margin-top:8px;text-align:center;min-height:22px;white-space:pre-line}
+  .ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;justify-content:center}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer}
+  .btn:hover{border-color:var(--blue)}
+  .btn.active{border-color:var(--blue);background:#25335c;color:#fff}
+  input[type=range]{width:200px;accent-color:var(--blue)}
+  .val{font-family:ui-monospace,monospace;color:var(--gold);font-size:14px}
+</style>
+</head>
+<body>
+<div class="app">
+<button class="menu-btn" id="menuBtn">☰ Разделы</button>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="brand">
+    <a href="index.html">← Портал</a>
+    <h1>Множества и функции</h1>
+    <p>Множества · операции · окрестности · отображения</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+  <div class="lead"><h2 id="secTitle"></h2><p id="secDesc"></p></div>
+
+<!-- ============ 1. Множества ============ -->
+<section data-group="1 · Множества" data-t="Множества" data-desc="Конечные/бесконечные, мощность, счётные/несчётные, подмножества.">
+  <h2>Множества</h2>
+  <p class="blurb">Что такое множество, конечные и бесконечные, мощность, счётные и несчётные, подмножества.</p>
+
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Множество — это набор объектов, объединённых каким-то признаком: числа, точки, буквы, что угодно. Объекты называют элементами. Запись x ∈ A читается «x принадлежит A».</p>
+  </div>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Множество</b> — совокупность элементов, объединённых некоторым признаком. Задают перечислением A = {a, b, c} или условием.</p>
+  </div>
+
+  <h3>Конечные и бесконечные, мощность</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Конечное</b> множество содержит конечное число элементов; <b>бесконечное</b> — элементы нельзя пересчитать. <b>Мощность</b> |A| конечного множества — число его элементов.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> A = {a, b, c} ⇒ |A| = 3. Множество всех натуральных чисел ℕ бесконечно.</div>
+
+  <h3>Счётные и несчётные</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Счётное</b> множество — то, которое можно занумеровать (поставить в соответствие натуральные числа), например ℕ = {1, 2, 3, …}. <b>Несчётное</b> — занумеровать нельзя; таково множество всех вещественных чисел ℝ.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> ℕ и даже ℚ (рациональные) — счётны. А отрезок [0, 1] действительных чисел — несчётен.</div>
+
+  <h3>Подмножества</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p>Если все элементы B принадлежат A, то B — <b>подмножество</b> A: B ⊂ A.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> {1, 2} ⊂ {1, 2, 3}. Также ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.</div>
+</section>
+
+<!-- ============ 2. Операции ============ -->
+<section data-group="1 · Множества" data-t="Операции (Венн)" data-desc="Объединение, пересечение, разность, дополнение; интерактив Венна.">
+  <h2>Операции над множествами</h2>
+  <p class="blurb">Объединение, пересечение, разность, дополнение; свойства отношения ⊂.</p>
+
+  <div class="df"><span class="tag">Определения</span>
+    <ul>
+      <li><b>Объединение</b> A ∪ B = { x : x ∈ A <b>или</b> x ∈ B } — всё, что хотя бы в одном.</li>
+      <li><b>Пересечение</b> A ∩ B = { x : x ∈ A <b>и</b> x ∈ B } — общее.</li>
+      <li><b>Разность</b> A \ B = { x : x ∈ A, x ∉ B } — то, что в A, но не в B.</li>
+      <li><b>Дополнение</b> A<sup>c</sup> = { x : x ∉ A, x ∈ U } — всё из универсума U, что не в A.</li>
+    </ul>
+  </div>
+  <div class="fix">Исправлено (в конспекте описка): в дополнении условие — <b>x ∉ A</b> (а не x ∈ A): дополнение состоит из элементов, которые в A <b>не</b> входят.</div>
+
+  <div class="lab">
+    <h4>Интерактив: диаграммы Венна</h4>
+    <p style="text-align:center;font-size:14px;color:var(--muted)">Нажимай операции — подсветится соответствующая область.</p>
+    <canvas id="cVenn" width="600" height="300"></canvas>
+    <div class="ctl" id="vennBtns"></div>
+    <div class="readout" id="vennOut"></div>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> A = {1, 2}, B = {2, 3}: &nbsp; A ∪ B = {1, 2, 3}, &nbsp; A ∩ B = {2}, &nbsp; A \ B = {1}, &nbsp; B \ A = {3}.</div>
+
+  <h3>Свойства отношения ⊂</h3>
+  <ul>
+    <li><b>Рефлексивность:</b> A ⊂ A.</li>
+    <li><b>Антисимметричность:</b> если A ⊂ B и B ⊂ A, то A = B.</li>
+    <li><b>Транзитивность:</b> если A ⊂ B и B ⊂ C, то A ⊂ C.</li>
+  </ul>
+</section>
+
+<!-- ============ 3. Окрестности и прямая ============ -->
+<section data-group="2 · Прямая и функции" data-t="Окрестности и прямая" data-desc="Окрестности, открытые/замкнутые множества, точные грани; интерактив.">
+  <h2>Множества на числовой прямой</h2>
+  <p class="blurb">Окрестность точки, открытые и замкнутые множества, точные грани.</p>
+
+  <h3>Окрестность точки</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Окрестность</b> точки a — любой открытый интервал, содержащий a. <b>δ-окрестность</b>: U<sub>δ</sub>(a) = (a − δ, a + δ). <b>Проколотая</b> δ-окрестность — та же без самой точки a: U̇<sub>δ</sub>(a) = (a − δ, a) ∪ (a, a + δ).</p>
+  </div>
+  <div class="fix">Исправлено: пример δ = 0,01, a = 1 даёт U<sub>δ</sub>(1) = (0,99; <b>1,01</b>) — в конспекте второй конец не был дописан.</div>
+
+  <div class="lab">
+    <h4>Интерактив: δ-окрестность</h4>
+    <canvas id="cNbhd" width="640" height="140"></canvas>
+    <div class="ctl">
+      <label>δ = <span class="val" id="dV">0.50</span></label>
+      <input type="range" id="dN" min="0.1" max="2" step="0.05" value="0.5">
+      <label style="cursor:pointer"><input type="checkbox" id="punct"> проколотая</label>
+    </div>
+    <div class="readout" id="nbhdOut"></div>
+  </div>
+
+  <h3>Открытые и замкнутые множества</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Открытое</b> множество: каждая его точка внутренняя — у любой точки найдётся окрестность, целиком лежащая в множестве. Пример — интервал (a, b). <b>Замкнутое</b> множество содержит все свои граничные точки. Пример — отрезок [a, b].</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> (0, 1) — открытое (концы не входят). [0, 1] — замкнутое (концы входят). [0, 1) — ни то, ни другое.</div>
+  <h4>Свойства</h4>
+  <ul>
+    <li>Объединение любого числа открытых множеств — открыто.</li>
+    <li>Пересечение любого числа замкнутых множеств — замкнуто.</li>
+  </ul>
+
+  <h3>Точные грани (sup и inf)</h3>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Верхняя грань</b> множества A — число M, такое что a ≤ M для всех a ∈ A. <b>Точная верхняя грань</b> (sup) — наименьшая из верхних граней. Аналогично <b>нижняя грань</b> (a ≥ m) и <b>точная нижняя</b> (inf) — наибольшая из нижних.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> Для интервала (0, 1): sup = 1, inf = 0 — при этом сами эти значения множеству не принадлежат (грань не обязана достигаться).</div>
+</section>
+
+<!-- ============ 4. Отображения и функции ============ -->
+<section data-group="2 · Прямая и функции" data-t="Отображения и функции" data-desc="Инъекция/сюръекция/биекция, функция, сложная и обратная; интерактив.">
+  <h2>Отображения и функции</h2>
+  <p class="blurb">Отображение множеств, инъекция/сюръекция/биекция, функция вещественной переменной, сложная и обратная функции.</p>
+
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Отображение</b> f: X → Y — правило, по которому каждому элементу множества X ставится в соответствие элемент множества Y.</p>
+  </div>
+
+  <div class="df"><span class="tag">Три важных типа</span>
+    <ul>
+      <li><b>Инъекция:</b> разным элементам X соответствуют разные элементы Y (никакие два x не «слипаются» в один y).</li>
+      <li><b>Сюръекция:</b> каждый элемент Y является образом хотя бы одного x (Y «покрыт» весь).</li>
+      <li><b>Биекция:</b> взаимно однозначное соответствие — одновременно инъекция и сюръекция (каждому x — свой единственный y и наоборот).</li>
+    </ul>
+  </div>
+  <div class="lab">
+    <h4>Интерактив: типы отображений</h4>
+    <div class="ctl" id="mapBtns"></div>
+    <canvas id="cMap" width="600" height="320"></canvas>
+    <div class="readout" id="mapOut"></div>
+  </div>
+
+  <h3>Функция вещественной переменной</h3>
+  <div class="df"><span class="tag">Определение</span>
+    <p><b>Функция</b> f: D → E (D, E ⊂ ℝ), y = f(x) — закон, ставящий в соответствие каждому x ∈ D число y ∈ E. Виды: чётные/нечётные, периодические, монотонные.</p>
+  </div>
+
+  <h3>Сложная и обратная функции</h3>
+  <div class="df"><span class="tag">Сложная функция</span>
+    <p>Если y = f(u), а u = φ(x), то y = f(φ(x)) — <b>сложная функция</b>; φ(x) называют промежуточным аргументом.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример</span> y = √(sin x): внешняя функция f(u) = √u, внутренняя u = φ(x) = sin x.</div>
+  <div class="df"><span class="tag">Обратная функция</span>
+    <p>Если y = f(x) задаёт биекцию f: X → Y, то существует <b>обратная</b> g: Y → X, возвращающая x по y: x = g(y).</p>
+  </div>
+  <div class="note">Обратная функция существует именно тогда, когда исходная — биекция (каждому y отвечает ровно один x). Поэтому три типа отображений выше так важны.</div>
+</section>
+
+</main>
+</div>
+<script>
+  const secs=[...document.querySelectorAll('section')];
+  const nav=document.getElementById('nav');
+  const titleEl=document.getElementById('secTitle');
+  const descEl=document.getElementById('secDesc');
+  const groupOrder=['1 · Множества','2 · Прямая и функции'];
+  const links=[];
+  groupOrder.forEach(g=>{
+    const idxs=[]; secs.forEach((s,i)=>{ if((s.dataset.group||'')===g) idxs.push(i); });
+    if(!idxs.length) return;
+    const grp=document.createElement('div');grp.className='grp';grp.dataset.g=g;
+    const btn=document.createElement('button');btn.innerHTML='<span>'+g+'</span><span class="arw">▶</span>';
+    const items=document.createElement('div');items.className='items';
+    idxs.forEach(i=>{const a=document.createElement('a');a.textContent=secs[i].dataset.t;a.onclick=()=>show(i);items.appendChild(a);links[i]=a;});
+    btn.onclick=()=>grp.classList.toggle('open');
+    grp.appendChild(btn);grp.appendChild(items);nav.appendChild(grp);
+  });
+  const groupEls=[...document.querySelectorAll('.grp')];
+  window.__start = secs.findIndex(s=>(s.dataset.group||'')===groupOrder[0]);
+  function show(i){
+    secs.forEach((s,k)=>s.classList.toggle('show',k===i));
+    links.forEach((a,k)=>a&&a.classList.toggle('active',k===i));
+    const g=secs[i].dataset.group;
+    groupEls.forEach(el=>{ if(el.dataset.g===g) el.classList.add('open'); });
+    titleEl.textContent=secs[i].dataset.t;
+    descEl.textContent=secs[i].dataset.desc||'';
+    window.scrollTo({top:0,behavior:'smooth'});
+    const s=secs[i];
+    if(s.querySelector('#cVenn')&&typeof drawVenn==='function') drawVenn();
+    if(s.querySelector('#cNbhd')&&typeof drawNbhd==='function') drawNbhd();
+    if(s.querySelector('#cMap')&&typeof drawMap==='function') drawMap();
+  }
+  if(groupEls[0]) groupEls[0].classList.add('open');
+
+  // ===== Venn =====
+  const cVenn=document.getElementById('cVenn'),vx=cVenn.getContext('2d');
+  const VA={cx:230,cy:150,r:110}, VB={cx:370,cy:150,r:110};
+  let vennOp='union';
+  const vennDefs=[['union','A ∪ B','объединение — всё, что хотя бы в одном'],
+    ['inter','A ∩ B','пересечение — общее для обоих'],
+    ['diffAB','A \\ B','в A, но не в B'],
+    ['diffBA','B \\ A','в B, но не в A'],
+    ['compA','Aᶜ','дополнение A — всё вне A']];
+  const vennBtns=document.getElementById('vennBtns');
+  vennDefs.forEach((d,i)=>{const b=document.createElement('button');b.className='btn'+(i===0?' active':'');b.textContent=d[1];b.onclick=()=>{vennOp=d[0];[...vennBtns.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');drawVenn();};vennBtns.appendChild(b);});
+  function cPath(c){vx.beginPath();vx.arc(c.cx,c.cy,c.r,0,7);}
+  function drawVenn(){
+    const W=cVenn.width,H=cVenn.height;
+    vx.clearRect(0,0,W,H);
+    // universe box (for complement)
+    vx.strokeStyle='#33406b';vx.lineWidth=1.5;vx.strokeRect(40,30,W-80,H-60);
+    vx.fillStyle='#6b7aa8';vx.font='13px sans-serif';vx.fillText('U',W-62,50);
+    // fill region
+    vx.save();
+    vx.fillStyle='rgba(160,107,255,.45)';
+    if(vennOp==='union'){cPath(VA);vx.fill();cPath(VB);vx.fill();}
+    else if(vennOp==='inter'){cPath(VA);vx.clip();cPath(VB);vx.fill();}
+    else if(vennOp==='diffAB'){cPath(VA);vx.clip();vx.fillRect(0,0,W,H);vx.globalCompositeOperation='destination-out';cPath(VB);vx.fill();}
+    else if(vennOp==='diffBA'){cPath(VB);vx.clip();vx.fillRect(0,0,W,H);vx.globalCompositeOperation='destination-out';cPath(VA);vx.fill();}
+    else if(vennOp==='compA'){vx.beginPath();vx.rect(40,30,W-80,H-60);vx.clip();vx.fillRect(0,0,W,H);vx.globalCompositeOperation='destination-out';cPath(VA);vx.fill();}
+    vx.restore();
+    // outlines
+    vx.strokeStyle='#7aa5ff';vx.lineWidth=2;cPath(VA);vx.stroke();
+    vx.strokeStyle='#ff7ab6';cPath(VB);vx.stroke();
+    vx.fillStyle='#7aa5ff';vx.font='bold 16px sans-serif';vx.fillText('A',VA.cx-70,VA.cy-70);
+    vx.fillStyle='#ff7ab6';vx.fillText('B',VB.cx+58,VB.cy-70);
+    const d=vennDefs.find(x=>x[0]===vennOp);
+    document.getElementById('vennOut').textContent=d[1]+' — '+d[2];
+  }
+
+  // ===== neighbourhood =====
+  const cNbhd=document.getElementById('cNbhd'),nx=cNbhd.getContext('2d');
+  const dN=document.getElementById('dN'),punct=document.getElementById('punct');
+  const aN=1;
+  function drawNbhd(){
+    const W=cNbhd.width,H=cNbhd.height,ml=30,mr=30,cy=H/2;
+    const d=+dN.value;document.getElementById('dV').textContent=d.toFixed(2);
+    const xr=[aN-2.6,aN+2.6];const X=x=>ml+(x-xr[0])/(xr[1]-xr[0])*(W-ml-mr);
+    nx.clearRect(0,0,W,H);
+    nx.fillStyle='rgba(91,141,239,.18)';nx.fillRect(X(aN-d),cy-26,X(aN+d)-X(aN-d),52);
+    nx.strokeStyle='#46567f';nx.lineWidth=1.4;nx.beginPath();nx.moveTo(ml-6,cy);nx.lineTo(W-ml+6,cy);nx.stroke();
+    nx.beginPath();nx.moveTo(W-ml+6,cy);nx.lineTo(W-ml-2,cy-4);nx.lineTo(W-ml-2,cy+4);nx.closePath();nx.fillStyle='#46567f';nx.fill();
+    nx.textAlign='center';
+    function openC(x){nx.fillStyle='#0b1020';nx.strokeStyle='#5b8def';nx.lineWidth=2;nx.beginPath();nx.arc(X(x),cy,5,0,7);nx.fill();nx.stroke();}
+    openC(aN-d);openC(aN+d);
+    if(punct.checked){nx.fillStyle='#0b1020';nx.strokeStyle='#ffc24b';nx.lineWidth=2;nx.beginPath();nx.arc(X(aN),cy,5,0,7);nx.fill();nx.stroke();}
+    else{nx.fillStyle='#ffc24b';nx.beginPath();nx.arc(X(aN),cy,5,0,7);nx.fill();}
+    nx.fillStyle='#ffc24b';nx.font='13px sans-serif';nx.fillText('a='+aN,X(aN),cy-32);
+    nx.fillStyle='#7aa5ff';nx.fillText('a−δ',X(aN-d),cy+34);nx.fillText('a+δ',X(aN+d),cy+34);
+    nx.textAlign='left';
+    const lo=(aN-d).toFixed(2),hi=(aN+d).toFixed(2);
+    document.getElementById('nbhdOut').textContent=punct.checked
+      ? 'U̇_δ(a) = ('+lo+', '+aN+') ∪ ('+aN+', '+hi+')  — точка a выколота'
+      : 'U_δ(a) = ('+lo+', '+hi+')  — интервал радиуса δ='+d.toFixed(2);
+  }
+  dN.oninput=drawNbhd;punct.onchange=drawNbhd;
+
+  // ===== mappings =====
+  const cMap=document.getElementById('cMap'),mx=cMap.getContext('2d');
+  let mapMode='inj';
+  const mapData={
+    inj:{X:['x₁','x₂'],Y:['y₁','y₂','y₃'],edges:[[0,0],[1,1]],desc:'Инъекция: разные x → разные y (y₃ без прообраза).'},
+    surj:{X:['x₁','x₂','x₃'],Y:['y₁','y₂'],edges:[[0,0],[1,0],[2,1]],desc:'Сюръекция: каждый y покрыт (в y₁ ведут два x).'},
+    bij:{X:['x₁','x₂','x₃'],Y:['y₁','y₂','y₃'],edges:[[0,0],[1,1],[2,2]],desc:'Биекция: каждому x — свой единственный y и наоборот.'}
+  };
+  const mapBtns=document.getElementById('mapBtns');
+  [['inj','Инъекция'],['surj','Сюръекция'],['bij','Биекция']].forEach((d,i)=>{const b=document.createElement('button');b.className='btn'+(i===0?' active':'');b.textContent=d[1];b.onclick=()=>{mapMode=d[0];[...mapBtns.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');drawMap();};mapBtns.appendChild(b);});
+  function drawMap(){
+    const W=cMap.width,H=cMap.height;mx.clearRect(0,0,W,H);
+    const d=mapData[mapMode];
+    const lx=170,rx=430;
+    // ovals
+    mx.strokeStyle='#46567f';mx.lineWidth=1.6;
+    mx.beginPath();mx.ellipse(lx,H/2,70,110,0,0,7);mx.stroke();
+    mx.beginPath();mx.ellipse(rx,H/2,70,110,0,0,7);mx.stroke();
+    mx.fillStyle='#9aa6c4';mx.font='14px sans-serif';mx.textAlign='center';
+    mx.fillText('X',lx,H/2-120);mx.fillText('Y',rx,H/2-120);
+    const posX=[],posY=[];
+    function place(arr,cx,store,color){
+      const n=arr.length,gap=Math.min(70,180/n),top=H/2-(n-1)*gap/2;
+      for(let i=0;i<n;i++){const y=top+i*gap;store.push({x:cx,y});mx.fillStyle=color;mx.beginPath();mx.arc(cx,y,6,0,7);mx.fill();mx.fillStyle='#cdd7ee';mx.font='13px monospace';mx.textAlign=cx===lx?'right':'left';mx.fillText(arr[i],cx+(cx===lx?-14:14),y+4);}
+    }
+    place(d.X,lx,posX,'#7aa5ff');place(d.Y,rx,posY,'#ff7ab6');
+    // arrows
+    mx.strokeStyle='#39d98a';mx.fillStyle='#39d98a';mx.lineWidth=2;
+    d.edges.forEach(e=>{const a=posX[e[0]],b=posY[e[1]];
+      mx.beginPath();mx.moveTo(a.x+10,a.y);mx.lineTo(b.x-10,b.y);mx.stroke();
+      const ang=Math.atan2(b.y-a.y,(b.x-10)-(a.x+10));
+      mx.beginPath();mx.moveTo(b.x-10,b.y);mx.lineTo(b.x-10-9*Math.cos(ang-0.4),b.y-9*Math.sin(ang-0.4));mx.lineTo(b.x-10-9*Math.cos(ang+0.4),b.y-9*Math.sin(ang+0.4));mx.closePath();mx.fill();
+    });
+    mx.textAlign='left';
+    document.getElementById('mapOut').textContent=d.desc;
+  }
+
+  show(window.__start||0);
+(function(){var mb=document.getElementById('menuBtn'),bd=document.getElementById('backdrop'),as=document.querySelector('aside');function cl(){if(as)as.classList.remove('open');if(bd)bd.classList.remove('show');}if(mb)mb.onclick=function(){as.classList.add('open');bd.classList.add('show');};if(bd)bd.onclick=cl;document.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',cl);});})();
+</script>
+</body>
+</html>

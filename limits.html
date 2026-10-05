@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пределы — теория, смысл и решение</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--warn:#ff8d6b;--pink:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6}
+  .app{display:flex;min-height:100vh}
+  aside{width:290px;flex:none;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow:auto}
+  .brand{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+  .brand a{color:var(--blue2);text-decoration:none;font-size:12.5px;font-weight:600}
+  .brand h1{margin:8px 0 0;font-size:17px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+  nav{padding:8px 8px 30px}
+  .grp{margin:6px 0}
+  .grp>button{width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:#fff;font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .grp>button:hover{border-color:var(--blue)}
+  .grp>button .arw{color:var(--muted);font-size:11px;transition:.15s}
+  .grp.open>button .arw{transform:rotate(90deg)}
+  .grp .items{display:none;margin:4px 0 8px 6px;padding-left:8px;border-left:1px solid var(--line)}
+  .grp.open .items{display:block}
+  .items a{display:block;color:var(--ink);text-decoration:none;font-size:13px;padding:6px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+  .items a:hover{background:var(--panel2)}
+  .items a.active{background:linear-gradient(92deg,#25335c,#20294a);border-color:var(--blue);color:#fff}
+  main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:26px 34px 90px}
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:18px}
+  .lead h2{margin:0 0 4px;font-size:22px}
+  .lead p{margin:0;color:var(--muted);font-size:14px}
+  .ex{background:rgba(57,217,138,.08);border-left:3px solid var(--ok);border-radius:0 10px 10px 0;padding:10px 15px;margin:11px 0}
+  .ex .tag{display:inline-block;font-size:11px;font-weight:700;color:#04140c;background:var(--ok);padding:2px 9px;border-radius:20px;margin-bottom:5px}
+  .pill{display:inline-block;font-size:11px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:2px 10px;margin-left:6px}
+  .menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    .backdrop.show{display:block}
+    aside{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:25;box-shadow:4px 0 20px rgba(0,0,0,.55)}
+    aside.open{transform:translateX(0)}
+    main{padding:60px 16px 70px;max-width:100%}
+  }
+  section{display:none}section.show{display:block;animation:f .25s ease}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:22px;margin:6px 0 4px}
+  h3{color:var(--blue2);font-size:18px;margin:24px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  h4{margin:16px 0 6px;color:#fff;font-size:15px}
+  p{margin:8px 0}
+  .df{background:var(--panel);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .df .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--acc);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .intu{background:rgba(255,194,75,.10);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .intu .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--gold);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .warnbox{background:rgba(255,141,107,.10);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .warnbox .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--warn);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .lab{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0}
+  canvas{width:100%;max-width:680px;height:auto;display:block;background:#0b1020;border-radius:12px;border:1px solid var(--line);touch-action:none}
+  .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
+  .ctl label{font-size:14px;color:var(--muted)}
+  input[type=range]{width:220px;accent-color:var(--blue)}
+  .val{font-family:ui-monospace,monospace;color:var(--gold);font-size:14px}
+  .readout{font-family:ui-monospace,monospace;font-size:14px;color:var(--ok);margin-top:8px;min-height:22px;white-space:pre-line}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer}
+  .btn.active{border-color:var(--blue);background:#25335c;color:#fff}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:12px 0;text-align:center;font-size:16px;overflow-x:auto}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:2px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--gold);padding:8px 0}
+  ul,ol{margin:8px 0 8px 2px;padding-left:22px}li{margin:5px 0}
+  sub,sup{font-size:.72em}
+  code{background:var(--panel2);padding:1px 6px;border-radius:6px}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.12;font-size:.95em}
+  .frac>span{display:block;padding:0 .45em}
+  .frac>.num{padding-bottom:.06em}
+  .frac>.den{border-top:1.6px solid currentColor;padding-top:.08em}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th{background:var(--panel2);color:#fff;text-align:left;padding:7px 10px;border:1px solid var(--line)}
+  td{border:1px solid var(--line);padding:6px 10px}
+  .method{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:12px 0}
+  .method h4{margin:2px 0 6px;color:var(--blue2)}
+  .task{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:12px 0}
+  .task .q{font-weight:600}
+  .step{margin:5px 0;padding-left:12px;border-left:2px solid var(--line)}
+  .kw{color:var(--gold);font-weight:600}
+</style>
+</head>
+<body>
+<div class="app">
+<button class="menu-btn" id="menuBtn">☰ Разделы</button>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="brand">
+    <a href="index.html">← Портал</a>
+    <h1>Пределы</h1>
+    <p>Последовательности · предел функции · вычисление · разборы</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+  <div class="lead">
+    <h2 id="secTitle"></h2>
+    <p id="secDesc"></p>
+  </div>
+
+<!-- ============ 0. ОКРЕСТНОСТЬ ============ -->
+<section data-group="2 · Предел функции" data-t="Окрестность" data-desc="Окрестность точки, δ-окрестность, проколотая; интерактив на прямой.">
+  <h2>Окрестность точки</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Окрестность точки a — это «зона вокруг неё», маленький кусочек прямой, внутри которого сидит сама точка. Понятие нужно, чтобы аккуратно сказать словосочетание «x подходит близко к a».</p>
+  </div>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Окрестность</b> точки a — любой открытый интервал, содержащий a.</p>
+    <p><b>δ-окрестность</b> — симметричный интервал радиуса δ вокруг a:</p>
+    <div class="formula">U<sub>δ</sub>(a) = (a − δ, &nbsp; a + δ)</div>
+    <p>Например, δ = 0,01, a = 1: &nbsp; U<sub>δ</sub>(1) = (0,99; &nbsp;1,01).</p>
+    <p><b>Проколотая δ-окрестность</b> — та же, но без самой точки a:</p>
+    <div class="formula">U̇<sub>δ</sub>(a) = (a − δ, &nbsp;a) ∪ (a, &nbsp;a + δ)</div>
+  </div>
+  <div class="note">Зачем «проколотая»? В пределе нас интересует, как ведёт себя функция <b>рядом</b> с точкой, а не <b>в самой</b> точке. Поэтому саму точку a из рассмотрения выкалывают — функция в ней может быть даже не определена (вспомни «дырку» на графике).</div>
+
+  <div class="lab">
+    <h4>Интерактив: δ-окрестность на числовой прямой</h4>
+    <canvas id="cNbhd" width="680" height="150"></canvas>
+    <div class="ctl">
+      <label>δ = <span class="val" id="dNbhdV">0.50</span></label>
+      <input type="range" id="dNbhd" min="0.1" max="2" step="0.05" value="0.5">
+      <label style="cursor:pointer"><input type="checkbox" id="punct"> проколотая</label>
+    </div>
+    <div class="readout" id="nbhdOut"></div>
+  </div>
+</section>
+
+<!-- ============ 1. ПРЕДЕЛ ПОСЛЕДОВАТЕЛЬНОСТИ ============ -->
+<section data-group="1 · Последовательности" data-t="Предел последовательности" data-desc="ε–N определение и интерактив ε-полосы.">
+  <h2>Предел последовательности</h2>
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Последовательность a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, … стремится к числу L, если её члены с ростом номера скапливаются возле L и в итоге застревают сколь угодно близко к нему.</p>
+  </div>
+  <div class="df"><span class="tag">Определение (ε–N)</span>
+    <div class="formula">∀ ε &gt; 0 &nbsp; ∃ N : &nbsp; ∀ n &gt; N &nbsp; ⇒ &nbsp; |a<sub>n</sub> − L| &lt; ε</div>
+    <p>ε задаёт горизонтальную полосу шириной 2ε вокруг L. «Предел равен L» означает: какой бы узкой ни была полоса, начиная с некоторого номера N все точки лежат внутри неё.</p>
+  </div>
+  <div class="lab">
+    <h4>Интерактив: ε-полоса вокруг предела</h4>
+    <p style="font-size:14px;color:var(--muted)">a<sub>n</sub> = 1 + <span class="frac"><span class="num">(−1)<sup>n</sup></span><span class="den">n</span></span> → L = 1. Двигай ε и смотри, с какого N все точки внутри полосы.</p>
+    <canvas id="cSeq" width="680" height="380"></canvas>
+    <div class="ctl">
+      <label>ε = <span class="val" id="epsSeqV">0.30</span></label>
+      <input type="range" id="epsSeq" min="0.03" max="1" step="0.01" value="0.3">
+    </div>
+    <div class="readout" id="seqOut"></div>
+  </div>
+</section>
+
+<!-- ============ 2. ОПРЕДЕЛЕНИЕ ПРЕДЕЛА ФУНКЦИИ ============ -->
+<section data-group="2 · Предел функции" data-t="Определение (ε–δ)" data-desc="Строгое определение по Коши, варианты записи, интерактив ε–δ.">
+  <h2>Предел функции: определение подробно</h2>
+
+  <div class="warnbox"><span class="tag">Частая путаница</span>
+    <p>Кажется, что в определении одно маленькое число. На самом деле их <b>два</b>, и они разные: близость x к точке a измеряют через <b>δ</b>, а близость f(x) к A — через <b>ε</b>. Одной буквой их писать нельзя — сначала задают ε, а под него подбирают δ.</p>
+  </div>
+
+  <div class="df"><span class="tag">Определение по Коши (ε–δ)</span>
+    <p>Число A называется пределом функции f при x → a, если для любого ε &gt; 0 найдётся δ &gt; 0 такое, что как только 0 &lt; |x − a| &lt; δ, выполняется |f(x) − A| &lt; ε.</p>
+    <div class="formula">∀ ε &gt; 0 &nbsp; ∃ δ &gt; 0 : &nbsp; 0 &lt; |x − a| &lt; δ &nbsp; ⇒ &nbsp; |f(x) − A| &lt; ε</div>
+  </div>
+
+  <h4>Как это читать словами</h4>
+  <ol>
+    <li><span class="kw">ε — это «вызов»:</span> насколько близко к A мы хотим оказаться. Его задаёт «противник», и он может быть сколь угодно маленьким.</li>
+    <li><span class="kw">δ — это «ответ»:</span> насколько близко к a должен подойти x, чтобы гарантировать попадание в ε-полосу. Мы обязаны найти такое δ под каждый ε.</li>
+    <li><span class="kw">Порядок важен:</span> сначала дают ε, потом ищут δ. Если под любой ε удаётся подобрать свой δ — предел равен A.</li>
+    <li><span class="kw">Запись 0 &lt; |x − a|</span> означает «x близко к a, но не равен a» — саму точку выкалываем (значение f(a) на предел не влияет).</li>
+  </ol>
+
+  <h4>Одно и то же определение — разные записи</h4>
+  <table>
+    <tr><th>Форма</th><th>Запись</th></tr>
+    <tr><td>Через модули (Коши)</td><td>0 &lt; |x − a| &lt; δ ⇒ |f(x) − A| &lt; ε</td></tr>
+    <tr><td>Через окрестности</td><td>x ∈ U̇<sub>δ</sub>(a) ⇒ f(x) ∈ U<sub>ε</sub>(A)</td></tr>
+    <tr><td>По Гейне (через последовательности)</td><td>для любой x<sub>n</sub> → a (x<sub>n</sub> ≠ a) выполнено f(x<sub>n</sub>) → A</td></tr>
+  </table>
+  <p class="note">Определения Коши и Гейне <b>эквивалентны</b> — это одно и то же понятие предела, просто «на языке ε–δ» и «на языке последовательностей». В разных учебниках встречаются оба; иногда вместо δ пишут другую букву, но смысл тот же.</p>
+
+  <h4>Разновидности предела</h4>
+  <ul>
+    <li><b>Односторонние.</b> Предел слева (x → a<sup>−</sup>) и справа (x → a<sup>+</sup>). Двусторонний предел существует ⟺ левый и правый равны.</li>
+    <li><b>На бесконечности.</b> lim<sub>x→+∞</sub> f(x) = A: &nbsp;∀ ε &gt; 0 ∃ M : x &gt; M ⇒ |f(x) − A| &lt; ε.</li>
+    <li><b>Бесконечный предел.</b> f(x) → ∞ при x → a: &nbsp;∀ E &gt; 0 ∃ δ : 0 &lt; |x − a| &lt; δ ⇒ |f(x)| &gt; E.</li>
+  </ul>
+
+  <div class="lab">
+    <h4>Интерактив: ε–δ на графике</h4>
+    <div class="ctl" id="fnPick"></div>
+    <canvas id="cEps" width="680" height="440"></canvas>
+    <div class="ctl">
+      <label>ε = <span class="val" id="epsFnV">0.60</span></label>
+      <input type="range" id="epsFn" min="0.05" max="1.2" step="0.01" value="0.6">
+    </div>
+    <div class="readout" id="epsOut"></div>
+    <p style="font-size:13px;color:var(--muted);margin-top:6px">Золотая <b>горизонтальная</b> полоса — это ε (высота меряется по оси y вокруг A). Синяя <b>вертикальная</b> полоса — это δ (ширина меряется по оси x вокруг a). Чем у́же ε, тем у́же δ.</p>
+  </div>
+</section>
+
+<!-- ============ 3. КАК РАБОТАЕТ ОПРЕДЕЛЕНИЕ ============ -->
+<section data-group="2 · Предел функции" data-new="1" data-t="Предел по Гейне (через последовательности)" data-desc="Два языка предела — Коши и Гейне; интерактив с тропинками и sin(1/x).">
+  <h2>Предел по Гейне — «язык тропинок»</h2>
+  <div class="intu"><span class="tag">Два языка — одно и то же</span>
+    <p>Есть два определения предела функции, и оба про одно. Разница — как именно мы «подходим» к точке a.</p>
+    <ul>
+      <li><b>По Коши (ε–δ)</b> — «язык коридоров»: под любой узкий коридор ε вокруг A находится коридор δ вокруг a. Проверяем <b>все</b> x сразу.</li>
+      <li><b>По Гейне</b> (в лекции — «по Чайке») — «язык тропинок»: по <b>любой</b> последовательности точек x<sub>n</sub> → a (x<sub>n</sub> ≠ a) значения f(x<sub>n</sub>) стремятся к A. Проверяем, подходя к a по всевозможным «тропинкам».</li>
+    </ul>
+  </div>
+
+  <div class="df"><span class="tag">Определение по Гейне</span>
+    <p>Число A — предел функции f в точке a, если для <b>любой</b> последовательности x<sub>n</sub> → a (x<sub>n</sub> ≠ a) соответствующая последовательность значений f(x<sub>n</sub>) → A.</p>
+  </div>
+  <div class="df"><span class="tag">Эквивалентность</span>
+    <p>Определения <b>по Коши и по Гейне равносильны</b> — задают один и тот же предел. Это теорема (доказывается в обе стороны). Поэтому можно пользоваться любым, смотря что удобнее.</p>
+  </div>
+
+  <h3>Пример на числах — как считать предел по Гейне</h3>
+  <p>Пусть f(x) = 2x + 1, точка a = 1. Возьмём «тропинку» x<sub>n</sub> = 1 + <span class="frac"><span class="num">1</span><span class="den">n</span></span> — она стремится к 1. Тогда f(x<sub>n</sub>) = 2(1 + <span class="frac"><span class="num">1</span><span class="den">n</span></span>) + 1 = 3 + <span class="frac"><span class="num">2</span><span class="den">n</span></span>. Посчитаем значения:</p>
+  <table>
+    <tr><th>n</th><th>x<sub>n</sub> = 1 + 1/n</th><th>f(x<sub>n</sub>) = 3 + 2/n</th></tr>
+    <tr><td>1</td><td>2,00</td><td>5,00</td></tr>
+    <tr><td>2</td><td>1,50</td><td>4,00</td></tr>
+    <tr><td>5</td><td>1,20</td><td>3,40</td></tr>
+    <tr><td>100</td><td>1,01</td><td>3,02</td></tr>
+    <tr><td>→ ∞</td><td>→ 1</td><td>→ 3</td></tr>
+  </table>
+  <p>Значения f(x<sub>n</sub>) ползут к <b>3</b>. Возьмём другую тропинку, слева: x<sub>n</sub> = 1 − <span class="frac"><span class="num">1</span><span class="den">n</span></span> → тогда f(x<sub>n</sub>) = 3 − <span class="frac"><span class="num">2</span><span class="den">n</span></span> → снова <b>3</b>. По <b>любой</b> тропинке получается 3 ⟹ по Гейне предел равен 3. (Интерактив ниже показывает это картинкой.)</p>
+
+  <div class="intu"><span class="tag">Зачем нужен именно Гейне</span>
+    <p>Им удобно <b>доказывать, что предела НЕТ</b>: достаточно найти <b>две</b> тропинки x<sub>n</sub> → a, по которым f(x<sub>n</sub>) идёт к <b>разным</b> числам. Раз по разным тропинкам разные итоги — общего предела быть не может.</p>
+  </div>
+
+  <div class="lab">
+    <h4>Интерактив: тропинки к пределу</h4>
+    <p style="font-size:14px;color:var(--muted)">Точки x<sub>n</sub> подбираются к a, а точки f(x<sub>n</sub>) — к пределу (слева на оси y). Переключи режим и увеличивай n.</p>
+    <div class="ctl" id="geineBtns"></div>
+    <canvas id="cGeine" width="680" height="420"></canvas>
+    <div class="ctl">
+      <label>сколько точек n = <span class="val" id="geineNV">6</span></label>
+      <input type="range" id="geineN" min="2" max="20" step="1" value="6">
+    </div>
+    <div class="readout" id="geineOut"></div>
+  </div>
+
+  <h4>Классический контрпример: sin(1/x) при x → 0</h4>
+  <p>Берём <b>две</b> тропинки к нулю и считаем значения f(x) = sin(1/x):</p>
+  <table>
+    <tr><th>k</th><th>x<sub>k</sub> = 1/(2πk)</th><th>f = sin(2πk)</th><th>x'<sub>k</sub> = 1/(π/2 + 2πk)</th><th>f = sin(π/2 + 2πk)</th></tr>
+    <tr><td>1</td><td>≈ 0,159</td><td>0</td><td>≈ 0,127</td><td>1</td></tr>
+    <tr><td>2</td><td>≈ 0,080</td><td>0</td><td>≈ 0,071</td><td>1</td></tr>
+    <tr><td>3</td><td>≈ 0,053</td><td>0</td><td>≈ 0,049</td><td>1</td></tr>
+    <tr><td>→ ∞</td><td>→ 0</td><td>всё время 0</td><td>→ 0</td><td>всё время 1</td></tr>
+  </table>
+  <p>Обе тропинки идут к нулю, но по левой f всё время = <b>0</b>, а по правой f всё время = <b>1</b>. Итоги разные ⟹ <b>предела sin(1/x) в нуле не существует</b>. Включи в интерактиве режим «sin(1/x)» — синие точки лягут по уровню 0, розовые по уровню 1.</p>
+</section>
+
+<section data-group="2 · Предел функции" data-t="Как работает определение" data-desc="Разбор ε–δ на примере, почему A — предел, интерактив.">
+
+  <h2>Как работает определение — разбор на примере</h2>
+  <div class="intu"><span class="tag">Определение как игра</span>
+    <p>Определение предела удобно понимать как игру двух игроков. <b>Противник</b> называет ε — маленькую «трубу» вокруг числа A: «докажи, что можешь загнать значения функции сюда». <b>Ты</b> отвечаешь: находишь δ — насколько близко к точке a нужно взять x, чтобы значение f(x) точно попало в эту трубу. Если <b>на любой</b> ε у тебя есть ответ δ — значит A действительно предел.</p>
+  </div>
+
+  <h3>Пример: f(x) = 2x + 1, &nbsp; x → 1</h3>
+  <p>Подставим точку: f(1) = 2·1 + 1 = 3. Проверим по определению, что предел A = 3. Возьмём <b>произвольное</b> ε &gt; 0 и попробуем найти δ.</p>
+  <div class="df"><span class="tag">Вывод δ из ε</span>
+    <p>Мы хотим, чтобы выполнялось |f(x) − 3| &lt; ε. Распишем левую часть:</p>
+    <div class="formula">|f(x) − 3| = |(2x + 1) − 3| = |2x − 2| = 2·|x − 1|</div>
+    <p>Значит условие |f(x) − 3| &lt; ε превращается в:</p>
+    <div class="formula">2·|x − 1| &lt; ε &nbsp; ⟺ &nbsp; |x − 1| &lt; <span class="frac"><span class="num">ε</span><span class="den">2</span></span></div>
+    <p>Вот и ответ: достаточно взять &nbsp;<b>δ = <span class="frac"><span class="num">ε</span><span class="den">2</span></span></b>. &nbsp;Тогда как только 0 &lt; |x − 1| &lt; δ, автоматически |f(x) − 3| &lt; ε.</p>
+  </div>
+  <div class="note"><b>Почему это доказывает, что A = 3 — предел?</b> Мы нашли рабочую δ для <b>любого</b> ε (просто δ = ε/2 — какое ε ни дай, ответ есть). А это ровно то, что требует определение: ∀ε ∃δ. Следовательно, по определению предел равен 3. ∎</div>
+  <p class="note"><b>Про «такую» δ на графике.</b> δ — это не магическое число: это половина ширины окошка по x, при которой кусок графика над окошком целиком помещается в ε-полосу по y. Для прямой δ = ε/2; для кривой (например x²) δ считается иначе, но смысл тот же — см. интерактив в разделе «Определение предела функции».</p>
+
+  <div class="lab">
+    <h4>Интерактив: почему предел именно A = 3?</h4>
+    <p style="font-size:14px;color:var(--muted)">Двигай ε (труба вокруг проверяемого A) и сам проверяемый A. Смотри, находится ли δ. Зелёная точка — пример x внутри δ: её значение f(x) попадает в ε-полосу.</p>
+    <canvas id="cGame" width="680" height="440"></canvas>
+    <div class="ctl">
+      <label>ε = <span class="val" id="epsGV">0.60</span></label>
+      <input type="range" id="epsG" min="0.1" max="2" step="0.05" value="0.6">
+      <label>проверяем A = <span class="val" id="candAV">3.0</span></label>
+      <input type="range" id="candA" min="1.5" max="4.5" step="0.1" value="3">
+      <button class="btn" id="resetA">Вернуть A = 3</button>
+    </div>
+    <div class="readout" id="gameOut"></div>
+  </div>
+
+  <div class="warnbox"><span class="tag">Почему не другое число</span>
+    <p>Поставь A = 3,5 и уменьшай ε. Пока ε &gt; 0,5 труба ещё «дотягивается» до тройки, и δ формально есть. Но как только ε станет меньше 0,5 = |3 − 3,5|, полоса вокруг 3,5 перестаёт накрывать значение 3, к которому функция реально прижимается у x = 1 — и <b>никакая</b> δ не спасёт: точки рядом с a вылетают из ε-полосы. Значит 3,5 пределом быть не может. Пройти проверку на <b>каждом</b> ε способно только одно число — истинный предел 3.</p>
+  </div>
+</section>
+
+<!-- ============ 4. НЕОПРЕДЕЛЁННОСТИ ============ -->
+<section data-group="2 · Предел функции" data-t="Односторонние и на бесконечности" data-desc="Пределы слева/справа, на бесконечности, бесконечный предел.">
+  <h2>Разновидности предела функции</h2>
+  <div class="df"><span class="tag">Односторонние пределы</span>
+    <p><b>Справа</b> (x → a+0): для ∀ε&gt;0 ∃δ&gt;0, что при 0 &lt; x − a &lt; δ выполнено |f(x) − A₁| &lt; ε. Обозначают lim<sub>x→a+0</sub> f(x). <b>Слева</b> (x → a−0) — аналогично при −δ &lt; x − a &lt; 0.</p>
+  </div>
+  <div class="intu"><span class="tag">Связь с обычным пределом</span>
+    <p>Двусторонний предел <b>существует ⟺ левый и правый равны</b>: lim<sub>x→a</sub> f(x) = A ⟺ lim<sub>x→a−0</sub> = lim<sub>x→a+0</sub> = A. Если односторонние пределы разные — предела в точке нет (например, у ступеньки).</p>
+  </div>
+  <div class="df"><span class="tag">Предел на бесконечности</span>
+    <p>lim<sub>x→+∞</sub> f(x) = A: для ∀ε&gt;0 ∃M, что при x &gt; M выполнено |f(x) − A| &lt; ε.</p>
+  </div>
+  <div class="df"><span class="tag">Бесконечный предел</span>
+    <p>f(x) → ∞ при x → a: для ∀E&gt;0 ∃δ&gt;0, что при 0 &lt; |x − a| &lt; δ выполнено |f(x)| &gt; E.</p>
+  </div>
+</section>
+
+<section data-group="2 · Предел функции" data-t="Неопределённости" data-desc="Семь видов неопределённостей и что это значит.">
+  <h2>Неопределённости</h2>
+  <div class="intu"><span class="tag">Что это такое</span>
+    <p>Самый первый приём — просто подставить точку в функцию. Но иногда получается «странное» выражение вроде 0/0 или ∞/∞, из которого ответ не виден. Это и есть <b>неопределённость</b>: не ответ, а сигнал «нужно преобразовать выражение».</p>
+  </div>
+  <h4>Семь видов неопределённостей</h4>
+  <div class="formula"><span class="frac"><span class="num">0</span><span class="den">0</span></span> &nbsp;·&nbsp; <span class="frac"><span class="num">∞</span><span class="den">∞</span></span> &nbsp;·&nbsp; ∞ − ∞ &nbsp;·&nbsp; 0 · ∞ &nbsp;·&nbsp; 1<sup>∞</sup> &nbsp;·&nbsp; 0<sup>0</sup> &nbsp;·&nbsp; ∞<sup>0</sup></div>
+  <p>Раскрыть неопределённость — значит преобразовать выражение так, чтобы подстановка дала конкретное число (или ∞).</p>
+
+  <h4>А это НЕ неопределённости — ответ виден сразу</h4>
+  <table>
+    <tr><th>Выражение</th><th>Результат</th><th>Почему</th></tr>
+    <tr><td><span class="frac"><span class="num">c</span><span class="den">0</span></span> (c ≠ 0)</td><td>∞</td><td>делим на «почти ноль»</td></tr>
+    <tr><td><span class="frac"><span class="num">c</span><span class="den">∞</span></span></td><td>0</td><td>число делим на «огромное»</td></tr>
+    <tr><td>∞ + ∞</td><td>∞</td><td>оба растут в одну сторону</td></tr>
+    <tr><td>∞ · ∞</td><td>∞</td><td>произведение больших</td></tr>
+    <tr><td><span class="frac"><span class="num">0</span><span class="den">c</span></span> (c ≠ 0)</td><td>0</td><td>ноль делим на число</td></tr>
+  </table>
+  <p class="note">Итог: <b>сначала подставь точку.</b> Если вышло число — это и есть ответ. Если вышла одна из семи неопределённостей — переходи к приёмам из следующего раздела.</p>
+</section>
+
+<!-- ============ 4. КАК РЕШАТЬ БЕЗ ЛОПИТАЛЯ ============ -->
+<section data-group="3 · Вычисление" data-t="Приёмы (без Лопиталя)" data-desc="Восемь приёмов: подстановка, разложение, сопряжённое, старшая степень, замечательные, эквивалентности.">
+  <h2>Как приходить к ответу без Лопиталя</h2>
+  <p>Лопиталь — мощный, но на первых занятиях его ещё «нельзя»: важно понять механику. Ниже — приёмы, которые заменяют его и объясняют, <b>почему</b> получается именно такой ответ.</p>
+
+  <div class="method"><h4>1. Прямая подстановка</h4>
+    <p>Если функция непрерывна в точке и неопределённости нет — просто подставь.</p>
+    <div class="formula">lim<sub>x→2</sub> (x² + 1) = 2² + 1 = 5</div>
+  </div>
+
+  <div class="method"><h4>2. Неопределённость 0/0 с многочленами → разложить и сократить</h4>
+    <p>Ноль в числителе и знаменателе означает общий множитель (x − a). Раскладываем и сокращаем его.</p>
+    <div class="step">lim<sub>x→3</sub> <span class="frac"><span class="num">x² − 9</span><span class="den">x − 3</span></span> = lim <span class="frac"><span class="num">(x − 3)(x + 3)</span><span class="den">x − 3</span></span> = lim (x + 3) = <b>6</b></div>
+  </div>
+
+  <div class="method"><h4>3. Неопределённость 0/0 с корнями → домножить на сопряжённое</h4>
+    <p>Домножаем числитель и знаменатель на сопряжённое к корню, чтобы «убрать» корень по формуле (√u − √v)(√u + √v) = u − v.</p>
+    <div class="step">lim<sub>x→0</sub> <span class="frac"><span class="num">√(1 + x) − 1</span><span class="den">x</span></span> = lim <span class="frac"><span class="num">x</span><span class="den">x(√(1 + x) + 1)</span></span> = lim <span class="frac"><span class="num">1</span><span class="den">√(1 + x) + 1</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b></div>
+  </div>
+
+  <div class="method"><h4>4. Неопределённость ∞/∞ (рациональные) → делить на старшую степень</h4>
+    <p>Делим числитель и знаменатель на x в старшей степени. Правило по степеням: числитель степени p, знаменатель степени q:</p>
+    <ul>
+      <li>p &lt; q → предел <b>0</b>;</li>
+      <li>p = q → отношение старших коэффициентов;</li>
+      <li>p &gt; q → предел <b>∞</b>.</li>
+    </ul>
+    <div class="step">lim<sub>x→∞</sub> <span class="frac"><span class="num">3x² + 1</span><span class="den">x² + x</span></span> = lim <span class="frac"><span class="num">3 + 1/x²</span><span class="den">1 + 1/x</span></span> = <b>3</b></div>
+  </div>
+
+  <div class="method"><h4>5. Неопределённость ∞ − ∞ → общий знаменатель или сопряжённое</h4>
+    <div class="step">lim<sub>x→+∞</sub> (√(x² + x) − x) = lim <span class="frac"><span class="num">x</span><span class="den">√(x² + x) + x</span></span> = lim <span class="frac"><span class="num">1</span><span class="den">√(1 + 1/x) + 1</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b></div>
+  </div>
+
+  <div class="method"><h4>6. Тригонометрическая 0/0 → первый замечательный предел</h4>
+    <div class="step">lim<sub>x→0</sub> <span class="frac"><span class="num">sin 5x</span><span class="den">x</span></span> = lim 5 · <span class="frac"><span class="num">sin 5x</span><span class="den">5x</span></span> = 5 · 1 = <b>5</b></div>
+  </div>
+
+  <div class="method"><h4>7. Степень вида 1<sup>∞</sup> → второй замечательный предел</h4>
+    <div class="step">lim<sub>x→∞</sub> (1 + <span class="frac"><span class="num">1</span><span class="den">x</span></span>)<sup>2x</sup> = [ (1 + <span class="frac"><span class="num">1</span><span class="den">x</span></span>)<sup>x</sup> ]<sup>2</sup> = e² </div>
+  </div>
+
+  <div class="method"><h4>8. Эквивалентные бесконечно малые — то, что ты делаешь «в уме»</h4>
+    <p>При x → 0 малые функции можно заменять на эквивалентные (см. таблицу в разделе «Замечательные пределы»). Это и есть быстрый способ вместо Лопиталя.</p>
+    <div class="step">lim<sub>x→0</sub> <span class="frac"><span class="num">ln(1 + x)</span><span class="den">sin x</span></span> = [ln(1+x) ~ x, &nbsp;sin x ~ x] = lim <span class="frac"><span class="num">x</span><span class="den">x</span></span> = <b>1</b></div>
+  </div>
+  <div class="warnbox"><span class="tag">Осторожно</span>
+    <p>Эквивалентные бесконечно малые можно подставлять только в <b>множителях</b> (в произведении и частном). В <b>сумме/разности</b> так делать нельзя — можно потерять главный член и получить неверный ответ.</p>
+  </div>
+</section>
+
+<!-- ============ 5. ЗАМЕЧАТЕЛЬНЫЕ ПРЕДЕЛЫ ============ -->
+<section data-group="3 · Вычисление" data-t="Замечательные пределы" data-desc="Первый и второй замечательные пределы, следствия, таблица эквивалентностей.">
+  <h2>Замечательные пределы</h2>
+
+  <h3>Первый замечательный предел</h3>
+  <div class="formula" style="font-size:19px">lim<sub>x→0</sub> &nbsp;<span class="frac"><span class="num">sin x</span><span class="den">x</span></span> = 1</div>
+  <p>Геометрически (единичная окружность): при малом угле x выполнено sin x &lt; x &lt; tg x. Разделив на sin x и «сжав» неравенство, получаем, что отношение <span class="frac"><span class="num">sin x</span><span class="den">x</span></span> зажато между 1 и cos x → 1.</p>
+  <h4>Следствия (при x → 0)</h4>
+  <ul>
+    <li><span class="frac"><span class="num">tg x</span><span class="den">x</span></span> → 1</li>
+    <li><span class="frac"><span class="num">1 − cos x</span><span class="den">x²</span></span> → <span class="frac"><span class="num">1</span><span class="den">2</span></span></li>
+    <li><span class="frac"><span class="num">arcsin x</span><span class="den">x</span></span> → 1, &nbsp; <span class="frac"><span class="num">arctg x</span><span class="den">x</span></span> → 1</li>
+  </ul>
+
+  <h3>Второй замечательный предел</h3>
+  <div class="formula" style="font-size:19px">lim<sub>x→∞</sub> (1 + <span class="frac"><span class="num">1</span><span class="den">x</span></span>)<sup>x</sup> = e &nbsp;≈&nbsp; 2,71828…</div>
+  <p>Эквивалентная запись через x → 0: &nbsp; lim<sub>x→0</sub> (1 + x)<sup>1/x</sup> = e. Работает для неопределённости 1<sup>∞</sup>.</p>
+  <h4>Следствия (при x → 0)</h4>
+  <ul>
+    <li><span class="frac"><span class="num">ln(1 + x)</span><span class="den">x</span></span> → 1</li>
+    <li><span class="frac"><span class="num">e<sup>x</sup> − 1</span><span class="den">x</span></span> → 1</li>
+    <li><span class="frac"><span class="num">a<sup>x</sup> − 1</span><span class="den">x</span></span> → ln a</li>
+    <li><span class="frac"><span class="num">(1 + x)<sup>μ</sup> − 1</span><span class="den">x</span></span> → μ</li>
+  </ul>
+
+  <h3>Таблица эквивалентных бесконечно малых (x → 0)</h3>
+  <table>
+    <tr><th>Функция</th><th>Эквивалентна</th><th>Функция</th><th>Эквивалентна</th></tr>
+    <tr><td>sin x</td><td>x</td><td>ln(1 + x)</td><td>x</td></tr>
+    <tr><td>tg x</td><td>x</td><td>e<sup>x</sup> − 1</td><td>x</td></tr>
+    <tr><td>arcsin x</td><td>x</td><td>a<sup>x</sup> − 1</td><td>x·ln a</td></tr>
+    <tr><td>arctg x</td><td>x</td><td>(1 + x)<sup>μ</sup> − 1</td><td>μ·x</td></tr>
+    <tr><td>1 − cos x</td><td><span class="frac"><span class="num">x²</span><span class="den">2</span></span></td><td>√(1 + x) − 1</td><td><span class="frac"><span class="num">x</span><span class="den">2</span></span></td></tr>
+  </table>
+</section>
+
+<!-- ============ 6. ЗАДАЧИ ============ -->
+<section data-group="3 · Вычисление" data-new="1" data-t="Бесконечно малые и порядки малости" data-desc="Сравнение БМФ: одного порядка, высшего, порядка k, эквивалентные; таблица и примеры.">
+  <h2>Бесконечно малые и порядки малости</h2>
+  <div class="df"><span class="tag">Бесконечно малая функция (БМФ)</span>
+    <p>Функция α(x) называется <b>бесконечно малой</b> при x → a, если lim<sub>x→a</sub> α(x) = 0. (Например, sin x, 1 − cos x, x² при x → 0.)</p>
+  </div>
+  <div class="intu"><span class="tag">Зачем сравнивать — на числах</span>
+    <p>Разные БМФ стремятся к нулю с <b>разной скоростью</b>. Подставим x = 0,1:</p>
+    <p style="padding-left:12px">x = 0,1; &nbsp; x² = 0,01; &nbsp; x³ = 0,001. &nbsp;Каждая следующая степень в 10 раз <b>меньше</b>.</p>
+    <p>Говорят: x² <b>высшего порядка малости</b>, чем x («мельче»), а x³ — ещё мельче. Проверка через предел: <span class="frac"><span class="num">x²</span><span class="den">x</span></span> = x → 0, значит x² мельче x.</p>
+  </div>
+
+  <h3>Виды сравнения (α и β — БМФ при x → a)</h3>
+  <table>
+    <tr><th>Случай</th><th>Условие</th><th>Что значит</th></tr>
+    <tr><td>Одного порядка</td><td>lim <span class="frac"><span class="num">α</span><span class="den">β</span></span> = c ≠ 0</td><td>убывают «одинаково быстро»</td></tr>
+    <tr><td>α высшего порядка</td><td>lim <span class="frac"><span class="num">α</span><span class="den">β</span></span> = 0</td><td>α мельче, быстрее к 0 (как x² против x)</td></tr>
+    <tr><td>α порядка k</td><td>lim <span class="frac"><span class="num">α</span><span class="den">β<sup>k</sup></span></span> = c ≠ 0</td><td>α ведёт себя как β<sup>k</sup></td></tr>
+    <tr><td>Эквивалентные (α ~ β)</td><td>lim <span class="frac"><span class="num">α</span><span class="den">β</span></span> = 1</td><td>почти совпадают у нуля</td></tr>
+  </table>
+
+  <h3>Таблица эквивалентностей (при x → 0)</h3>
+  <p>Эти «простейшие двойники» известны заранее (следствия замечательных пределов). Ими и пользуемся.</p>
+  <table>
+    <tr><th>Функция</th><th>~</th><th>Функция</th><th>~</th></tr>
+    <tr><td>sin x</td><td>x</td><td>ln(1 + x)</td><td>x</td></tr>
+    <tr><td>tg x</td><td>x</td><td>e<sup>x</sup> − 1</td><td>x</td></tr>
+    <tr><td>arcsin x</td><td>x</td><td>a<sup>x</sup> − 1</td><td>x·ln a</td></tr>
+    <tr><td>arctg x</td><td>x</td><td>(1 + x)<sup>μ</sup> − 1</td><td>μ·x</td></tr>
+    <tr><td>1 − cos x</td><td><span class="frac"><span class="num">x²</span><span class="den">2</span></span></td><td>√(1 + x) − 1</td><td><span class="frac"><span class="num">x</span><span class="den">2</span></span></td></tr>
+  </table>
+  <div class="df"><span class="tag">Теорема о замене</span>
+    <p>В пределе <b>отношения</b> БМФ каждую можно заменить на эквивалентную — предел не изменится (только в произведениях/частных, не в суммах).</p>
+  </div>
+
+  <h3>Как найти порядок малости (относительно x)</h3>
+  <p><b>Порядок малости</b> α относительно x — это та степень <b>k</b>, при которой предел <span class="frac"><span class="num">α</span><span class="den">x<sup>k</sup></span></span> становится конечным и <b>не нулём</b>. Ищем k перебором: пока получается 0 — степень мала (α мельче), берём k больше.</p>
+
+  <div class="ex"><span class="tag">Разбор: α = 1 − cos x — почему порядок 2</span>
+    <p>Из таблицы: 1 − cos x у нуля ведёт себя как <span class="frac"><span class="num">x²</span><span class="den">2</span></span> (откуда x²: это следствие первого замечательного предела). Пробуем k:</p>
+    <p style="padding-left:12px"><b>k = 1:</b> &nbsp;lim <span class="frac"><span class="num">1 − cos x</span><span class="den">x</span></span> = lim <span class="frac"><span class="num">x²/2</span><span class="den">x</span></span> = lim <span class="frac"><span class="num">x</span><span class="den">2</span></span> = <b>0</b>. Ноль — значит 1 − cos x <b>мельче</b>, чем x; k = 1 мало.</p>
+    <p style="padding-left:12px"><b>k = 2:</b> &nbsp;lim <span class="frac"><span class="num">1 − cos x</span><span class="den">x²</span></span> = lim <span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b> ≠ 0. Конечное ненулевое — <b>попали</b>.</p>
+    <p>Деление на x даёт 0 (мало), деление на x² даёт 1/2 (в самый раз) ⟹ <b>порядок малости = 2</b>.</p>
+  </div>
+
+  <div class="task"><p class="q">Задача. Найди порядок малости α = tg x − sin x относительно x.</p>
+    <details><summary>Решение</summary>
+      <div class="step">Известно, что tg x − sin x ведёт себя как <span class="frac"><span class="num">x³</span><span class="den">2</span></span>. Перебираем k:</div>
+      <div class="step">k = 1: <span class="frac"><span class="num">x³/2</span><span class="den">x</span></span> = <span class="frac"><span class="num">x²</span><span class="den">2</span></span> → 0 (мало). &nbsp; k = 2: <span class="frac"><span class="num">x³/2</span><span class="den">x²</span></span> = <span class="frac"><span class="num">x</span><span class="den">2</span></span> → 0 (ещё мало).</div>
+      <div class="step">k = 3: <span class="frac"><span class="num">x³/2</span><span class="den">x³</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span> ≠ 0 — попали ⟹ порядок <b>3</b> (очень «мелкая»).</div>
+    </details></div>
+  <div class="task"><p class="q">Задача. Порядок малости α = √(1 + x) − 1.</p>
+    <details><summary>Решение</summary>
+      <div class="step">√(1 + x) − 1 ~ <span class="frac"><span class="num">x</span><span class="den">2</span></span>. k = 1: <span class="frac"><span class="num">x/2</span><span class="den">x</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span> ≠ 0 — сразу попали ⟹ порядок <b>1</b>.</div>
+    </details></div>
+  <p class="note">Правило простое: делим α на x, x², x³… — первая степень, где получилось <b>не ноль</b>, и есть порядок малости. А метод эквивалентностей — это замена α на «x^(порядок)·коэффициент», что сохраняет предел отношения.</p>
+
+  <h3>Реальные пределы через порядки малости</h3>
+  <p>Тут порядки малости работают «вживую»: сравниваем, какого порядка числитель и знаменатель, и сокращаем.</p>
+  <div class="task"><p class="q">1. lim<sub>x→0</sub> <span class="frac"><span class="num">e<sup>2x</sup> − 1</span><span class="den">sin 3x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Числитель e<sup>2x</sup> − 1 ~ 2x (порядок 1). Знаменатель sin 3x ~ 3x (порядок 1) — одного порядка.</div>
+      <div class="step"><span class="frac"><span class="num">2x</span><span class="den">3x</span></span> = <b><span class="frac"><span class="num">2</span><span class="den">3</span></span></b>.</div>
+    </details></div>
+  <div class="task"><p class="q">2. lim<sub>x→0</sub> <span class="frac"><span class="num">1 − cos x</span><span class="den">x·tg x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Числитель 1 − cos x ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span> (порядок 2). Знаменатель x·tg x ~ x·x = x² (порядок 2) — тоже порядка 2.</div>
+      <div class="step"><span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+  <div class="task"><p class="q">3. lim<sub>x→0</sub> <span class="frac"><span class="num">ln(1 + x²)</span><span class="den">1 − cos x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">ln(1 + x²) ~ x² (порядок 2); 1 − cos x ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span> (порядок 2).</div>
+      <div class="step"><span class="frac"><span class="num">x²</span><span class="den">x²/2</span></span> = <b>2</b>.</div>
+    </details></div>
+  <div class="task"><p class="q">4. lim<sub>x→0</sub> <span class="frac"><span class="num">√(1 + x·sin x) − 1</span><span class="den">x²</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">x·sin x ~ x·x = x². Числитель √(1 + u) − 1 ~ <span class="frac"><span class="num">u</span><span class="den">2</span></span> = <span class="frac"><span class="num">x·sin x</span><span class="den">2</span></span> ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span> (порядок 2 — как и знаменатель).</div>
+      <div class="step"><span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+</section>
+
+<section data-group="4 · Разборы задач" data-t="Базовые задачи" data-desc="Восемь базовых задач с пошаговыми решениями.">
+  <h2>Задачи с подробными решениями</h2>
+  <p style="color:var(--muted)">Каждая задача — на конкретный приём. Сначала попробуй сама, потом раскрой решение.</p>
+
+  <div class="task"><p class="q">1. lim<sub>x→3</sub> <span class="frac"><span class="num">x² − 9</span><span class="den">x − 3</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Подстановка даёт 0/0 — неопределённость.</div>
+      <div class="step">Раскладываем: x² − 9 = (x − 3)(x + 3).</div>
+      <div class="step">Сокращаем (x − 3): остаётся x + 3 → 3 + 3 = <b>6</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">2. lim<sub>x→∞</sub> <span class="frac"><span class="num">2x² − 3</span><span class="den">5x² + x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Неопределённость <span class="frac"><span class="num">∞</span><span class="den">∞</span></span>. Степени числителя и знаменателя равны (обе 2).</div>
+      <div class="step">Делим всё на x²: <span class="frac"><span class="num">2 − 3/x²</span><span class="den">5 + 1/x</span></span> → <span class="frac"><span class="num">2</span><span class="den">5</span></span>.</div>
+      <div class="step">Ответ: <b><span class="frac"><span class="num">2</span><span class="den">5</span></span></b> (отношение старших коэффициентов).</div>
+    </details></div>
+
+  <div class="task"><p class="q">3. lim<sub>x→0</sub> <span class="frac"><span class="num">√(1 + x) − 1</span><span class="den">x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step"><span class="frac"><span class="num">0</span><span class="den">0</span></span>. Домножаем на сопряжённое (√(1 + x) + 1).</div>
+      <div class="step">Числитель: (1 + x) − 1 = x. Дробь: <span class="frac"><span class="num">x</span><span class="den">x(√(1 + x) + 1)</span></span>.</div>
+      <div class="step">Сокращаем x: <span class="frac"><span class="num">1</span><span class="den">√(1 + x) + 1</span></span> → <span class="frac"><span class="num">1</span><span class="den">1 + 1</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">4. lim<sub>x→0</sub> <span class="frac"><span class="num">sin 3x</span><span class="den">sin 5x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step"><span class="frac"><span class="num">0</span><span class="den">0</span></span>. Пользуемся первым замечательным пределом (или эквивалентностью sin u ~ u).</div>
+      <div class="step">sin 3x ~ 3x, sin 5x ~ 5x → <span class="frac"><span class="num">3x</span><span class="den">5x</span></span> = <b><span class="frac"><span class="num">3</span><span class="den">5</span></span></b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">5. lim<sub>x→0</sub> <span class="frac"><span class="num">1 − cos x</span><span class="den">x²</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step"><span class="frac"><span class="num">0</span><span class="den">0</span></span>. По следствию первого замечательного: 1 − cos x ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span>.</div>
+      <div class="step"><span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">6. lim<sub>x→∞</sub> (1 + <span class="frac"><span class="num">3</span><span class="den">x</span></span>)<sup>x</sup></p>
+    <details><summary>Решение</summary>
+      <div class="step">Неопределённость 1<sup>∞</sup>. Приводим ко второму замечательному пределу.</div>
+      <div class="step">(1 + <span class="frac"><span class="num">3</span><span class="den">x</span></span>)<sup>x</sup> = [ (1 + <span class="frac"><span class="num">3</span><span class="den">x</span></span>)<sup>x/3</sup> ]<sup>3</sup> → e³.</div>
+      <div class="step">Ответ: <b>e³</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">7. lim<sub>x→+∞</sub> (√(x² + 2x) − x)</p>
+    <details><summary>Решение</summary>
+      <div class="step">Неопределённость ∞ − ∞. Домножаем на сопряжённое (√(x² + 2x) + x).</div>
+      <div class="step">Числитель: (x² + 2x) − x² = 2x. Дробь: <span class="frac"><span class="num">2x</span><span class="den">√(x² + 2x) + x</span></span>.</div>
+      <div class="step">Делим на x: <span class="frac"><span class="num">2</span><span class="den">√(1 + 2/x) + 1</span></span> → <span class="frac"><span class="num">2</span><span class="den">2</span></span> = <b>1</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">8. lim<sub>x→0</sub> <span class="frac"><span class="num">ln(1 + 2x)</span><span class="den">x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step"><span class="frac"><span class="num">0</span><span class="den">0</span></span>. Эквивалентность: ln(1 + 2x) ~ 2x.</div>
+      <div class="step"><span class="frac"><span class="num">2x</span><span class="den">x</span></span> = <b>2</b>.</div>
+    </details></div>
+</section>
+
+<!-- ============ РАЗБОР: замечательные пределы 5.310, 5.311, 5.316 ============ -->
+<section data-group="4 · Разборы задач" data-t="Сложные: 5.310, 5.311, 5.316" data-desc="Замечательные пределы через замену переменной и полуугловые формулы.">
+  <h2>Сложные замечательные пределы</h2>
+  <p class="blurb">Общий приём: <b>замена</b>, чтобы точка ушла в 0, затем первый замечательный предел / эквивалентности.</p>
+
+  <h3>№ 5.310</h3>
+  <div class="formula">lim<sub>x→α</sub> tg<span class="frac"><span class="num">πx</span><span class="den">2α</span></span> · sin<span class="frac"><span class="num">x−α</span><span class="den">2</span></span></div>
+  <div class="step">При x = α: tg(π/2) = ∞, sin 0 = 0 — неопределённость 0·∞.</div>
+  <div class="step"><b>Замена</b> t = x − α, t → 0, x = α + t.</div>
+  <div class="step">tg<span class="frac"><span class="num">πx</span><span class="den">2α</span></span> = tg(<span class="frac"><span class="num">π</span><span class="den">2</span></span> + <span class="frac"><span class="num">πt</span><span class="den">2α</span></span>) = −ctg<span class="frac"><span class="num">πt</span><span class="den">2α</span></span> &nbsp;(тождество tg(π/2 + u) = −ctg u).</div>
+  <div class="step">Выражение = −ctg<span class="frac"><span class="num">πt</span><span class="den">2α</span></span> · sin<span class="frac"><span class="num">t</span><span class="den">2</span></span> = −<span class="frac"><span class="num">cos(πt/2α)</span><span class="den">sin(πt/2α)</span></span>·sin<span class="frac"><span class="num">t</span><span class="den">2</span></span>.</div>
+  <div class="step">При t→0: cos → 1, sin(πt/2α) ~ πt/2α, sin(t/2) ~ t/2. Значит ≈ −<span class="frac"><span class="num">1</span><span class="den">πt/2α</span></span>·<span class="frac"><span class="num">t</span><span class="den">2</span></span> = −<span class="frac"><span class="num">2α</span><span class="den">πt</span></span>·<span class="frac"><span class="num">t</span><span class="den">2</span></span> = −<span class="frac"><span class="num">α</span><span class="den">π</span></span>.</div>
+  <div class="step">Ответ: <b>−<span class="frac"><span class="num">α</span><span class="den">π</span></span></b></div>
+
+  <h3>№ 5.311</h3>
+  <div class="formula">lim<sub>x→π/4</sub> <span class="frac"><span class="num">√2 − 2cos x</span><span class="den">π − 4x</span></span></div>
+  <div class="step">При x = π/4: cos(π/4) = √2/2, числитель √2 − √2 = 0; знаменатель π − π = 0. 0/0.</div>
+  <div class="step"><b>Замена</b> t = x − π/4, x = π/4 + t. Тогда cos x = cos(π/4 + t) = <span class="frac"><span class="num">√2</span><span class="den">2</span></span>(cos t − sin t).</div>
+  <div class="step">Числитель: √2 − 2cos x = √2 − √2(cos t − sin t) = √2(1 − cos t + sin t). Знаменатель: π − 4x = −4t.</div>
+  <div class="step">Выражение = −<span class="frac"><span class="num">√2</span><span class="den">4</span></span>·<span class="frac"><span class="num">(1 − cos t) + sin t</span><span class="den">t</span></span>. При t→0: <span class="frac"><span class="num">1 − cos t</span><span class="den">t</span></span> → 0, <span class="frac"><span class="num">sin t</span><span class="den">t</span></span> → 1, значит скобка → 1.</div>
+  <div class="step">Ответ: <b>−<span class="frac"><span class="num">√2</span><span class="den">4</span></span></b></div>
+
+  <h3>№ 5.316</h3>
+  <div class="formula">lim<sub>x→π</sub> <span class="frac"><span class="num">1 + cos 5x</span><span class="den">1 − cos 4x</span></span></div>
+  <div class="step">При x = π: cos 5π = −1 ⟹ 1 + cos5x = 0; cos 4π = 1 ⟹ 1 − cos4x = 0. 0/0.</div>
+  <div class="step"><b>Замена</b> t = x − π, x = π + t. cos 5x = cos(5π + 5t) = −cos 5t, поэтому 1 + cos5x = 1 − cos 5t. А cos 4x = cos(4π + 4t) = cos 4t, поэтому 1 − cos4x = 1 − cos 4t.</div>
+  <div class="step">Выражение = <span class="frac"><span class="num">1 − cos 5t</span><span class="den">1 − cos 4t</span></span>. Пользуемся 1 − cos kt ~ <span class="frac"><span class="num">(kt)²</span><span class="den">2</span></span>: числитель ~ <span class="frac"><span class="num">25t²</span><span class="den">2</span></span>, знаменатель ~ <span class="frac"><span class="num">16t²</span><span class="den">2</span></span>.</div>
+  <div class="step">Ответ: <b><span class="frac"><span class="num">25</span><span class="den">16</span></span></b></div>
+</section>
+
+<!-- ============ РАЗБОР: пределы с корнями ============ -->
+<section data-group="4 · Разборы задач" data-t="Пределы с корнями (5.297, 5.298)" data-desc="Домножение на сопряжённое; для кубических корней — неполный квадрат.">
+  <h2>Пределы с корнями</h2>
+  <h3>№ 5.297 — двойное сопряжённое</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">√(x²+4) − 2</span><span class="den">√(x²+9) − 3</span></span></div>
+  <div class="step">0/0. Домножаем числитель на (√(x²+4)+2), знаменатель на (√(x²+9)+3) — каждый множитель ставим и сверху, и снизу.</div>
+  <div class="step">Числитель даёт (x²+4)−4 = x², знаменатель (x²+9)−9 = x². Остаётся <span class="frac"><span class="num">x²(√(x²+9)+3)</span><span class="den">x²(√(x²+4)+2)</span></span>.</div>
+  <div class="step">Сокращаем x²: <span class="frac"><span class="num">√(x²+9)+3</span><span class="den">√(x²+4)+2</span></span> → <span class="frac"><span class="num">3+3</span><span class="den">2+2</span></span> = <b><span class="frac"><span class="num">3</span><span class="den">2</span></span></b>.</div>
+
+  <h3>№ 5.298 — квадратные и кубические корни</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">√(2+x) − √(2−x)</span><span class="den">∛(2+x) − ∛(2−x)</span></span></div>
+  <div class="step">Числитель (разность квадратных корней) домножаем на сопряжённое (√(2+x)+√(2−x)) → даёт 2x.</div>
+  <div class="step">Знаменатель (разность кубических) — на неполный квадрат a²+ab+b² (a=∛(2+x), b=∛(2−x)) → тоже даёт 2x. Каждый множитель ставим и сверху, и снизу.</div>
+  <div class="step">После сокращения 2x: <span class="frac"><span class="num">∛(2+x)²+∛((2+x)(2−x))+∛(2−x)²</span><span class="den">√(2+x)+√(2−x)</span></span> → <span class="frac"><span class="num">3∛4</span><span class="den">2√2</span></span> = <b><span class="frac"><span class="num">3</span><span class="den">2</span></span>∛… = <span class="frac"><span class="num">3</span><span class="den">2</span></span>⁶√2</b> ≈ 1,68.</div>
+  <div class="note">Правило: разность <b>квадратных</b> корней гасим сопряжённым (a−b)(a+b); разность <b>кубических</b> — неполным квадратом (a−b)(a²+ab+b²). То же самое можно сделать эквивалентностями (см. «Приёмы»).</div>
+</section>
+
+<!-- ============ ПОСЛЕДОВАТЕЛЬНОСТИ: теоремы, e ============ -->
+<section data-group="1 · Последовательности" data-t="Теоремы о пределах" data-desc="Единственность, ограниченность, теорема о зажатой, арифметика пределов.">
+  <h2>Теоремы о пределах последовательностей</h2>
+  <div class="df"><span class="tag">Единственность</span><p>Сходящаяся последовательность имеет <b>ровно один</b> предел.</p></div>
+  <div class="df"><span class="tag">Ограниченность</span><p>Всякая сходящаяся последовательность <b>ограничена</b> (обратное неверно: (−1)<sup>n</sup> ограничена, но предела нет).</p></div>
+  <div class="df"><span class="tag">Теорема о зажатой («о двух милиционерах»)</span>
+    <p>Если x<sub>n</sub> ≤ y<sub>n</sub> ≤ z<sub>n</sub> (начиная с некоторого номера) и x<sub>n</sub> → a, z<sub>n</sub> → a, то и y<sub>n</sub> → a.</p>
+  </div>
+  <div class="intu"><span class="tag">Как пользоваться</span><p>Зажимаем «неудобную» последовательность между двумя простыми с одинаковым пределом. Так, например, доказывают первый замечательный предел.</p></div>
+  <div class="df"><span class="tag">Арифметика пределов</span>
+    <p>Если x<sub>n</sub> → a, y<sub>n</sub> → b, то: x<sub>n</sub> ± y<sub>n</sub> → a ± b; &nbsp; x<sub>n</sub>·y<sub>n</sub> → a·b; &nbsp; <span class="frac"><span class="num">x<sub>n</sub></span><span class="den">y<sub>n</sub></span></span> → <span class="frac"><span class="num">a</span><span class="den">b</span></span> (при b ≠ 0).</p>
+  </div>
+  <div class="ex"><span class="tag">Пример — арифметика в деле</span>
+    <p>lim <span class="frac"><span class="num">3n² + 2n</span><span class="den">n² + 1</span></span>. Делим числитель и знаменатель на n²: <span class="frac"><span class="num">3 + 2/n</span><span class="den">1 + 1/n²</span></span>.</p>
+    <p>По арифметике: 2/n → 0 и 1/n² → 0, значит числитель → 3, знаменатель → 1, а их частное → <b>3</b>.</p>
+  </div>
+</section>
+
+<section data-group="1 · Последовательности" data-t="Монотонные и Вейерштрасс" data-desc="Неубывающие/невозрастающие последовательности и теорема Вейерштрасса.">
+  <h2>Монотонные последовательности</h2>
+  <div class="df"><span class="tag">Определения</span>
+    <p><b>Неубывающая</b>: x<sub>1</sub> ≤ x<sub>2</sub> ≤ … <b>Невозрастающая</b>: x<sub>1</sub> ≥ x<sub>2</sub> ≥ … Строгие неравенства дают <b>монотонно возрастающую/убывающую</b>.</p>
+  </div>
+  <div class="df"><span class="tag">Теорема Вейерштрасса</span>
+    <p>Если неубывающая последовательность <b>ограничена сверху</b>, то она имеет предел (равный её точной верхней грани sup). Аналогично невозрастающая, ограниченная снизу, имеет предел (равный inf).</p>
+  </div>
+  <details><summary>Показать идею доказательства</summary>
+    <div class="step">Ограниченная сверху последовательность имеет точную верхнюю грань L = sup{x<sub>n</sub>}.</div>
+    <div class="step">Для любого ε &gt; 0 число L − ε уже не верхняя грань, поэтому найдётся x<sub>N</sub> &gt; L − ε. А так как последовательность неубывающая и L — верхняя грань, при всех n &gt; N: L − ε &lt; x<sub>n</sub> ≤ L &lt; L + ε, то есть |x<sub>n</sub> − L| &lt; ε. Значит lim x<sub>n</sub> = L. ∎</div>
+  </details>
+  <p class="note">Это главный инструмент: чтобы доказать существование предела, часто достаточно показать <b>монотонность + ограниченность</b> (не находя сам предел).</p>
+</section>
+
+<section data-group="1 · Последовательности" data-t="Критерий Коши" data-desc="Фундаментальные последовательности; критерий сходимости.">
+  <h2>Критерий Коши</h2>
+  <div class="df"><span class="tag">Критерий</span>
+    <p>Последовательность (x<sub>n</sub>) сходится <b>тогда и только тогда</b>, когда она <b>фундаментальная</b>: для любого ε &gt; 0 найдётся N такое, что для всех n &gt; N и всех p ∈ ℕ выполнено |x<sub>n+p</sub> − x<sub>n</sub>| &lt; ε.</p>
+  </div>
+  <div class="intu"><span class="tag">Смысл</span>
+    <p>Члены последовательности с большими номерами становятся сколь угодно близки <b>друг к другу</b> — не нужно заранее знать предел, чтобы доказать сходимость. Удобно, когда предел неизвестен.</p>
+  </div>
+</section>
+
+<section data-group="1 · Последовательности" data-t="Число e" data-desc="Предел (1+1/n)ⁿ, монотонность и ограниченность, связь со вторым замечательным пределом.">
+  <h2>Число e</h2>
+  <div class="df"><span class="tag">Теорема</span>
+    <p>Последовательность x<sub>n</sub> = (1 + <span class="frac"><span class="num">1</span><span class="den">n</span></span>)<sup>n</sup> имеет предел, который обозначают буквой <b>e</b>:</p>
+    <div class="formula">lim<sub>n→∞</sub> (1 + <span class="frac"><span class="num">1</span><span class="den">n</span></span>)<sup>n</sup> = e ≈ 2,718281…</div>
+  </div>
+  <div class="intu"><span class="tag">Как это доказывают</span>
+    <p>Показывают два факта — и дальше работает теорема Вейерштрасса:</p>
+    <ol>
+      <li><b>Монотонность:</b> раскрыв (1+1/n)<sup>n</sup> по биному Ньютона, видно, что каждый следующий член x<sub>n+1</sub> имеет и больше слагаемых, и каждое слагаемое больше (множители вида (1 − k/n) растут с ростом n). Значит x<sub>n</sub> возрастает.</li>
+      <li><b>Ограниченность сверху:</b> та же сумма оценивается сверху рядом 1 + 1 + <span class="frac"><span class="num">1</span><span class="den">2!</span></span> + <span class="frac"><span class="num">1</span><span class="den">3!</span></span> + … &lt; 3.</li>
+    </ol>
+    <p>Возрастает и ограничена ⟹ по Вейерштрассу предел существует. Его и назвали e.</p>
+  </div>
+  <p class="note">Отсюда растёт <b>второй замечательный предел</b>: lim (1 + 1/x)<sup>x</sup> = e (см. главу «Вычисление»).</p>
+</section>
+
+<!-- ============ ТРЕНАЖЁР: замечательные пределы ============ -->
+<section data-group="4 · Разборы задач" data-t="Тренажёр: замечательные пределы" data-desc="Десять задач на первый и второй замечательные пределы, отношения, эквивалентности.">
+  <h2>Тренажёр: замечательные пределы</h2>
+  <p class="blurb">Разные приёмы: отношения синусов, 1 − cos, оба замечательных, эквивалентности. Сначала попробуй сам, потом раскрой решение.</p>
+
+  <h3>Первый замечательный (sin, tg, arcsin)</h3>
+  <div class="task"><p class="q">1. lim<sub>x→0</sub> <span class="frac"><span class="num">sin 4x</span><span class="den">sin 7x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">0/0. Домножим и поделим, чтобы получить «sin/своё»: <span class="frac"><span class="num">sin 4x</span><span class="den">sin 7x</span></span> = <span class="frac"><span class="num">4x</span><span class="den">7x</span></span>·<span class="frac"><span class="num">sin4x/4x</span><span class="den">sin7x/7x</span></span> → <span class="frac"><span class="num">4</span><span class="den">7</span></span>·<span class="frac"><span class="num">1</span><span class="den">1</span></span> = <b><span class="frac"><span class="num">4</span><span class="den">7</span></span></b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">2. lim<sub>x→0</sub> <span class="frac"><span class="num">tg 3x</span><span class="den">x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">= 3·<span class="frac"><span class="num">tg 3x</span><span class="den">3x</span></span> → 3·1 = <b>3</b> (tg u / u → 1).</div>
+    </details></div>
+
+  <div class="task"><p class="q">3. lim<sub>x→0</sub> <span class="frac"><span class="num">arcsin 5x</span><span class="den">2x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">= <span class="frac"><span class="num">5</span><span class="den">2</span></span>·<span class="frac"><span class="num">arcsin 5x</span><span class="den">5x</span></span> → <span class="frac"><span class="num">5</span><span class="den">2</span></span>·1 = <b><span class="frac"><span class="num">5</span><span class="den">2</span></span></b> (arcsin u / u → 1).</div>
+    </details></div>
+
+  <div class="task"><p class="q">4. lim<sub>x→0</sub> <span class="frac"><span class="num">sin² 3x</span><span class="den">x²</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">= (<span class="frac"><span class="num">sin 3x</span><span class="den">x</span></span>)² = (3·<span class="frac"><span class="num">sin 3x</span><span class="den">3x</span></span>)² → 3² = <b>9</b>.</div>
+    </details></div>
+
+  <h3>Через 1 − cos</h3>
+  <div class="task"><p class="q">5. lim<sub>x→0</sub> <span class="frac"><span class="num">1 − cos 6x</span><span class="den">x²</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Следствие 1 − cos u ~ <span class="frac"><span class="num">u²</span><span class="den">2</span></span>. Здесь u = 6x: 1 − cos 6x ~ <span class="frac"><span class="num">36x²</span><span class="den">2</span></span> = 18x².</div>
+      <div class="step"><span class="frac"><span class="num">18x²</span><span class="den">x²</span></span> = <b>18</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">6. ★ lim<sub>x→0</sub> <span class="frac"><span class="num">tg x − sin x</span><span class="den">x³</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">tg x − sin x = sin x·(<span class="frac"><span class="num">1</span><span class="den">cos x</span></span> − 1) = <span class="frac"><span class="num">sin x·(1 − cos x)</span><span class="den">cos x</span></span>.</div>
+      <div class="step">Эквивалентности: sin x ~ x, 1 − cos x ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span>, cos x → 1. Значит числитель ~ x·<span class="frac"><span class="num">x²</span><span class="den">2</span></span> = <span class="frac"><span class="num">x³</span><span class="den">2</span></span>.</div>
+      <div class="step"><span class="frac"><span class="num">x³/2</span><span class="den">x³</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+
+  <h3>Второй замечательный (вид 1<sup>∞</sup>)</h3>
+  <div class="task"><p class="q">7. lim<sub>x→∞</sub> (1 + <span class="frac"><span class="num">2</span><span class="den">x</span></span>)<sup>3x</sup></p>
+    <details><summary>Решение</summary>
+      <div class="step">= [ (1 + <span class="frac"><span class="num">2</span><span class="den">x</span></span>)<sup>x/2</sup> ]<sup>6</sup> → e<sup>6</sup>. Ответ: <b>e⁶</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">8. lim<sub>x→0</sub> (1 + 5x)<sup>1/x</sup></p>
+    <details><summary>Решение</summary>
+      <div class="step">= [ (1 + 5x)<sup>1/(5x)</sup> ]<sup>5</sup> → e<sup>5</sup>. Ответ: <b>e⁵</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">9. ★ lim<sub>x→∞</sub> (<span class="frac"><span class="num">x + 1</span><span class="den">x − 1</span></span>)<sup>x</sup></p>
+    <details><summary>Решение</summary>
+      <div class="step">Выделяем 1: <span class="frac"><span class="num">x + 1</span><span class="den">x − 1</span></span> = 1 + <span class="frac"><span class="num">2</span><span class="den">x − 1</span></span>. Замена t = x − 1 → ∞, x = t + 1.</div>
+      <div class="step">(1 + <span class="frac"><span class="num">2</span><span class="den">t</span></span>)<sup>t+1</sup> = (1 + <span class="frac"><span class="num">2</span><span class="den">t</span></span>)<sup>t</sup> · (1 + <span class="frac"><span class="num">2</span><span class="den">t</span></span>) → e² · 1 = <b>e²</b>.</div>
+    </details></div>
+
+  <h3>Через эквивалентности</h3>
+  <div class="task"><p class="q">10. lim<sub>x→0</sub> <span class="frac"><span class="num">e<sup>3x</sup> − 1</span><span class="den">sin 2x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Эквивалентности: e<sup>3x</sup> − 1 ~ 3x, sin 2x ~ 2x.</div>
+      <div class="step"><span class="frac"><span class="num">3x</span><span class="den">2x</span></span> = <b><span class="frac"><span class="num">3</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">11. lim<sub>x→0</sub> <span class="frac"><span class="num">ln(1 + 4x)</span><span class="den">tg 2x</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">ln(1 + 4x) ~ 4x, tg 2x ~ 2x. <span class="frac"><span class="num">4x</span><span class="den">2x</span></span> = <b>2</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">12. ★ lim<sub>x→π/2</sub> <span class="frac"><span class="num">1 − sin x</span><span class="den">(π/2 − x)²</span></span></p>
+    <details><summary>Решение</summary>
+      <div class="step">Замена t = <span class="frac"><span class="num">π</span><span class="den">2</span></span> − x → 0, тогда x = <span class="frac"><span class="num">π</span><span class="den">2</span></span> − t и sin x = sin(<span class="frac"><span class="num">π</span><span class="den">2</span></span> − t) = cos t.</div>
+      <div class="step"><span class="frac"><span class="num">1 − cos t</span><span class="den">t²</span></span> → <span class="frac"><span class="num">1</span><span class="den">2</span></span> (следствие первого замечательного). Ответ: <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+    </details></div>
+</section>
+
+<!-- ============ СЛОЖНЫЕ: комбинируем приёмы ============ -->
+<section data-group="4 · Разборы задач" data-t="Сложные: комбинируем приёмы" data-desc="Многошаговые пределы, где надо догадаться: домножить, узнать замечательный, скомбинировать.">
+  <h2>Сложные пределы — комбинация приёмов</h2>
+  <p class="blurb">Здесь нет одного шаблона — нужно <b>увидеть</b>, как свести к замечательному пределу или эквивалентности. Ключевой ход в каждой задаче выделен.</p>
+
+  <h3>Задача 1</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">√(1 + x·sin x) − 1</span><span class="den">e<sup>x²</sup> − 1</span></span></div>
+  <div class="step"><b>Догадка:</b> и вверху, и внизу — «что-то минус 1», а такие выражения заменяются эквивалентностями. Обозначим u = x·sin x. Так как sin x ~ x, то u ~ x².</div>
+  <div class="step"><b>Числитель:</b> √(1 + u) − 1 ~ <span class="frac"><span class="num">u</span><span class="den">2</span></span> = <span class="frac"><span class="num">x·sin x</span><span class="den">2</span></span> ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span>.</div>
+  <div class="step"><b>Знаменатель:</b> e<sup>x²</sup> − 1 ~ x².</div>
+  <div class="step"><span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
+
+  <h3>Задача 2</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">cos x − cos 3x</span><span class="den">x²</span></span></div>
+  <div class="step"><b>Догадка:</b> разность косинусов сама по себе не эквивалентность — сначала превращаем её в <b>произведение</b> формулой cos A − cos B = −2 sin<span class="frac"><span class="num">A+B</span><span class="den">2</span></span> sin<span class="frac"><span class="num">A−B</span><span class="den">2</span></span>.</div>
+  <div class="step">При A = x, B = 3x: cos x − cos 3x = −2 sin 2x · sin(−x) = 2 sin 2x · sin x.</div>
+  <div class="step">Теперь работают синусы: 2 sin 2x · sin x ~ 2·(2x)·(x) = 4x².</div>
+  <div class="step"><span class="frac"><span class="num">4x²</span><span class="den">x²</span></span> = <b>4</b>.</div>
+
+  <h3>Задача 3</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">∛(1 + x) − ∛(1 − x)</span><span class="den">x</span></span></div>
+  <div class="step"><b>Догадка:</b> разность двух корней — выделяем у каждого «… − 1», чтобы применить (1 + u)<sup>μ</sup> − 1 ~ μu (здесь μ = 1/3).</div>
+  <div class="step">∛(1 + x) − ∛(1 − x) = [∛(1+x) − 1] − [∛(1−x) − 1] ~ <span class="frac"><span class="num">1</span><span class="den">3</span></span>x − <span class="frac"><span class="num">1</span><span class="den">3</span></span>(−x) = <span class="frac"><span class="num">2x</span><span class="den">3</span></span>.</div>
+  <div class="step"><span class="frac"><span class="num">2x/3</span><span class="den">x</span></span> = <b><span class="frac"><span class="num">2</span><span class="den">3</span></span></b>. <span class="pill">осторожно: эквивалентности — только для каждого «(корень − 1)», не для всей разности сразу</span></div>
+
+  <h3>Задача 4</h3>
+  <div class="formula">lim<sub>x→+∞</sub> x·(ln(x + 1) − ln x)</div>
+  <div class="step"><b>Догадка:</b> это ∞·0. Собираем логарифмы в один: ln(x+1) − ln x = ln<span class="frac"><span class="num">x+1</span><span class="den">x</span></span> = ln(1 + <span class="frac"><span class="num">1</span><span class="den">x</span></span>).</div>
+  <div class="step">Замена t = <span class="frac"><span class="num">1</span><span class="den">x</span></span> → 0: выражение = <span class="frac"><span class="num">1</span><span class="den">t</span></span>·ln(1 + t) = <span class="frac"><span class="num">ln(1 + t)</span><span class="den">t</span></span> → 1.</div>
+  <div class="step">Ответ: <b>1</b>.</div>
+
+  <h3>Задача 5 ★ (классика на 1<sup>∞</sup>)</h3>
+  <div class="formula">lim<sub>x→0</sub> (cos x)<sup>1/x²</sup></div>
+  <div class="step"><b>Догадка:</b> вид 1<sup>∞</sup> — берём <b>логарифм</b> предела. Пусть L = предел, тогда ln L = lim <span class="frac"><span class="num">1</span><span class="den">x²</span></span>·ln(cos x).</div>
+  <div class="step">ln(cos x) = ln(1 + (cos x − 1)) ~ (cos x − 1) ~ −<span class="frac"><span class="num">x²</span><span class="den">2</span></span> &nbsp;(использовали ln(1+u) ~ u и 1 − cos x ~ x²/2).</div>
+  <div class="step">ln L = lim <span class="frac"><span class="num">1</span><span class="den">x²</span></span>·(−<span class="frac"><span class="num">x²</span><span class="den">2</span></span>) = −<span class="frac"><span class="num">1</span><span class="den">2</span></span>. Значит L = e<sup>−1/2</sup> = <b><span class="frac"><span class="num">1</span><span class="den">√e</span></span></b> ≈ 0,607.</div>
+
+  <h3>Задача 6</h3>
+  <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">√(cos x) − 1</span><span class="den">x²</span></span></div>
+  <div class="step"><b>Догадка:</b> «корень − 1» ⟹ √(1 + u) − 1 ~ u/2, где u = cos x − 1.</div>
+  <div class="step">√(cos x) − 1 = √(1 + (cos x − 1)) − 1 ~ <span class="frac"><span class="num">cos x − 1</span><span class="den">2</span></span> ~ <span class="frac"><span class="num">−x²/2</span><span class="den">2</span></span> = −<span class="frac"><span class="num">x²</span><span class="den">4</span></span>.</div>
+  <div class="step"><span class="frac"><span class="num">−x²/4</span><span class="den">x²</span></span> = <b>−<span class="frac"><span class="num">1</span><span class="den">4</span></span></b>.</div>
+
+  <div class="note"><b>Общий вывод для ученика.</b> В сложных пределах алгоритм такой: (1) определить вид неопределённости; (2) привести к «замечательной» заготовке — домножить на сопряжённое, применить тригонометрическую формулу, выделить «(…) − 1», собрать логарифмы, сделать замену; (3) заменить на эквивалентность и сократить. Главное — <b>узнать замечательный предел под маской</b>.</div>
+</section>
+
+</main>
+</div>
+<script>
+// ---------- sidebar nav ----------
+const secs=[...document.querySelectorAll('section')];
+const nav=document.getElementById('nav');
+const titleEl=document.getElementById('secTitle');
+const descEl=document.getElementById('secDesc');
+const groupOrder=['1 · Последовательности','2 · Предел функции','3 · Вычисление','4 · Разборы задач'];
+const links=[];
+groupOrder.forEach(g=>{
+  const idxs=[]; secs.forEach((s,i)=>{ if((s.dataset.group||'')===g) idxs.push(i); });
+  if(!idxs.length) return;
+  const grp=document.createElement('div');grp.className='grp';grp.dataset.g=g;
+  const btn=document.createElement('button');btn.innerHTML='<span>'+g+'</span><span class="arw">▶</span>';
+  const items=document.createElement('div');items.className='items';
+  idxs.forEach(i=>{const a=document.createElement('a');a.textContent=secs[i].dataset.t;if(secs[i].dataset.new){const nb=document.createElement('span');nb.textContent=' NEW';nb.style.cssText='color:#39d98a;font-size:9px;font-weight:700;vertical-align:super';a.appendChild(nb);}a.onclick=()=>show(i);items.appendChild(a);links[i]=a;});
+  btn.onclick=()=>grp.classList.toggle('open');
+  grp.appendChild(btn);grp.appendChild(items);nav.appendChild(grp);
+});
+const groupEls=[...document.querySelectorAll('.grp')];
+window.__start = secs.findIndex(s=>(s.dataset.group||'')===groupOrder[0]);
+function show(i){
+  secs.forEach((s,k)=>s.classList.toggle('show',k===i));
+  links.forEach((a,k)=>a&&a.classList.toggle('active',k===i));
+  const g=secs[i].dataset.group;
+  groupEls.forEach(el=>{ if(el.dataset.g===g) el.classList.add('open'); });
+  titleEl.textContent=secs[i].dataset.t;
+  descEl.textContent=secs[i].dataset.desc||'';
+  window.scrollTo({top:0,behavior:'smooth'});
+  const s=secs[i];
+  if(s.querySelector('#cNbhd')&&typeof drawNbhd==='function') drawNbhd();
+  if(s.querySelector('#cSeq')&&typeof drawSeq==='function') drawSeq();
+  if(s.querySelector('#cEps')&&typeof drawEps==='function') drawEps();
+  if(s.querySelector('#cGame')&&typeof drawGame==='function') drawGame();
+  if(s.querySelector('#cGeine')&&typeof drawGeine==='function') drawGeine();
+}
+if(groupEls[0]) groupEls[0].classList.add('open');
+
+function axis(ctx,W,H,ml,mr,mt,mb,xr,yr){
+  const X=x=>ml+(x-xr[0])/(xr[1]-xr[0])*(W-ml-mr);
+  const Y=y=>H-mb-(y-yr[0])/(yr[1]-yr[0])*(H-mt-mb);
+  return {X,Y};
+}
+
+// ================= NEIGHBOURHOOD =================
+const cNbhd=document.getElementById('cNbhd'),nx=cNbhd.getContext('2d');
+const dN=document.getElementById('dNbhd'),punct=document.getElementById('punct');
+const aN=1;
+function drawNbhd(){
+  const W=cNbhd.width,H=cNbhd.height,ml=30,mr=30,cy=H/2;
+  const d=+dN.value;document.getElementById('dNbhdV').textContent=d.toFixed(2);
+  const xr=[aN-2.6,aN+2.6];
+  const X=x=>ml+(x-xr[0])/(xr[1]-xr[0])*(W-ml-mr);
+  nx.clearRect(0,0,W,H);
+  // interval shading
+  nx.fillStyle='rgba(91,141,239,.18)';
+  nx.fillRect(X(aN-d),cy-26,X(aN+d)-X(aN-d),52);
+  // number line
+  nx.strokeStyle='#46567f';nx.lineWidth=1.4;
+  nx.beginPath();nx.moveTo(ml-6,cy);nx.lineTo(W-ml+6,cy);nx.stroke();
+  // arrow
+  nx.beginPath();nx.moveTo(W-ml+6,cy);nx.lineTo(W-ml-2,cy-4);nx.lineTo(W-ml-2,cy+4);nx.closePath();nx.fillStyle='#46567f';nx.fill();
+  // ticks integers
+  nx.fillStyle='#9aa6c4';nx.font='12px sans-serif';nx.textAlign='center';
+  for(let t=-2;t<=3;t++){const xv=aN-3+t;if(xv<xr[0]||xv>xr[1])continue;nx.strokeStyle='#2a3350';nx.beginPath();nx.moveTo(X(xv),cy-4);nx.lineTo(X(xv),cy+4);nx.stroke();}
+  // endpoints (open circles)
+  function openC(x){nx.fillStyle='#0b1020';nx.strokeStyle='#5b8def';nx.lineWidth=2;nx.beginPath();nx.arc(X(x),cy,5,0,7);nx.fill();nx.stroke();}
+  openC(aN-d);openC(aN+d);
+  // center a
+  if(punct.checked){nx.fillStyle='#0b1020';nx.strokeStyle='#ffc24b';nx.lineWidth=2;nx.beginPath();nx.arc(X(aN),cy,5,0,7);nx.fill();nx.stroke();}
+  else{nx.fillStyle='#ffc24b';nx.beginPath();nx.arc(X(aN),cy,5,0,7);nx.fill();}
+  // labels
+  nx.fillStyle='#ffc24b';nx.fillText('a='+aN,X(aN),cy-32);
+  nx.fillStyle='#7aa5ff';nx.fillText('a−δ',X(aN-d),cy+34);nx.fillText('a+δ',X(aN+d),cy+34);
+  nx.textAlign='left';
+  const lo=(aN-d).toFixed(2),hi=(aN+d).toFixed(2);
+  document.getElementById('nbhdOut').textContent= punct.checked
+    ? 'Проколотая: U̇_δ(a) = ('+lo+', '+aN+') ∪ ('+aN+', '+hi+')   — точка a выколота'
+    : 'U_δ(a) = ('+lo+', '+hi+')   — интервал радиуса δ='+d.toFixed(2)+' вокруг a';
+}
+dN.oninput=drawNbhd;punct.onchange=drawNbhd;
+
+// ================= SEQUENCE =================
+const cSeq=document.getElementById('cSeq'), sx=cSeq.getContext('2d');
+const epsSeq=document.getElementById('epsSeq');
+const NMAX=30, L1=1;
+const aSeq=n=>1+Math.pow(-1,n)/n;
+function drawSeq(){
+  const W=cSeq.width,H=cSeq.height,ml=48,mr=18,mt=24,mb=36;
+  const eps=+epsSeq.value; document.getElementById('epsSeqV').textContent=eps.toFixed(2);
+  const yr=[L1-1.15,L1+1.15], xr=[0,NMAX+1];
+  const {X,Y}=axis(sx,W,H,ml,mr,mt,mb,xr,yr);
+  sx.clearRect(0,0,W,H);
+  sx.fillStyle='rgba(57,217,138,.14)';
+  sx.fillRect(X(0),Y(L1+eps),X(NMAX+1)-X(0),Y(L1-eps)-Y(L1+eps));
+  sx.strokeStyle='#39d98a';sx.lineWidth=1.5;sx.setLineDash([6,5]);
+  sx.beginPath();sx.moveTo(X(0),Y(L1));sx.lineTo(X(NMAX+1),Y(L1));sx.stroke();sx.setLineDash([]);
+  sx.fillStyle='#39d98a';sx.font='13px monospace';sx.fillText('L = 1',X(NMAX+1)-46,Y(L1)-6);
+  sx.strokeStyle='#40507a';sx.lineWidth=1;
+  sx.beginPath();sx.moveTo(ml,mt-6);sx.lineTo(ml,H-mb);sx.lineTo(W-mr,H-mb);sx.stroke();
+  sx.fillStyle='#9aa6c4';sx.font='12px sans-serif';
+  sx.fillText('n',W-mr-8,H-mb+18);sx.fillText('aₙ',ml-38,mt+2);
+  const N=Math.floor(1/eps)+1;
+  if(N<=NMAX){
+    sx.strokeStyle='#ffc24b';sx.setLineDash([4,4]);sx.lineWidth=1.2;
+    sx.beginPath();sx.moveTo(X(N),mt-4);sx.lineTo(X(N),H-mb);sx.stroke();sx.setLineDash([]);
+    sx.fillStyle='#ffc24b';sx.fillText('N='+N,X(N)+4,mt+8);
+  }
+  for(let n=1;n<=NMAX;n++){
+    const v=aSeq(n);
+    sx.fillStyle=(n>=N)?'#39d98a':'#ff8d6b';
+    sx.beginPath();sx.arc(X(n),Y(v),3.4,0,7);sx.fill();
+  }
+  document.getElementById('seqOut').textContent=
+    'ε='+eps.toFixed(2)+'  →  начиная с N='+N+' все точки внутри полосы (|aₙ−1|=1/n<'+eps.toFixed(2)+')';
+}
+epsSeq.oninput=drawSeq;
+
+// ================= EPS-DELTA =================
+const cEps=document.getElementById('cEps'), ex=cEps.getContext('2d');
+const epsFn=document.getElementById('epsFn');
+const FNS=[
+  {name:'f(x)=x²', f:x=>x*x, x0:1, L:1, hole:null, xr:[-0.4,2.3], yr:[-0.5,4.2]},
+  {name:'f(x)=(x²−4)/(x−2)', f:x=>x+2, x0:2, L:4, hole:2, xr:[0,4], yr:[1,7]},
+  {name:'f(x)=sin(x)/x', f:x=> (Math.abs(x)<1e-9?1:Math.sin(x)/x), x0:0, L:1, hole:0, xr:[-3,3], yr:[-0.4,1.3]},
+];
+let curFn=0;
+const fnPick=document.getElementById('fnPick');
+FNS.forEach((fn,i)=>{const b=document.createElement('button');b.className='btn'+(i===0?' active':'');b.textContent=fn.name;b.onclick=()=>{curFn=i;[...fnPick.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');drawEps();};fnPick.appendChild(b);});
+function findDelta(fn,eps){
+  const step=0.004, maxD=Math.min(fn.x0-fn.xr[0], fn.xr[1]-fn.x0);
+  let d=0;
+  for(let cand=step;cand<=maxD+1e-9;cand+=step){
+    let ok=true;
+    for(let x=fn.x0-cand;x<=fn.x0+cand+1e-9;x+=step){
+      if(Math.abs(x-fn.x0)<1e-9) continue;
+      if(fn.hole!==null && Math.abs(x-fn.hole)<1e-9) continue;
+      if(Math.abs(fn.f(x)-fn.L)>eps){ok=false;break;}
+    }
+    if(ok) d=cand; else break;
+  }
+  return d;
+}
+function drawEps(){
+  const fn=FNS[curFn];const W=cEps.width,H=cEps.height,ml=46,mr=18,mt=20,mb=34;
+  const eps=+epsFn.value; document.getElementById('epsFnV').textContent=eps.toFixed(2);
+  const {X,Y}=axis(ex,W,H,ml,mr,mt,mb,fn.xr,fn.yr);
+  ex.clearRect(0,0,W,H);
+  const delta=findDelta(fn,eps);
+  ex.fillStyle='rgba(255,194,75,.12)';
+  ex.fillRect(ml,Y(fn.L+eps),W-mr-ml,Y(fn.L-eps)-Y(fn.L+eps));
+  ex.fillStyle='rgba(91,141,239,.16)';
+  ex.fillRect(X(fn.x0-delta),mt,X(fn.x0+delta)-X(fn.x0-delta),H-mb-mt);
+  ex.strokeStyle='#40507a';ex.lineWidth=1;
+  ex.beginPath();ex.moveTo(ml,mt);ex.lineTo(ml,H-mb);ex.lineTo(W-mr,H-mb);ex.stroke();
+  ex.strokeStyle='#ffc24b';ex.setLineDash([5,4]);ex.beginPath();ex.moveTo(ml,Y(fn.L));ex.lineTo(W-mr,Y(fn.L));ex.stroke();
+  ex.strokeStyle='#5b8def';ex.beginPath();ex.moveTo(X(fn.x0),mt);ex.lineTo(X(fn.x0),H-mb);ex.stroke();ex.setLineDash([]);
+  ex.strokeStyle='#7aa5ff';ex.lineWidth=2;ex.beginPath();let started=false;
+  for(let px=ml;px<=W-mr;px++){
+    const x=fn.xr[0]+(px-ml)/(W-ml-mr)*(fn.xr[1]-fn.xr[0]);
+    if(fn.hole!==null && Math.abs(x-fn.hole)<0.02){started=false;continue;}
+    const y=fn.f(x);const sy=Y(y);
+    if(sy<mt-40||sy>H-mb+40){started=false;continue;}
+    if(!started){ex.moveTo(X(x),sy);started=true;}else ex.lineTo(X(x),sy);
+  }
+  ex.stroke();
+  if(fn.hole!==null){ex.fillStyle='#0b1020';ex.strokeStyle='#7aa5ff';ex.lineWidth=2;ex.beginPath();ex.arc(X(fn.hole),Y(fn.L),4,0,7);ex.fill();ex.stroke();}
+  // --- ε bracket on the y-axis (vertical extent) ---
+  const bx=ml+12;
+  ex.strokeStyle='#ffc24b';ex.lineWidth=1.6;
+  ex.beginPath();ex.moveTo(bx,Y(fn.L+eps));ex.lineTo(bx,Y(fn.L-eps));
+  ex.moveTo(bx-4,Y(fn.L+eps));ex.lineTo(bx+4,Y(fn.L+eps));
+  ex.moveTo(bx-4,Y(fn.L-eps));ex.lineTo(bx+4,Y(fn.L-eps));ex.stroke();
+  ex.fillStyle='#ffc24b';ex.font='bold 15px sans-serif';ex.fillText('ε',bx+7,(Y(fn.L+eps)+Y(fn.L-eps))/2+5);
+  // --- δ bracket on the x-axis (horizontal extent) ---
+  const by=H-mb-12;
+  ex.strokeStyle='#5b8def';
+  ex.beginPath();ex.moveTo(X(fn.x0-delta),by);ex.lineTo(X(fn.x0+delta),by);
+  ex.moveTo(X(fn.x0-delta),by-4);ex.lineTo(X(fn.x0-delta),by+4);
+  ex.moveTo(X(fn.x0+delta),by-4);ex.lineTo(X(fn.x0+delta),by+4);ex.stroke();
+  ex.fillStyle='#5b8def';ex.fillText('δ',(X(fn.x0-delta)+X(fn.x0+delta))/2-5,by-7);
+  ex.fillStyle='#ffc24b';ex.font='13px monospace';ex.fillText('A='+fn.L,W-mr-52,Y(fn.L)-6);
+  ex.fillStyle='#5b8def';ex.fillText('a='+fn.x0,X(fn.x0)+5,H-mb-6);
+  document.getElementById('epsOut').textContent='ε='+eps.toFixed(2)+'  →  подобрана δ≈'+delta.toFixed(2)+'   (для всех x с 0<|x−a|<δ график в ε-полосе)';
+}
+epsFn.oninput=drawEps;
+
+// ================= GAME: почему A предел =================
+const cGame=document.getElementById('cGame'),gx=cGame.getContext('2d');
+const epsG=document.getElementById('epsG'),candA=document.getElementById('candA');
+const GA=1, TRUE_A=3, gf=x=>2*x+1;
+function drawGame(){
+  const W=cGame.width,H=cGame.height,ml=46,mr=18,mt=20,mb=34;
+  const eps=+epsG.value, A=+candA.value;
+  document.getElementById('epsGV').textContent=eps.toFixed(2);
+  document.getElementById('candAV').textContent=A.toFixed(1);
+  const xr=[-0.4,2.4], yr=[0,6];
+  const {X,Y}=axis(gx,W,H,ml,mr,mt,mb,xr,yr);
+  gx.clearRect(0,0,W,H);
+  const xL=(A-eps-1)/2, xR=(A+eps-1)/2;
+  const okPoint=Math.abs(TRUE_A-A)<eps;
+  let delta=okPoint?Math.max(0,Math.min(GA-xL,xR-GA)):0;
+  // eps band around candidate A
+  gx.fillStyle='rgba(255,194,75,.12)';
+  gx.fillRect(ml,Y(A+eps),W-mr-ml,Y(A-eps)-Y(A+eps));
+  // delta band
+  if(delta>0){gx.fillStyle='rgba(91,141,239,.16)';gx.fillRect(X(GA-delta),mt,X(GA+delta)-X(GA-delta),H-mb-mt);}
+  // axes
+  gx.strokeStyle='#40507a';gx.lineWidth=1;gx.beginPath();gx.moveTo(ml,mt);gx.lineTo(ml,H-mb);gx.lineTo(W-mr,H-mb);gx.stroke();
+  // candidate A line + true limit line
+  gx.strokeStyle='#ffc24b';gx.setLineDash([5,4]);gx.beginPath();gx.moveTo(ml,Y(A));gx.lineTo(W-mr,Y(A));gx.stroke();
+  gx.strokeStyle='#39d98a';gx.setLineDash([2,4]);gx.beginPath();gx.moveTo(ml,Y(TRUE_A));gx.lineTo(W-mr,Y(TRUE_A));gx.stroke();
+  gx.strokeStyle='#5b8def';gx.beginPath();gx.moveTo(X(GA),mt);gx.lineTo(X(GA),H-mb);gx.stroke();gx.setLineDash([]);
+  // line f(x)=2x+1
+  gx.strokeStyle='#7aa5ff';gx.lineWidth=2;gx.beginPath();
+  gx.moveTo(X(xr[0]),Y(gf(xr[0])));gx.lineTo(X(xr[1]),Y(gf(xr[1])));gx.stroke();
+  // test point inside delta
+  if(delta>0){
+    const xt=GA+0.6*delta, yt=gf(xt);
+    gx.strokeStyle='rgba(57,217,138,.7)';gx.setLineDash([3,3]);gx.lineWidth=1;
+    gx.beginPath();gx.moveTo(X(xt),H-mb);gx.lineTo(X(xt),Y(yt));gx.lineTo(ml,Y(yt));gx.stroke();gx.setLineDash([]);
+    gx.fillStyle='#39d98a';gx.beginPath();gx.arc(X(xt),Y(yt),5,0,7);gx.fill();
+  }
+  // ε bracket
+  const bx=ml+12;gx.strokeStyle='#ffc24b';gx.lineWidth=1.6;
+  gx.beginPath();gx.moveTo(bx,Y(A+eps));gx.lineTo(bx,Y(A-eps));gx.moveTo(bx-4,Y(A+eps));gx.lineTo(bx+4,Y(A+eps));gx.moveTo(bx-4,Y(A-eps));gx.lineTo(bx+4,Y(A-eps));gx.stroke();
+  gx.fillStyle='#ffc24b';gx.font='bold 15px sans-serif';gx.fillText('ε',bx+7,(Y(A+eps)+Y(A-eps))/2+5);
+  // δ bracket
+  if(delta>0){const by=H-mb-12;gx.strokeStyle='#5b8def';gx.lineWidth=1.6;
+    gx.beginPath();gx.moveTo(X(GA-delta),by);gx.lineTo(X(GA+delta),by);gx.moveTo(X(GA-delta),by-4);gx.lineTo(X(GA-delta),by+4);gx.moveTo(X(GA+delta),by-4);gx.lineTo(X(GA+delta),by+4);gx.stroke();
+    gx.fillStyle='#5b8def';gx.fillText('δ',(X(GA-delta)+X(GA+delta))/2-5,by-7);}
+  // labels
+  gx.font='12px monospace';gx.fillStyle='#ffc24b';gx.fillText('A='+A.toFixed(1),W-mr-58,Y(A)-5);
+  gx.fillStyle='#39d98a';gx.fillText('истинный предел = 3',W-mr-150,Y(TRUE_A)+14);
+  gx.fillStyle='#5b8def';gx.fillText('a=1',X(GA)+5,H-mb-6);
+  // readout
+  const out=document.getElementById('gameOut'),diff=Math.abs(TRUE_A-A);
+  if(!okPoint){
+    out.textContent='|f(1) − A| = |3 − '+A.toFixed(1)+'| = '+diff.toFixed(2)+' ≥ ε='+eps.toFixed(2)+'  →  δ подобрать НЕЛЬЗЯ. Значит '+A.toFixed(1)+' — не предел ✗';
+  } else if(Math.abs(A-3)<1e-9){
+    out.textContent='A = 3 — истинный предел: δ = ε/2 = '+(eps/2).toFixed(2)+' годится при ЛЮБОМ ε ✓';
+  } else {
+    out.textContent='δ ≈ '+delta.toFixed(2)+' пока существует, но при ε < |3−A| = '+diff.toFixed(2)+' исчезнет → тогда '+A.toFixed(1)+' окажется не пределом.';
+  }
+}
+[epsG,candA].forEach(s=>s.oninput=drawGame);
+document.getElementById('resetA').onclick=()=>{candA.value=3;drawGame();};
+
+// ===== Гейне: тропинки к пределу =====
+let gmode='good';
+function drawGeine(){
+  const cv=document.getElementById('cGeine'); if(!cv) return; const g=cv.getContext('2d');
+  const W=cv.width,H=cv.height, ml=48,mr=16,mt=16,mb=34;
+  const gN=+document.getElementById('geineN').value;
+  document.getElementById('geineNV').textContent=gN;
+  const cfg = gmode==='good'
+    ? {xr:[0.2,1.8], yr:[0.5,3], a:1, A:2, f:x=>x+1, hole:1}
+    : {xr:[0,0.5], yr:[-1.3,1.3], a:0, A:null, f:x=>Math.sin(1/x), hole:null};
+  const X=x=>ml+(x-cfg.xr[0])/(cfg.xr[1]-cfg.xr[0])*(W-ml-mr);
+  const Y=y=>H-mb-(y-cfg.yr[0])/(cfg.yr[1]-cfg.yr[0])*(H-mt-mb);
+  g.clearRect(0,0,W,H);
+  g.strokeStyle='#40507a';g.lineWidth=1;
+  g.beginPath();g.moveTo(ml,mt);g.lineTo(ml,H-mb);g.lineTo(W-mr,H-mb);g.stroke();
+  if(cfg.A!==null){g.strokeStyle='#39d98a';g.setLineDash([5,4]);g.beginPath();g.moveTo(ml,Y(cfg.A));g.lineTo(W-mr,Y(cfg.A));g.stroke();g.setLineDash([]);g.fillStyle='#39d98a';g.font='12px monospace';g.fillText('A='+cfg.A,W-mr-46,Y(cfg.A)-5);}
+  g.strokeStyle='#5b8def';g.setLineDash([4,4]);g.beginPath();g.moveTo(X(cfg.a),mt);g.lineTo(X(cfg.a),H-mb);g.stroke();g.setLineDash([]);
+  g.fillStyle='#5b8def';g.font='12px monospace';g.fillText('a='+cfg.a,X(cfg.a)+4,H-mb-6);
+  // curve
+  g.strokeStyle='#7aa5ff';g.lineWidth=2;g.beginPath();let started=false;
+  const x0 = gmode==='sin'? 0.012 : cfg.xr[0];
+  const step = gmode==='sin'? (cfg.xr[1]-x0)/2400 : (cfg.xr[1]-cfg.xr[0])/400;
+  for(let x=x0; x<=cfg.xr[1]; x+=step){
+    if(cfg.hole!==null && Math.abs(x-cfg.hole)<0.004){started=false;continue;}
+    const sy=Y(cfg.f(x));
+    if(sy<mt-60||sy>H-mb+60){started=false;continue;}
+    if(!started){g.moveTo(X(x),sy);started=true;}else g.lineTo(X(x),sy);
+  }
+  g.stroke();
+  if(cfg.hole!==null){g.fillStyle='#0b1020';g.strokeStyle='#7aa5ff';g.lineWidth=2;g.beginPath();g.arc(X(cfg.hole),Y(cfg.A),4,0,7);g.fill();g.stroke();}
+  if(gmode==='good'){
+    for(let k=1;k<=gN;k++){
+      const xk = 1 + 0.7*Math.pow(-1,k)/k, yk = cfg.f(xk);
+      g.strokeStyle='rgba(255,194,75,.5)';g.setLineDash([3,3]);g.lineWidth=1;
+      g.beginPath();g.moveTo(X(xk),H-mb);g.lineTo(X(xk),Y(yk));g.lineTo(ml,Y(yk));g.stroke();g.setLineDash([]);
+      g.fillStyle='#ffc24b';g.beginPath();g.arc(X(xk),Y(yk),3.6,0,7);g.fill();
+      g.beginPath();g.arc(X(xk),H-mb,2.6,0,7);g.fill();
+    }
+    document.getElementById('geineOut').textContent='По любой тропинке xₙ → 1 значения f(xₙ) → 2. Предел существует и равен 2.';
+  } else {
+    function seq(kf,color){for(let k=1;k<=gN;k++){const xk=kf(k); if(xk<cfg.xr[0]||xk>cfg.xr[1])continue; const yk=cfg.f(xk);
+      g.globalAlpha=.4;g.strokeStyle=color;g.setLineDash([2,3]);g.lineWidth=1;g.beginPath();g.moveTo(X(xk),H-mb);g.lineTo(X(xk),Y(yk));g.stroke();g.setLineDash([]);g.globalAlpha=1;
+      g.fillStyle=color;g.beginPath();g.arc(X(xk),Y(yk),4,0,7);g.fill();g.beginPath();g.arc(X(xk),H-mb,2.6,0,7);g.fill();}}
+    seq(k=>1/(2*Math.PI*k), '#5b8def');
+    seq(k=>1/(Math.PI/2+2*Math.PI*k), '#ff7ab6');
+    g.fillStyle='#5b8def';g.font='12px monospace';g.fillText('синяя тропинка: f→0', ml+8, Y(0)-7);
+    g.fillStyle='#ff7ab6';g.fillText('розовая тропинка: f→1', ml+8, Y(1)-7);
+    document.getElementById('geineOut').textContent='sin(1/x) при x→0: по синей тропинке f→0, по розовой f→1. Итоги разные ⟹ предела НЕТ.';
+  }
+}
+(function(){
+  const gb=document.getElementById('geineBtns'); if(!gb) return;
+  [['good','Предел есть (f = x+1)'],['sin','sin(1/x) — предела нет']].forEach((d,i)=>{
+    const b=document.createElement('button');b.className='btn'+(i===0?' active':'');b.textContent=d[1];
+    b.onclick=()=>{gmode=d[0];[...gb.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');drawGeine();};
+    gb.appendChild(b);
+  });
+  const sl=document.getElementById('geineN'); if(sl) sl.oninput=drawGeine;
+})();
+
+show(window.__start||0);
+(function(){var mb=document.getElementById('menuBtn'),bd=document.getElementById('backdrop'),as=document.querySelector('aside');function cl(){if(as)as.classList.remove('open');if(bd)bd.classList.remove('show');}if(mb)mb.onclick=function(){as.classList.add('open');bd.classList.add('show');};if(bd)bd.onclick=cl;document.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',cl);});})();
+</script>
+</body>
+</html>

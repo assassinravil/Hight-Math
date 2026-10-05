@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Высшая математика — портал</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--pink:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+     radial-gradient(1100px 500px at 80% -10%,rgba(160,107,255,.14),transparent),
+     radial-gradient(900px 450px at 0% 0%,rgba(91,141,239,.12),transparent),
+     var(--bg);
+     color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.55;min-height:100vh}
+  .wrap{max-width:1000px;margin:0 auto;padding:46px 30px 80px}
+  header h1{margin:0;font-size:30px;letter-spacing:.2px}
+  header p{margin:8px 0 0;color:var(--muted);font-size:15px;max-width:640px}
+  .group{margin-top:40px}
+  .group h2{font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:var(--blue2);margin:0 0 4px}
+  .group .gsub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;transition:.16s;position:relative;overflow:hidden}
+  a.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accentbar,var(--blue))}
+  a.card:hover{transform:translateY(-3px);border-color:var(--blue);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .card .num{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.05em}
+  .card h3{margin:4px 0 6px;font-size:19px;color:#fff}
+  .card p{margin:0 0 12px;font-size:13.5px;color:#c4cee4}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+  .chip.act{color:#04140c;background:var(--ok);border-color:var(--ok);font-weight:700}
+  .open{margin-top:12px;font-size:13px;font-weight:600;color:var(--blue2)}
+  .card.soon{opacity:.5;cursor:default;pointer-events:none}
+  .card.soon::before{background:#39425f}
+  footer{margin-top:46px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px}
+  @media(max-width:620px){
+    .wrap{padding:26px 16px 56px}
+    header h1{font-size:24px}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>📐 Высшая математика</h1>
+  <p>Конспекты с интерактивами: каждая тема — интуиция, строгое определение, примеры и разбор. Выбери раздел ниже.</p>
+</header>
+
+<!-- ЛИНЕЙНАЯ АЛГЕБРА -->
+<div class="group">
+  <h2>Линейная алгебра</h2>
+  <p class="gsub">Лектор Веслк В. А.</p>
+  <div class="grid">
+    <a class="card" style="--accentbar:var(--acc)" href="linear-algebra.html">
+      <div class="num">РАЗДЕЛ 1</div>
+      <h3>Матрицы, определители, ранг</h3>
+      <p>Матрицы и действия, определители, обратная матрица, СЛАУ (Крамер, Кронекер–Капелли, решение при r&lt;n), ранг, линейная зависимость и элементарные преобразования. Боковая навигация по главам.</p>
+      <div class="chips"><span class="chip act">интерактивы</span><span class="chip">примеры</span><span class="chip">пошаговые решения</span></div>
+      <div class="open">Открыть →</div>
+    </a>
+    <div class="card soon">
+      <div class="num">СКОРО</div>
+      <h3>Векторы и приложения</h3>
+      <p>Геометрические векторы, скалярное и векторное произведение, метод Гаусса, приложения.</p>
+      <div class="chips"><span class="chip">в планах</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- МАТЕМАТИЧЕСКИЙ АНАЛИЗ -->
+<div class="group">
+  <h2>Математический анализ</h2>
+  <p class="gsub">Порядок изучения: множества → пределы → …</p>
+  <div class="grid">
+    <a class="card" style="--accentbar:var(--gold)" href="sets.html">
+      <div class="num">ТЕМА 1</div>
+      <h3>Множества и функции</h3>
+      <p>Множества и операции (диаграммы Венна), окрестности, открытые/замкнутые множества, грани, отображения и функции.</p>
+      <div class="chips"><span class="chip act">интерактивы</span><span class="chip">примеры</span></div>
+      <div class="open">Открыть →</div>
+    </a>
+    <a class="card" style="--accentbar:var(--blue)" href="limits.html">
+      <div class="num">ТЕМА 2</div>
+      <h3>Пределы и последовательности</h3>
+      <p>Последовательности и число e; предел функции по Коши и по Гейне (с интерактивом), односторонние, неопределённости, замечательные пределы, бесконечно малые и порядки малости, разборы (в т.ч. сложные).</p>
+      <div class="chips"><span class="chip act">интерактивы</span><span class="chip">примеры</span><span class="chip">задачи</span></div>
+      <div class="open">Открыть →</div>
+    </a>
+    <div class="card soon">
+      <div class="num">СКОРО</div>
+      <h3>Непрерывность и производные</h3>
+      <p>Непрерывность функции, производная, правила дифференцирования, исследование функций.</p>
+      <div class="chips"><span class="chip">в планах</span></div>
+    </div>
+    <div class="card soon">
+      <div class="num">СКОРО</div>
+      <h3>Интегралы и ряды</h3>
+      <p>Неопределённый и определённый интеграл, числовые и степенные ряды.</p>
+      <div class="chips"><span class="chip">в планах</span></div>
+    </div>
+    <a class="card" style="--accentbar:var(--pink)" href="complex.html">
+      <div class="num">ДОП. ТЕМА</div>
+      <h3>Комплексные числа</h3>
+      <p>Мнимая единица i, тригонометрическая форма, умножение как поворот, формула Муавра, корни. Элементарную часть можно давать в начале курса.</p>
+      <div class="chips"><span class="chip act">интерактивы</span><span class="chip">примеры</span><span class="chip">задачи</span></div>
+      <div class="open">Открыть →</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  Проект «Высшая математика». Все страницы открываются локально в браузере и связаны между собой (кнопка «← На главную» в каждой теме).
+</footer>
+</div>
+</body>
+</html>
