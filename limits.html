@@ -206,7 +206,7 @@
 </section>
 
 <!-- ============ 3. КАК РАБОТАЕТ ОПРЕДЕЛЕНИЕ ============ -->
-<section data-group="2 · Предел функции" data-new="1" data-t="Предел по Гейне (через последовательности)" data-desc="Два языка предела — Коши и Гейне; интерактив с тропинками и sin(1/x).">
+<section data-group="2 · Предел функции" data-t="Предел по Гейне (через последовательности)" data-desc="Два языка предела — Коши и Гейне; интерактив с тропинками и sin(1/x).">
   <h2>Предел по Гейне — «язык тропинок»</h2>
   <div class="intu"><span class="tag">Два языка — одно и то же</span>
     <p>Есть два определения предела функции, и оба про одно. Разница — как именно мы «подходим» к точке a.</p>
@@ -427,7 +427,7 @@
 </section>
 
 <!-- ============ 6. ЗАДАЧИ ============ -->
-<section data-group="3 · Вычисление" data-new="1" data-t="Бесконечно малые и порядки малости" data-desc="Сравнение БМФ: одного порядка, высшего, порядка k, эквивалентные; таблица и примеры.">
+<section data-group="3 · Вычисление" data-t="Бесконечно малые и порядки малости" data-desc="Сравнение БМФ: одного порядка, высшего, порядка k, эквивалентные; таблица и примеры.">
   <h2>Бесконечно малые и порядки малости</h2>
   <div class="df"><span class="tag">Бесконечно малая функция (БМФ)</span>
     <p>Функция α(x) называется <b>бесконечно малой</b> при x → a, если lim<sub>x→a</sub> α(x) = 0. (Например, sin x, 1 − cos x, x² при x → 0.)</p>
@@ -505,6 +505,89 @@
       <div class="step">x·sin x ~ x·x = x². Числитель √(1 + u) − 1 ~ <span class="frac"><span class="num">u</span><span class="den">2</span></span> = <span class="frac"><span class="num">x·sin x</span><span class="den">2</span></span> ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span> (порядок 2 — как и знаменатель).</div>
       <div class="step"><span class="frac"><span class="num">x²/2</span><span class="den">x²</span></span> = <b><span class="frac"><span class="num">1</span><span class="den">2</span></span></b>.</div>
     </details></div>
+</section>
+
+<section data-group="3 · Вычисление" data-new="1" data-t="Символы Ландау: o и O" data-desc="«о-маленькое» и «O-большое», свойства o, главная часть функции, теорема α ~ β ⟺ α = β + o(β).">
+  <h2>Символы Ландау</h2>
+
+  <div class="intu"><span class="tag">Зачем они</span>
+    <p>Символы Ландау — короткий язык, чтобы сказать «эта функция у нуля <b>мельче</b> той» или «они <b>одного масштаба</b>», не выписывая каждый раз пределы. Это сжатая запись сравнения бесконечно малых.</p>
+  </div>
+
+  <div class="df"><span class="tag">o — «о-маленькое»</span>
+    <p>Если α(x) — б.м.ф. <b>высшего порядка</b> по сравнению с β(x) при x → a, то есть lim<sub>x→a</sub> <span class="frac"><span class="num">α(x)</span><span class="den">β(x)</span></span> = 0, пишут:</p>
+    <div class="formula" style="font-size:17px">α(x) = o(β(x))</div>
+    <p>Читается «α есть о-маленькое от β»: α <b>убывает быстрее</b>, чем β. Пример: x² = o(x) при x → 0, ведь x²/x = x → 0.</p>
+  </div>
+
+  <div class="df"><span class="tag">O — «O-большое»</span>
+    <p>Если α(x) и β(x) <b>одного порядка</b>, то есть lim<sub>x→a</sub> <span class="frac"><span class="num">α(x)</span><span class="den">β(x)</span></span> = c ≠ 0, пишут:</p>
+    <div class="formula" style="font-size:17px">α(x) = O(β(x)), &nbsp; β(x) = O(α(x))</div>
+    <p>Это значит «α того же масштаба, что β». Пример: sin x = O(x) и x = O(sin x) при x → 0 (отношение → 1 ≠ 0).</p>
+  </div>
+
+  <h3>Свойства «о-маленького»</h3>
+  <table>
+    <tr><th>Свойство</th><th>Смысл</th></tr>
+    <tr><td>o(f) + o(f) = o(f)</td><td>сумма мелких — мелкая</td></tr>
+    <tr><td>o(f) = o(c·f), &nbsp;c ≠ 0</td><td>константа масштаб не меняет</td></tr>
+    <tr><td>c · o(f) = o(f)</td><td>умножение на число — всё ещё мелкое</td></tr>
+    <tr><td>o(o(f)) = o(f)</td><td>мелкое от мелкого — мелкое</td></tr>
+    <tr><td>o(f + o(f)) = o(f)</td><td>добавка не влияет</td></tr>
+    <tr><td>o(f<sup>n</sup>) · o(f<sup>m</sup>) = o(f<sup>n+m</sup>)</td><td>порядки складываются</td></tr>
+  </table>
+  <p class="note">Все эти равенства «односторонние»: слева «какая-то мелкая величина такого-то порядка», справа — «мелкая того же порядка». Знак «=» здесь означает «принадлежит классу», а не тождество.</p>
+
+  <div class="df"><span class="tag">Главная часть функции</span>
+    <p>Если функцию α(x) можно записать в виде α(x) = β(x) + o(β(x)), то β(x) называют <b>главной частью</b> α(x). Это «основной кусок», а o(β) — мелкая поправка.</p>
+  </div>
+
+  <div class="df"><span class="tag">Критерий эквивалентности</span>
+    <p>α(x) ~ β(x) при x → a &nbsp;⟺&nbsp; α(x) = β(x) + o(β(x)). Иначе: <b>«быть эквивалентными» = «отличаться на величину высшего порядка»</b>.</p>
+  </div>
+  <div class="leg"><b>Почему (необходимость).</b> Пусть α ~ β, то есть α/β → 1. Тогда <span class="frac"><span class="num">α − β</span><span class="den">β</span></span> = <span class="frac"><span class="num">α</span><span class="den">β</span></span> − 1 → 1 − 1 = 0 ⟹ α − β = o(β) ⟹ α = β + o(β). Обратно: если α = β + o(β), то α/β = 1 + o(β)/β = 1 + 0 = 1 ⟹ α ~ β.</div>
+
+  <div class="ex"><span class="tag">На примере</span>
+    <p>sin x = x + o(x), &nbsp; 1 − cos x = <span class="frac"><span class="num">x²</span><span class="den">2</span></span> + o(x²), &nbsp; e<sup>x</sup> − 1 = x + o(x). Главная часть у каждого — первое слагаемое; именно его и используют как «двойник» в пределах.</p>
+  </div>
+</section>
+
+<section data-group="3 · Вычисление" data-new="1" data-t="Замена эквивалентными в пределе" data-desc="Теорема о замене, полная таблица эквивалентностей, разборы (tg7x/sin3x, степенной предел e⁶).">
+  <h2>Замена эквивалентными: главный рабочий приём</h2>
+
+  <div class="df"><span class="tag">Теорема</span>
+    <p>Если в пределе <b>отношения</b> (или произведения) бесконечно малых заменить множители на эквивалентные — предел не изменится. Если f ~ f₁ и g ~ g₁, то</p>
+    <div class="formula" style="font-size:17px">lim<sub>x→a</sub> <span class="frac"><span class="num">f</span><span class="den">g</span></span> = lim<sub>x→a</sub> <span class="frac"><span class="num">f₁</span><span class="den">g₁</span></span></div>
+    <p>(при условии, что правый предел существует).</p>
+  </div>
+  <div class="warnbox"><span class="tag">Осторожно</span>
+    <p>Заменять эквивалентными можно только в <b>множителях</b> произведения и частного. В <b>сумме</b> и <b>разности</b> так делать <b>нельзя</b> — можно потерять главную часть (например, в tg x − sin x наивная замена обоих на x даст 0, а правильный ответ — порядка x³).</p>
+  </div>
+
+  <h3>Полная таблица эквивалентностей (при u → 0)</h3>
+  <table>
+    <tr><th>Функция</th><th>~</th><th>Функция</th><th>~</th></tr>
+    <tr><td>sin u</td><td>u</td><td>ln(1 + u)</td><td>u</td></tr>
+    <tr><td>tg u</td><td>u</td><td>log<sub>a</sub>(1 + u)</td><td><span class="frac"><span class="num">u</span><span class="den">ln a</span></span></td></tr>
+    <tr><td>arcsin u</td><td>u</td><td>e<sup>u</sup> − 1</td><td>u</td></tr>
+    <tr><td>arctg u</td><td>u</td><td>a<sup>u</sup> − 1</td><td>u·ln a</td></tr>
+    <tr><td>1 − cos u</td><td><span class="frac"><span class="num">u²</span><span class="den">2</span></span></td><td>(1 + u)<sup>m</sup> − 1</td><td>m·u</td></tr>
+  </table>
+  <p class="note">Здесь u = u(x) — любая б.м.ф. (например u = 7x, u = x², u = sin x). Правило применяют «изнутри»: сначала узнаём, что у нуля ведёт себя как u.</p>
+
+  <div class="ex"><span class="tag">Разбор 1: tg и sin</span>
+    <div class="formula">lim<sub>x→0</sub> <span class="frac"><span class="num">tg 7x</span><span class="den">sin 3x</span></span></div>
+    <div class="step">Вид 0/0. Это <b>частное</b> — заменять эквивалентными можно. tg 7x ~ 7x, &nbsp;sin 3x ~ 3x.</div>
+    <div class="step"><span class="frac"><span class="num">7x</span><span class="den">3x</span></span> = <b><span class="frac"><span class="num">7</span><span class="den">3</span></span></b>.</div>
+  </div>
+
+  <div class="ex"><span class="tag">Разбор 2: степенной предел (вид 1<sup>∞</sup>) → e⁶</span>
+    <div class="formula">lim<sub>x→∞</sub> (<span class="frac"><span class="num">x + 1</span><span class="den">x − 2</span></span>)<sup>2x+1</sup></div>
+    <div class="step">Выделяем «1 + малое»: <span class="frac"><span class="num">x + 1</span><span class="den">x − 2</span></span> = <span class="frac"><span class="num">(x − 2) + 3</span><span class="den">x − 2</span></span> = 1 + <span class="frac"><span class="num">3</span><span class="den">x − 2</span></span>.</div>
+    <div class="step"><b>Замена</b> t = <span class="frac"><span class="num">x − 2</span><span class="den">3</span></span> ⟹ x = 3t + 2, &nbsp;t → ∞. Показатель: 2x + 1 = 2(3t + 2) + 1 = 6t + 5.</div>
+    <div class="step">Предел = lim<sub>t→∞</sub> (1 + <span class="frac"><span class="num">1</span><span class="den">t</span></span>)<sup>6t+5</sup> = lim (1 + <span class="frac"><span class="num">1</span><span class="den">t</span></span>)<sup>6t</sup> · lim (1 + <span class="frac"><span class="num">1</span><span class="den">t</span></span>)<sup>5</sup>.</div>
+    <div class="step">Первый множитель = (lim (1 + 1/t)<sup>t</sup>)<sup>6</sup> = e<sup>6</sup>; второй → 1<sup>5</sup> = 1. Ответ: <b>e<sup>6</sup></b>.</div>
+  </div>
 </section>
 
 <section data-group="4 · Разборы задач" data-t="Базовые задачи" data-desc="Восемь базовых задач с пошаговыми решениями.">
@@ -794,6 +877,80 @@
   <div class="note"><b>Общий вывод для ученика.</b> В сложных пределах алгоритм такой: (1) определить вид неопределённости; (2) привести к «замечательной» заготовке — домножить на сопряжённое, применить тригонометрическую формулу, выделить «(…) − 1», собрать логарифмы, сделать замену; (3) заменить на эквивалентность и сократить. Главное — <b>узнать замечательный предел под маской</b>.</div>
 </section>
 
+<!-- ============ 5. НЕПРЕРЫВНОСТЬ ============ -->
+<section data-group="5 · Непрерывность" data-new="1" data-t="Непрерывность в точке" data-desc="Определение через предел и на языке ε–δ; свойства непрерывных функций; непрерывность сложной функции.">
+  <h2>Непрерывность функции в точке</h2>
+
+  <div class="intu"><span class="tag">Интуиция</span>
+    <p>Функция непрерывна в точке, если её график около этой точки можно нарисовать <b>не отрывая карандаша</b>: нет скачков, дыр и разрывов. Формально — предел в точке совпадает со значением функции.</p>
+  </div>
+
+  <div class="df"><span class="tag">Определение (через предел)</span>
+    <p>Пусть x₀ ∈ D(f). Функция f(x) называется <b>непрерывной в точке x₀</b>, если</p>
+    <div class="formula" style="font-size:17px">lim<sub>x→x₀</sub> f(x) = f(x₀)</div>
+    <p>То есть: предел существует, значение в точке существует, и они равны.</p>
+  </div>
+
+  <div class="df"><span class="tag">То же на языке ε–δ</span>
+    <p>f(x) непрерывна в x₀, если для любого ε &gt; 0 найдётся δ(ε) &gt; 0 такое, что при |x − x₀| &lt; δ выполнено |f(x) − f(x₀)| &lt; ε.</p>
+  </div>
+  <div class="leg">Отличие от «обычного» предела: здесь предельное значение <b>обязано совпасть</b> с f(x₀), а точку x₀ не прокалывают — функция должна быть определена и в самой точке.</div>
+
+  <h3>Свойства непрерывных функций</h3>
+  <ol>
+    <li><b>Локальная ограниченность.</b> Если f непрерывна в x₀, то она ограничена в некоторой окрестности x₀.</li>
+    <li><b>Сохранение неравенства.</b> Если f и g непрерывны в x₀ и f(x) &lt; g(x) в окрестности, то и f(x₀) ≤ g(x₀).</li>
+    <li><b>Сохранение знака.</b> Если f непрерывна в x₀ и f(x) &gt; 0 в окрестности, то f(x₀) ≥ 0.</li>
+    <li><b>Арифметика.</b> Если f и g непрерывны в x₀, то f + g, &nbsp;f·g &nbsp;и &nbsp;f/g (при g(x₀) ≠ 0) тоже непрерывны в x₀.</li>
+    <li><b>Критерий через приращение.</b> f непрерывна в x₀ ⟺ f(x) = f(x₀) + α(x), где α(x) → 0 при x → x₀ (приращение функции бесконечно мало).</li>
+    <li><b>Сложная функция.</b> Если t = u(x) непрерывна в x₀, а f(t) непрерывна в t₀ = u(x₀), то f(u(x)) непрерывна в x₀.</li>
+  </ol>
+
+  <div class="ex"><span class="tag">Проверка на числах</span>
+    <p>f(x) = x² + 1 в точке x₀ = 2: &nbsp;lim<sub>x→2</sub>(x² + 1) = 5, &nbsp;f(2) = 5. &nbsp;Совпали ⟹ <b>непрерывна</b>.</p>
+    <p>g(x) = <span class="frac"><span class="num">sin x</span><span class="den">x</span></span> в точке x₀ = 0: &nbsp;lim<sub>x→0</sub> g = 1, но g(0) <b>не определена</b> ⟹ в точке 0 функция <b>не непрерывна</b> (но разрыв «чинится», см. ниже).</p>
+  </div>
+</section>
+
+<section data-group="5 · Непрерывность" data-new="1" data-t="Точки разрыва" data-desc="Классификация: устранимый, 1-го рода (скачок), 2-го рода; примеры sin x/x, sign x, 1/x.">
+  <h2>Классификация точек разрыва</h2>
+
+  <div class="intu"><span class="tag">Три вида «поломки»</span>
+    <p>Если в точке x₀ непрерывность нарушена, смотрят на <b>односторонние пределы</b> f(x₀−0) и f(x₀+0) — что с ними происходит.</p>
+  </div>
+
+  <div class="df"><span class="tag">1. Устранимый разрыв</span>
+    <p>Односторонние пределы существуют, конечны и <b>равны между собой</b>, но не равны f(x₀) (или f(x₀) не определена). Функцию можно <b>доопределить</b> до непрерывной.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример: y = sin x / x в x = 0</span>
+    <p>lim<sub>x→0</sub> <span class="frac"><span class="num">sin x</span><span class="den">x</span></span> = 1 слева и справа, но в x = 0 функция не определена. <b>Чиним</b>, доопределив значением предела:</p>
+    <div class="formula" style="font-size:15px">y = { 1 при x = 0; &nbsp; <span class="frac"><span class="num">sin x</span><span class="den">x</span></span> при x ≠ 0 }</div>
+    <p>Теперь функция непрерывна всюду — «дырку» в графике заполнили одной точкой.</p>
+  </div>
+
+  <div class="df"><span class="tag">2. Разрыв 1-го рода (скачок)</span>
+    <p>Односторонние пределы конечны, но <b>не равны</b> между собой: &nbsp;lim<sub>x→x₀−0</sub> f ≠ lim<sub>x→x₀+0</sub> f. Разность значений — «скачок».</p>
+  </div>
+  <div class="ex"><span class="tag">Пример: y = sign x в x = 0</span>
+    <p>sign x = −1 при x &lt; 0; &nbsp;0 при x = 0; &nbsp;1 при x &gt; 0.</p>
+    <p>lim<sub>x→0−0</sub> sign x = <b>−1</b>, &nbsp;lim<sub>x→0+0</sub> sign x = <b>+1</b>. Пределы конечны, но разные ⟹ x = 0 — разрыв <b>1-го рода</b>, скачок величиной 2.</p>
+  </div>
+
+  <div class="df"><span class="tag">3. Разрыв 2-го рода</span>
+    <p>Хотя бы один из односторонних пределов <b>бесконечен</b> либо <b>не существует</b>.</p>
+  </div>
+  <div class="ex"><span class="tag">Пример: y = 1/x в x = 0</span>
+    <p>lim<sub>x→0−0</sub> <span class="frac"><span class="num">1</span><span class="den">x</span></span> = −∞, &nbsp;lim<sub>x→0+0</sub> <span class="frac"><span class="num">1</span><span class="den">x</span></span> = +∞. Пределы бесконечны ⟹ x = 0 — разрыв <b>2-го рода</b> (вертикальная асимптота).</p>
+  </div>
+
+  <table>
+    <tr><th>Вид разрыва</th><th>Односторонние пределы</th><th>Пример</th></tr>
+    <tr><td>Устранимый</td><td>конечны и равны (но ≠ f(x₀))</td><td>sin x / x при x = 0</td></tr>
+    <tr><td>1-го рода (скачок)</td><td>конечны, но не равны</td><td>sign x при x = 0</td></tr>
+    <tr><td>2-го рода</td><td>хотя бы один = ∞ или ∄</td><td>1 / x при x = 0</td></tr>
+  </table>
+</section>
+
 </main>
 </div>
 <script>
@@ -802,7 +959,7 @@ const secs=[...document.querySelectorAll('section')];
 const nav=document.getElementById('nav');
 const titleEl=document.getElementById('secTitle');
 const descEl=document.getElementById('secDesc');
-const groupOrder=['1 · Последовательности','2 · Предел функции','3 · Вычисление','4 · Разборы задач'];
+const groupOrder=['1 · Последовательности','2 · Предел функции','3 · Вычисление','4 · Разборы задач','5 · Непрерывность'];
 const links=[];
 groupOrder.forEach(g=>{
   const idxs=[]; secs.forEach((s,i)=>{ if((s.dataset.group||'')===g) idxs.push(i); });
