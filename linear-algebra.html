@@ -1196,7 +1196,7 @@
 </section>
 
 <!-- ================= ГЛАВА 8. БАЗИС И КООРДИНАТЫ ================= -->
-<section data-group="8 · Базис и координаты" data-new="1" data-t="Разложение по базису и координаты" data-desc="Любой вектор = комбинация базисных; координаты — коэффициенты этого разложения. На графиках и числах.">
+<section data-group="8 · Базис и координаты" data-t="Разложение по базису и координаты" data-desc="Любой вектор = комбинация базисных; координаты — коэффициенты этого разложения. На графиках и числах.">
   <h2>Разложение вектора по базису</h2>
   <div class="intu"><span class="tag">Идея</span>
     <p><b>Базис</b> — это набор «эталонных» векторов, через которые можно выразить любой другой. Коэффициенты такого разложения и называют <b>координатами</b> вектора в этом базисе.</p>
@@ -1254,7 +1254,7 @@
   <div class="note"><b>Вывод:</b> «координаты» — не свойство вектора, а свойство пары «вектор + базис». Сменили базис — поменялись координаты.</div>
 </section>
 
-<section data-group="8 · Базис и координаты" data-new="1" data-t="Размерность и виды базисов" data-desc="dim = число базисных векторов; базис Rⁿ и Pₙ; нормированный, ортогональный, ортонормированный — на числах.">
+<section data-group="8 · Базис и координаты" data-t="Размерность и виды базисов" data-desc="dim = число базисных векторов; базис Rⁿ и Pₙ; нормированный, ортогональный, ортонормированный — на числах.">
   <h2>Размерность и виды базисов</h2>
   <div class="df"><span class="tag">Размерность</span>
     <p><b>dim V</b> — число векторов в базисе (оно одинаково для всех базисов данного пространства). Пространство <b>конечномерное</b>, если такой конечный базис существует.</p>
@@ -1283,7 +1283,7 @@
   </div>
 </section>
 
-<section data-group="8 · Базис и координаты" data-new="1" data-t="Единственность разложения. Операции в координатах" data-desc="Разложение по базису единственно; как складывать векторы и умножать на число через координаты; дополнение до базиса.">
+<section data-group="8 · Базис и координаты" data-t="Единственность разложения. Операции в координатах" data-desc="Разложение по базису единственно; как складывать векторы и умножать на число через координаты; дополнение до базиса.">
   <h2>Единственность и операции в координатах</h2>
   <div class="df"><span class="tag">Теорема 1 (единственность)</span>
     <p>Любой вектор x конечномерного пространства представляется через базис <b>единственным образом</b>: &nbsp;x = ξ₁e₁ + … + ξ<sub>n</sub>e<sub>n</sub>. Числа ξ₁, …, ξ<sub>n</sub> — его <b>координаты</b> в этом базисе.</p>
@@ -1312,7 +1312,7 @@
   </div>
 </section>
 
-<section data-group="8 · Базис и координаты" data-new="1" data-t="Матрица перехода" data-desc="Как связаны два базиса и координаты вектора в них: ū = ē·A, ξ = A·η, η = A⁻¹·ξ. Полный числовой разбор.">
+<section data-group="8 · Базис и координаты" data-t="Матрица перехода" data-desc="Как связаны два базиса и координаты вектора в них: ū = ē·A, ξ = A·η, η = A⁻¹·ξ. Полный числовой разбор.">
   <h2>Матрица перехода между базисами</h2>
   <div class="df"><span class="tag">Определение</span>
     <p>Пусть в пространстве два базиса: старый ē = (e₁,…,e<sub>n</sub>) и новый ū = (u₁,…,u<sub>n</sub>). Каждый новый вектор раскладывается по старому; из этих коэффициентов составляют <b>матрицу перехода A</b> (в её столбцах — координаты новых базисных векторов в старом базисе): ū = ē·A. Матрица перехода всегда невырожденная (|A| ≠ 0).</p>
@@ -1356,6 +1356,235 @@
   </div>
 
   <div class="note"><b>Как запомнить:</b> столбцы матрицы перехода — это новые базисные векторы, записанные в старом базисе. Умножение на A переводит координаты «из нового в старый», а на A⁻¹ — обратно.</div>
+</section>
+
+<!-- ================= ГЛАВА 9. ЛИНЕЙНЫЕ ПРЕОБРАЗОВАНИЯ ================= -->
+<section data-group="9 · Линейные операторы" data-new="1" data-t="Определение и примеры" data-desc="Линейное преобразование (оператор): аддитивность и однородность; образ и прообраз; нулевое, единичное, поворот, дифференцирование.">
+  <h2>Линейные преобразования (операторы)</h2>
+  <div class="intu"><span class="tag">Идея</span>
+    <p><b>Линейное преобразование</b> A — это «машинка», которая каждому вектору x сопоставляет новый вектор A(x) из того же пространства, причём делает это «честно»: не ломает сложение и умножение на число. A(x) называют <b>образом</b>, x — <b>прообразом</b>.</p>
+  </div>
+  <div class="df"><span class="tag">Определение</span>
+    <p>Преобразование A линейно, если для любых x, y и любого числа α:</p>
+    <ol>
+      <li><b>A(x + y) = A(x) + A(y)</b> — аддитивность;</li>
+      <li><b>A(αx) = α·A(x)</b> — однородность.</li>
+    </ol>
+    <p>Вместе это и есть <b>линейность</b>.</p>
+  </div>
+
+  <h3>Примеры</h3>
+  <ul>
+    <li><b>Нулевое (вырожденное)</b> O: O(x) = 0 для всех x.</li>
+    <li><b>Единичное</b> E: E(x) = x (ничего не меняет).</li>
+    <li><b>Поворот, растяжение</b> на плоскости — линейны.</li>
+    <li><b>Дифференцирование</b> в пространстве многочленов P<sub>n</sub>: A(p) = p′. Например, A(3 + 2t + 5t²) = 2 + 10t.</li>
+  </ul>
+  <div class="ex"><span class="tag">На числах: растяжение-сдвиг A(x,y) = (2x + y, &nbsp;y)</span>
+    <p>Проверим на базисных векторах, куда они едут:</p>
+    <div class="step">A(e₁) = A(1, 0) = (2·1 + 0, &nbsp;0) = <b>(2, 0)</b>.</div>
+    <div class="step">A(e₂) = A(0, 1) = (2·0 + 1, &nbsp;1) = <b>(1, 1)</b>.</div>
+    <div class="step">Произвольный x = (3, 1): A(x) = (2·3 + 1, &nbsp;1) = (7, 1). И через базис: 3·A(e₁) + 1·A(e₂) = 3(2,0)+(1,1) = (7,1) ✓.</div>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="60" y1="8" x2="60" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="116" y1="8" x2="116" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="172" y1="8" x2="172" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="228" y1="8" x2="228" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="284" y1="8" x2="284" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="340" y1="8" x2="340" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="60" y1="250" x2="412" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="60" y1="194" x2="412" y2="194" stroke="#1b2444" stroke-width="1"/><line x1="60" y1="138" x2="412" y2="138" stroke="#1b2444" stroke-width="1"/><line x1="60" y1="82" x2="412" y2="82" stroke="#1b2444" stroke-width="1"/>
+<line x1="60" y1="250" x2="412" y2="250" stroke="#46567f" stroke-width="1.4"/>
+<line x1="60" y1="8" x2="60" y2="250" stroke="#46567f" stroke-width="1.4"/>
+<line x1="60.0" y1="250.0" x2="116.0" y2="250.0" stroke="#e7ecf7" stroke-width="2"/><polygon points="116.0,250.0 108.6,253.1 108.6,246.9" fill="#e7ecf7"/>
+<line x1="60.0" y1="250.0" x2="60.0" y2="194.0" stroke="#e7ecf7" stroke-width="2"/><polygon points="60.0,194.0 63.1,201.4 56.9,201.4" fill="#e7ecf7"/>
+<line x1="60.0" y1="250.0" x2="172.0" y2="250.0" stroke="#ffc24b" stroke-width="3"/><polygon points="172.0,250.0 162.8,253.9 162.8,246.1" fill="#ffc24b"/>
+<line x1="60.0" y1="250.0" x2="116.0" y2="194.0" stroke="#5b8def" stroke-width="3"/><polygon points="116.0,194.0 112.2,203.3 106.7,197.8" fill="#5b8def"/>
+<text x="80" y="240" fill="#e7ecf7" font-size="12" font-family="monospace">e₁</text>
+<text x="64" y="219" fill="#e7ecf7" font-size="12" font-family="monospace">e₂</text>
+<text x="144" y="274" fill="#ffc24b" font-size="12" font-family="monospace">A(e₁)=(2,0)</text>
+<text x="122" y="191" fill="#5b8def" font-size="12" font-family="monospace">A(e₂)=(1,1)</text>
+<text x="66" y="24" fill="#cdd7ee" font-size="12" font-family="monospace">столбцы матрицы — образы e₁, e₂</text>
+</svg>
+    <div class="cap">Оператор полностью задаётся тем, куда едут базисные векторы: образы e₁ и e₂ — это столбцы матрицы A.</div>
+  </div>
+
+  <p>Нагляднее всего видно, что делает оператор, если применить его к целой <b>фигуре</b>. Тот же оператор A(x,y) = (2x + y, y) превращает единичный квадрат в наклонённый параллелограмм (сдвиг, «shear»):</p>
+  <div class="fig">
+<svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="50" y1="8" x2="50" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="98" y1="8" x2="98" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="146" y1="8" x2="146" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="194" y1="8" x2="194" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="242" y1="8" x2="242" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="290" y1="8" x2="290" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="338" y1="8" x2="338" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="50" y1="250" x2="412" y2="250" stroke="#1b2444" stroke-width="1"/><line x1="50" y1="202" x2="412" y2="202" stroke="#1b2444" stroke-width="1"/><line x1="50" y1="154" x2="412" y2="154" stroke="#1b2444" stroke-width="1"/><line x1="50" y1="106" x2="412" y2="106" stroke="#1b2444" stroke-width="1"/>
+<line x1="50" y1="250" x2="412" y2="250" stroke="#46567f" stroke-width="1.4"/>
+<line x1="50" y1="8" x2="50" y2="250" stroke="#46567f" stroke-width="1.4"/>
+<polygon points="50,250 98,250 98,202 50,202" fill="rgba(57,217,138,.18)" stroke="#39d98a" stroke-width="2.4"/>
+<polygon points="50,250 146,250 194,202 98,202" fill="rgba(255,194,75,.16)" stroke="#ffc24b" stroke-width="2.4"/>
+<text x="60" y="231" fill="#39d98a" font-size="12" font-family="monospace">квадрат</text>
+<text x="150" y="226" fill="#ffc24b" font-size="12" font-family="monospace">образ</text>
+<text x="56" y="24" fill="#cdd7ee" font-size="12" font-family="monospace">A(x,y)=(2x+y, y): сдвиг (shear)</text>
+</svg>
+    <div class="cap">Каждая вершина квадрата едет по правилу A: (1,0)→(2,0), (1,1)→(3,1), (0,1)→(1,1). Нижняя сторона осталась на месте, верх «поехал» вправо.</div>
+  </div>
+</section>
+
+<section data-group="9 · Линейные операторы" data-new="1" data-t="Свойства операторов" data-desc="A(0)=0; образ линейной комбинации; образ линейно зависимой системы снова зависим (а для независимой — не обязательно).">
+  <h2>Свойства линейных преобразований</h2>
+  <div class="df"><span class="tag">Свойство 1</span><p>A(0) = 0: нулевой вектор всегда переходит в нулевой. (Ведь A(0) = A(0·x) = 0·A(x) = 0.)</p></div>
+  <div class="df"><span class="tag">Свойство 2 — образ комбинации</span>
+    <p>A(α₁x₁ + … + α<sub>k</sub>x<sub>k</sub>) = α₁A(x₁) + … + α<sub>k</sub>A(x<sub>k</sub>). То есть можно «вносить» A внутрь комбинации.</p>
+  </div>
+  <div class="df"><span class="tag">Свойство 3</span>
+    <p>Линейное преобразование переводит всякую <b>линейно зависимую</b> систему снова в линейно зависимую.</p>
+  </div>
+  <div class="leg"><b>Почему:</b> если α₁x₁+…+α<sub>k</sub>x<sub>k</sub> = 0 с ненулевыми коэффициентами, применим A: α₁A(x₁)+…+α<sub>k</sub>A(x<sub>k</sub>) = A(0) = 0 — та же нетривиальная комбинация обнуляет образы ⟹ они зависимы.</div>
+  <div class="warnbox"><span class="tag">Осторожно</span>
+    <p>Для <b>независимой</b> системы это <b>неверно</b>: образ одного из векторов может оказаться нулевым, и система образов станет зависимой. Пример — дифференцирование: 1, t независимы, но A(1) = 0 — образы {0, 1} уже зависимы.</p>
+  </div>
+  <div class="ex"><span class="tag">На числах (поворот на 90°)</span>
+    <p>A(x,y) = (−y, x). Система (1,0), (2,0) зависима (второй = 2·первый). Образы: A(1,0)=(0,1), A(2,0)=(0,2) — снова (0,2)=2·(0,1), зависимы ✓.</p>
+  </div>
+</section>
+
+<section data-group="9 · Линейные операторы" data-new="1" data-t="Матрица оператора" data-desc="Столбцы матрицы = координаты образов базисных векторов; координаты образа η = A·ξ. Полный разбор + дифференцирование.">
+  <h2>Матрица линейного оператора</h2>
+  <div class="df"><span class="tag">Главная теорема</span>
+    <p>В фиксированном базисе каждому линейному оператору A соответствует <b>единственная матрица</b> A (и наоборот). <b>i-й столбец</b> матрицы — это координаты образа i-го базисного вектора A(e<sub>i</sub>). Тогда координаты образа любого вектора:</p>
+    <div class="formula" style="font-size:16px">η = A·ξ &nbsp;&nbsp;(координаты образа A(x) = матрица × координаты x)</div>
+  </div>
+
+  <div class="df"><span class="tag">Алгоритм построения матрицы оператора</span>
+    <ol>
+      <li><b>Шаг 1.</b> Подставь в формулу оператора базисный вектор e₁ = (1, 0, …) — получишь образ A(e₁).</li>
+      <li><b>Шаг 2.</b> Так же найди A(e₂), A(e₃), … — образы всех базисных векторов.</li>
+      <li><b>Шаг 3.</b> Запиши найденные образы <b>в столбцы</b>: A(e₁) — 1-й столбец, A(e₂) — 2-й, и т. д.</li>
+      <li><b>Шаг 4.</b> Теперь образ любого вектора считается умножением η = A·ξ.</li>
+    </ol>
+  </div>
+
+  <div class="ex"><span class="tag">Разбор 1 — оператор A(x,y) = (2x + y, &nbsp;y)</span>
+    <div class="step"><b>Дано:</b> оператор переводит вектор (x, y) в вектор (2x + y, y). <b>Найти:</b> его матрицу и образ вектора (3, 1).</div>
+    <div class="step"><b>Шаг 1. Образ e₁.</b> Подставляем x = 1, y = 0: &nbsp;A(e₁) = A(1, 0) = (2·1 + 0, &nbsp;0) = <b>(2, 0)</b>.</div>
+    <div class="step"><b>Шаг 2. Образ e₂.</b> Подставляем x = 0, y = 1: &nbsp;A(e₂) = A(0, 1) = (2·0 + 1, &nbsp;1) = <b>(1, 1)</b>.</div>
+    <div class="step"><b>Шаг 3. В столбцы.</b> 1-й столбец (2, 0), 2-й столбец (1, 1): &nbsp; A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>1</span></span></span>.</div>
+    <div class="step"><b>Шаг 4. Образ (3, 1).</b> η = A·ξ: &nbsp;верхняя координата 2·3 + 1·1 = 7; нижняя 0·3 + 1·1 = 1 ⟹ <b>(7, 1)</b>.</div>
+    <div class="step"><b>Проверка:</b> прямо по формуле A(3, 1) = (2·3 + 1, 1) = (7, 1) ✓.</div>
+  </div>
+
+  <div class="ex"><span class="tag">«Было → стало»: тот же оператор на разных векторах</span>
+    <p>Матрица A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>1</span><span>0</span><span>1</span></span></span>, образ считаем как η = A·ξ:</p>
+    <table>
+      <tr><th>Было &nbsp;x = (x, y)</th><th>Счёт &nbsp;(2x + y, &nbsp;y)</th><th>Стало &nbsp;A(x)</th></tr>
+      <tr><td>(1, 0)</td><td>(2·1+0, &nbsp;0)</td><td>(2, 0)</td></tr>
+      <tr><td>(0, 1)</td><td>(2·0+1, &nbsp;1)</td><td>(1, 1)</td></tr>
+      <tr><td>(1, 1)</td><td>(2·1+1, &nbsp;1)</td><td>(3, 1)</td></tr>
+      <tr><td>(2, 3)</td><td>(2·2+3, &nbsp;3)</td><td>(7, 3)</td></tr>
+      <tr><td>(−1, 2)</td><td>(2·(−1)+2, &nbsp;2)</td><td>(0, 2)</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:13px">Видно правило: вторая координата не меняется (y → y), а первая «подтягивает» y: 2x + y. Это и есть сдвиг.</p>
+  </div>
+
+  <div class="ex"><span class="tag">Разбор 2 — поворот на 90°: A(x,y) = (−y, &nbsp;x)</span>
+    <div class="step"><b>Дано:</b> оператор поворачивает плоскость на 90° против часовой: (x, y) → (−y, x). <b>Найти:</b> матрицу и образ вектора (2, 1).</div>
+    <div class="step"><b>Шаг 1. Образ e₁.</b> A(1, 0) = (−0, &nbsp;1) = <b>(0, 1)</b> &nbsp;(вектор «вправо» стал «вверх»).</div>
+    <div class="step"><b>Шаг 2. Образ e₂.</b> A(0, 1) = (−1, &nbsp;0) = <b>(−1, 0)</b> &nbsp;(вектор «вверх» стал «влево»).</div>
+    <div class="step"><b>Шаг 3. В столбцы.</b> A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>−1</span><span>1</span><span>0</span></span></span>.</div>
+    <div class="step"><b>Шаг 4. Образ (2, 1).</b> η = A·ξ: &nbsp;верх 0·2 + (−1)·1 = −1; низ 1·2 + 0·1 = 2 ⟹ <b>(−1, 2)</b> — вектор повернулся на 90° ✓.</div>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 380 340" width="100%" style="max-width:380px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="30" y1="8" x2="30" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="70" y1="8" x2="70" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="110" y1="8" x2="110" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="150" y1="8" x2="150" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="230" y1="8" x2="230" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="270" y1="8" x2="270" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="310" y1="8" x2="310" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="350" y1="8" x2="350" y2="332" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="335" x2="372" y2="335" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="295" x2="372" y2="295" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="255" x2="372" y2="255" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="215" x2="372" y2="215" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="135" x2="372" y2="135" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="95" x2="372" y2="95" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="55" x2="372" y2="55" stroke="#1b2444" stroke-width="1"/><line x1="8" y1="15" x2="372" y2="15" stroke="#1b2444" stroke-width="1"/>
+<line x1="8" y1="175" x2="372" y2="175" stroke="#46567f" stroke-width="1.4"/>
+<line x1="190" y1="8" x2="190" y2="332" stroke="#46567f" stroke-width="1.4"/>
+<polygon points="190,175 270,175 270,135 230,135 230,95 190,95" fill="rgba(57,217,138,.18)" stroke="#39d98a" stroke-width="2.4"/>
+<polygon points="190,175 190,95 150,95 150,135 110,135 110,175" fill="rgba(91,141,239,.18)" stroke="#5b8def" stroke-width="2.4"/>
+<text x="210" y="143" fill="#39d98a" font-size="12" font-family="monospace">исходная</text>
+<text x="114" y="143" fill="#5b8def" font-size="12" font-family="monospace">после A</text>
+<text x="12" y="22" fill="#cdd7ee" font-size="12" font-family="monospace">A=поворот 90°: (x,y)→(−y,x)</text>
+</svg>
+    <div class="cap">Матрица поворота разворачивает всю фигуру на 90° против часовой стрелки. Форма сохраняется — поворот не искажает.</div>
+  </div>
+  <div class="ex"><span class="tag">Разбор 3 — дифференцирование на P₂ (базис 1, t, t²)</span>
+    <div class="step"><b>Дано:</b> оператор A(p) = p′ (взятие производной) на многочленах степени ≤ 2. Базис: e₁ = 1, e₂ = t, e₃ = t². <b>Найти:</b> матрицу и образ p = 3 + 2t + 5t².</div>
+    <div class="step"><b>Шаг 1. Образы базиса.</b> A(1) = (1)′ = 0; &nbsp;A(t) = (t)′ = 1; &nbsp;A(t²) = (t²)′ = 2t.</div>
+    <div class="step"><b>Шаг 2. Образы в координатах</b> (по базису 1, t, t²): &nbsp;0 = (0,0,0); &nbsp;1 = (1,0,0); &nbsp;2t = (0,2,0).</div>
+    <div class="step"><b>Шаг 3. В столбцы:</b> &nbsp;A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>2</span><span>0</span><span>0</span><span>0</span></span></span>.</div>
+    <div class="step"><b>Шаг 4. Образ p.</b> Координаты p = 3 + 2t + 5t² это ξ = (3, 2, 5). η = A·ξ: &nbsp;(0·3+1·2+0·5, &nbsp;0·3+0·2+2·5, &nbsp;0·3+0·2+0·5) = (2, 10, 0).</div>
+    <div class="step"><b>Ответ:</b> это многочлен 2 + 10t ⟹ p′ = 2 + 10t. Проверка напрямую: (3 + 2t + 5t²)′ = 2 + 10t ✓.</div>
+  </div>
+</section>
+
+<section data-group="9 · Линейные операторы" data-new="1" data-t="Операции над операторами" data-desc="Сумма, умножение на число, произведение (= композиция) операторов — им соответствуют действия над матрицами.">
+  <h2>Операции над операторами</h2>
+  <div class="df"><span class="tag">Три операции</span>
+    <ul>
+      <li><b>Сумма:</b> (A + B)x = A(x) + B(x). Матрица: G = A + B.</li>
+      <li><b>Умножение на число:</b> (kA)x = k·A(x). Матрица: G = kA.</li>
+      <li><b>Произведение (композиция):</b> (A·B)x = A(B(x)) — сначала B, потом A. Матрица: G = A·B.</li>
+    </ul>
+    <p>Все линейные операторы с этими операциями сами образуют линейное пространство (выполнены те же 8 аксиом).</p>
+  </div>
+  <div class="ex"><span class="tag">Разбор на числах: A — растяжение, B — поворот</span>
+    <div class="step"><b>Дано:</b> A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>0</span><span>0</span><span>3</span></span></span> (растягивает по x в 2 раза, по y в 3), &nbsp;B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>−1</span><span>1</span><span>0</span></span></span> (поворот 90°).</div>
+    <div class="step"><b>Сумма</b> (поэлементно): A + B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2+0</span><span>0−1</span><span>0+1</span><span>3+0</span></span></span> = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>−1</span><span>1</span><span>3</span></span></span>.</div>
+    <div class="step"><b>Умножение на число:</b> 2A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>4</span><span>0</span><span>0</span><span>6</span></span></span> (каждый элемент ×2).</div>
+    <div class="step"><b>Произведение A·B</b> (строка × столбец). Элемент (1,1): 2·0 + 0·1 = 0; (1,2): 2·(−1) + 0·0 = −2; (2,1): 0·0 + 3·1 = 3; (2,2): 0·(−1) + 3·0 = 0.</div>
+    <div class="step">A·B = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>−2</span><span>3</span><span>0</span></span></span> &nbsp;(сначала поворот B, потом растяжение A).</div>
+    <div class="step"><b>Проверка смысла</b> на x = (1, 0): B(x) = (0, 1) (повернули), затем A(0, 1) = (0, 3) (растянули). И (A·B)·(1,0) = (0, 3) ✓.</div>
+  </div>
+  <div class="warnbox"><span class="tag">Порядок важен!</span>
+    <p>A·B ≠ B·A в общем случае. Для наших матриц B·A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>−3</span><span>2</span><span>0</span></span></span> ≠ A·B. «Сначала повернуть, потом растянуть» — не то же самое, что наоборот.</p>
+  </div>
+</section>
+
+<section data-group="9 · Линейные операторы" data-new="1" data-t="Задачи для разбора" data-desc="Проверка линейности, поиск матрицы оператора, образ вектора, композиция, проекция и поворот — с решениями.">
+  <h2>Задачи для разбора</h2>
+  <p style="color:var(--muted)">Каждая задача — строго по шагам: <b>что дано → что найти → как строим → ответ</b>. Сначала попробуй сам.</p>
+
+  <div class="task"><p class="q">Задача 1. Линейно ли преобразование A(x, y) = (x + 1, &nbsp;y)?</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> A(x, y) = (x + 1, y). <b>Найти:</b> линеен ли оператор.</div>
+      <div class="step"><b>Шаг 1. Проверяем A(0) = 0.</b> Подставляем (0, 0): A(0, 0) = (0 + 1, &nbsp;0) = (1, 0).</div>
+      <div class="step"><b>Шаг 2. Сравниваем с нулём.</b> Получили (1, 0) ≠ (0, 0). А у любого линейного оператора обязано быть A(0) = 0.</div>
+      <div class="step"><b>Ответ:</b> условие нарушено ⟹ оператор <b>не линейный</b>. (Это перенос: «+1» ломает однородность.)</div>
+    </details></div>
+
+  <div class="task"><p class="q">Задача 2. Линейно ли A(x, y) = (2x − y, &nbsp;3x)? Если да — найди матрицу.</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> A(x, y) = (2x − y, 3x). <b>Найти:</b> линейность и матрицу.</div>
+      <div class="step"><b>Шаг 1. Линейность.</b> Обе координаты — линейные комбинации x и y <b>без свободных членов</b> ⟹ A(0)=0, аддитивность и однородность есть ⟹ <b>линеен</b>.</div>
+      <div class="step"><b>Шаг 2. Образ e₁.</b> A(1, 0) = (2·1 − 0, &nbsp;3·1) = (2, 3).</div>
+      <div class="step"><b>Шаг 3. Образ e₂.</b> A(0, 1) = (2·0 − 1, &nbsp;3·0) = (−1, 0).</div>
+      <div class="step"><b>Шаг 4. В столбцы.</b> A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>−1</span><span>3</span><span>0</span></span></span>.</div>
+      <div class="step"><b>Ответ:</b> оператор линеен, матрица <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>2</span><span>−1</span><span>3</span><span>0</span></span></span>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">Задача 3. Найди матрицу оператора в R³: A(x, y, z) = (x + y, &nbsp;y + z, &nbsp;z).</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> A(x, y, z) = (x + y, y + z, z). <b>Найти:</b> матрицу 3×3.</div>
+      <div class="step"><b>Шаг 1. Образ e₁ = (1,0,0).</b> A(1,0,0) = (1 + 0, &nbsp;0 + 0, &nbsp;0) = (1, 0, 0).</div>
+      <div class="step"><b>Шаг 2. Образ e₂ = (0,1,0).</b> A(0,1,0) = (0 + 1, &nbsp;1 + 0, &nbsp;0) = (1, 1, 0).</div>
+      <div class="step"><b>Шаг 3. Образ e₃ = (0,0,1).</b> A(0,0,1) = (0 + 0, &nbsp;0 + 1, &nbsp;1) = (0, 1, 1).</div>
+      <div class="step"><b>Шаг 4. В столбцы:</b> A = <span class="mat"><span class="grid" style="grid-template-columns:repeat(3,auto)"><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span></span></span>.</div>
+      <div class="step"><b>Проверка</b> на (2, 3, 4): η = A·ξ = (2+3, &nbsp;3+4, &nbsp;4) = (5, 7, 4) = прямой счёт ✓.</div>
+    </details></div>
+
+  <div class="task"><p class="q">Задача 4. Оператор задан матрицей A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>3</span><span>1</span><span>2</span><span>−1</span></span></span>. Найди образ вектора x = (1, 2).</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> матрица A и вектор x = (1, 2). <b>Найти:</b> A(x) = η = A·ξ.</div>
+      <div class="step"><b>Шаг 1. Верхняя координата</b> (1-я строка × вектор): 3·1 + 1·2 = 5.</div>
+      <div class="step"><b>Шаг 2. Нижняя координата</b> (2-я строка × вектор): 2·1 + (−1)·2 = 0.</div>
+      <div class="step"><b>Ответ:</b> A(x) = (5, 0).</div>
+    </details></div>
+
+  <div class="task"><p class="q">Задача 5. Проекция на ось Ox: A(x, y) = (x, 0). Найди матрицу и объясни, почему оператор «вырожденный».</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> A(x, y) = (x, 0) — оставляем x, обнуляем y. <b>Найти:</b> матрицу и вырожденность.</div>
+      <div class="step"><b>Шаг 1. Образ e₁.</b> A(1, 0) = (1, 0).</div>
+      <div class="step"><b>Шаг 2. Образ e₂.</b> A(0, 1) = (0, 0) — вектор «вверх» схлопнулся в ноль!</div>
+      <div class="step"><b>Шаг 3. В столбцы:</b> A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>1</span><span>0</span><span>0</span><span>0</span></span></span>.</div>
+      <div class="step"><b>Шаг 4. Определитель:</b> |A| = 1·0 − 0·0 = 0 ⟹ <b>вырожденный</b>: оператор прижимает всю плоскость к оси Ox, теряет y, обратного нет.</div>
+    </details></div>
+
+  <div class="task"><p class="q">Задача 6. A — поворот 90° (матрица <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>0</span><span>−1</span><span>1</span><span>0</span></span></span>). Чему равен A·A (повернуть дважды)?</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Дано:</b> A — поворот 90°. <b>Найти:</b> матрицу A·A.</div>
+      <div class="step"><b>Шаг 1. Перемножаем строка × столбец.</b> (1,1): 0·0 + (−1)·1 = −1; (1,2): 0·(−1) + (−1)·0 = 0; (2,1): 1·0 + 0·1 = 0; (2,2): 1·(−1) + 0·0 = −1.</div>
+      <div class="step"><b>Шаг 2. Собираем:</b> A·A = <span class="mat"><span class="grid" style="grid-template-columns:auto auto"><span>−1</span><span>0</span><span>0</span><span>−1</span></span></span> = −E.</div>
+      <div class="step"><b>Ответ:</b> это поворот на 180°. Дважды по 90° = развернуть вектор в противоположную сторону. Логично ✓.</div>
+    </details></div>
 </section>
 
 </main>

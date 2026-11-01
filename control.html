@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контрольные и задачи — разбор по шагам</title>
+<style>
+  :root{
+    --bg:#0f1424;--panel:#161d33;--panel2:#1d2742;--ink:#e7ecf7;--muted:#9aa6c4;
+    --blue:#5b8def;--blue2:#7aa5ff;--acc:#a06bff;--gold:#ffc24b;--line:#2a3350;--ok:#39d98a;--warn:#ff8d6b;--pink:#ff7ab6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.6}
+  .app{display:flex;min-height:100vh}
+  aside{width:300px;flex:none;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow:auto}
+  .brand{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+  .brand a{color:var(--blue2);text-decoration:none;font-size:12.5px;font-weight:600}
+  .brand h1{margin:8px 0 0;font-size:17px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:11.5px}
+  nav{padding:8px 8px 30px}
+  .grp{margin:6px 0}
+  .grp>button{width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:#fff;
+     font-size:13px;font-weight:700;padding:9px 11px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .grp>button:hover{border-color:var(--blue)}
+  .grp>button .arw{color:var(--muted);font-size:11px;transition:.15s}
+  .grp.open>button .arw{transform:rotate(90deg)}
+  .grp .items{display:none;margin:4px 0 8px 6px;padding-left:8px;border-left:1px solid var(--line)}
+  .grp.open .items{display:block}
+  .items a{display:block;color:var(--ink);text-decoration:none;font-size:12.5px;padding:6px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+  .items a:hover{background:var(--panel2)}
+  .items a.active{background:linear-gradient(92deg,#25335c,#20294a);border-color:var(--blue);color:#fff}
+  main{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:26px 34px 90px}
+  .lead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:20px}
+  .lead h2{margin:0 0 4px;font-size:22px}
+  .lead p{margin:0;color:var(--muted);font-size:14px}
+  section{display:none}section.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:21px;margin:6px 0 10px}
+  h3{color:var(--blue2);font-size:18px;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  p{margin:8px 0}
+  .df{background:var(--panel);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .df .tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--acc);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .cond{background:rgba(122,165,255,.10);border-left:3px solid var(--blue2);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .cond .tag{display:inline-block;font-size:11px;font-weight:700;color:#04122e;background:var(--blue2);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .ex{background:rgba(57,217,138,.08);border-left:3px solid var(--ok);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+  .ex .tag{display:inline-block;font-size:11px;font-weight:700;color:#04140c;background:var(--ok);padding:2px 9px;border-radius:20px;margin-bottom:8px}
+  .chk{background:rgba(57,217,138,.10);border:1px solid rgba(57,217,138,.4);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#bff0d6}
+  .chk b{color:var(--ok)}
+  .warnbox{background:rgba(255,141,107,.10);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+  .warnbox .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--warn);padding:2px 9px;border-radius:20px;margin-bottom:6px}
+  .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .ans{background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.5);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:15px;color:#ffe6ad}
+  .ans b{color:var(--gold)}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0;text-align:center;font-size:17px;overflow-x:auto;line-height:1.9}
+  .step{margin:10px 0;padding:4px 0 4px 12px;border-left:2px solid var(--line);font-size:15px;overflow-x:auto}
+  ul,ol{margin:8px 0 8px 4px;padding-left:22px}li{margin:5px 0}
+  sub,sup{font-size:.72em}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th{background:var(--panel2);color:#fff;text-align:left;padding:7px 10px;border:1px solid var(--line)}
+  td{border:1px solid var(--line);padding:6px 10px}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.12;font-size:.95em}
+  .frac>span{display:block;padding:0 .45em}.frac>.num{padding-bottom:.06em}.frac>.den{border-top:1.6px solid currentColor;padding-top:.08em}
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 10px 4px;margin:16px 0}
+  .fig .cap{font-size:13px;color:var(--muted);text-align:center;padding:2px 10px 8px}
+  .menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:9px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    .backdrop.show{display:block}
+    aside{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:25;box-shadow:4px 0 20px rgba(0,0,0,.55)}
+    aside.open{transform:translateX(0)}
+    main{padding:60px 16px 70px;max-width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+<button class="menu-btn" id="menuBtn">☰ Задания</button>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="brand">
+    <a href="index.html">← Портал</a>
+    <h1>Контрольные и задачи</h1>
+    <p>Полные разборы по шагам · с проверкой ответов</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+  <div class="lead">
+    <h2 id="secTitle"></h2>
+    <p id="secDesc"></p>
+  </div>
+
+<section data-group="Вариант №1 · матан" data-new="1" data-t="Как устроен разбор" data-desc="Формат решений: дано → по шагам → ответ → проверка (2–3 раза).">
+  <h2>Как читать разборы</h2>
+  <div class="note">Каждое задание решено по одной схеме: <b>Дано → Шаг 1, 2, 3… → Ответ → Проверка</b>. Ответы перепроверены другим способом (подстановкой, прикидкой, разложением). Где полезно — график.</div>
+  <div class="cond"><span class="tag">Вариант №1 (матан), 10 заданий</span>
+    <p>1 — непрерывность; 2–4, 10 — производные (в т.ч. логарифмическое дифференцирование); 5 — параметрическая; 6 — неявная; 7 — касательная и нормаль; 8 — предел по Лопиталю; 9 — n-я производная.</p>
+  </div>
+  <h3>Справочник: производные для разборов</h3>
+  <p style="color:var(--muted);font-size:13px">Эти формулы используются в решениях ниже (u = u(x) — внутренняя функция, не забываем домножать на u′).</p>
+  <table>
+    <tr><th>Функция</th><th>Производная</th><th>Функция</th><th>Производная</th></tr>
+    <tr><td>uⁿ</td><td>n·u<sup>n−1</sup>·u′</td><td>ln u</td><td>u′/u</td></tr>
+    <tr><td>eᵘ</td><td>eᵘ·u′</td><td>logₐ u</td><td>u′/(u·ln a)</td></tr>
+    <tr><td>aᵘ</td><td>aᵘ·ln a·u′</td><td>sin u</td><td>cos u·u′</td></tr>
+    <tr><td>cos u</td><td>−sin u·u′</td><td>tg u</td><td>u′/cos²u</td></tr>
+    <tr><td>ctg u</td><td>−u′/sin²u</td><td>√u</td><td>u′/(2√u)</td></tr>
+    <tr><td>arcsin u</td><td>u′/√(1−u²)</td><td>arccos u</td><td>−u′/√(1−u²)</td></tr>
+    <tr><td>arctg u</td><td>u′/(1+u²)</td><td>arcctg u</td><td>−u′/(1+u²)</td></tr>
+  </table>
+</section>
+
+<!-- №1 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№1 — непрерывность" data-desc="y = 1/(3x+1)·arctg(1/(x−2)): найти и классифицировать точки разрыва.">
+  <h2>№1. Исследовать на непрерывность</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = <span class="frac"><span class="num">1</span><span class="den">3x + 1</span></span> · arctg <span class="frac"><span class="num">1</span><span class="den">x − 2</span></span></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Где может ломаться.</b> Функция составлена из элементарных и непрерывна всюду, кроме точек, где знаменатели обращаются в ноль: &nbsp;3x + 1 = 0 ⟹ x = −1/3; &nbsp;x − 2 = 0 ⟹ x = 2.</div>
+    <div class="step"><b>Шаг 2. Точка x = −1/3.</b> Множитель 1/(3x+1) → ∞. Второй множитель в этой точке конечен: arctg(1/(−1/3 − 2)) = arctg(−3/7) ≈ −0,40 ≠ 0.</div>
+    <div class="step">Значит произведение → ∞ ⟹ это <b>разрыв 2-го рода</b> (бесконечный, вертикальная асимптота).</div>
+    <div class="step"><b>Шаг 3. Точка x = 2.</b> Здесь «опасен» arctg(1/(x−2)): дробь 1/(x−2) при подходе слева и справа ведёт себя по-разному.</div>
+    <div class="step">Слева (x→2−0): x−2 → 0⁻, 1/(x−2) → −∞, &nbsp;arctg(−∞) = −π/2. Множитель 1/(3x+1) → 1/7. Левый предел: (1/7)·(−π/2) = <b>−π/14</b>.</div>
+    <div class="step">Справа (x→2+0): x−2 → 0⁺, 1/(x−2) → +∞, &nbsp;arctg(+∞) = +π/2. Правый предел: (1/7)·(π/2) = <b>+π/14</b>.</div>
+    <div class="step">Пределы конечны, но <b>не равны</b> ⟹ <b>разрыв 1-го рода (скачок)</b>. Величина скачка: π/14 − (−π/14) = <b>π/7</b>.</div>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 460 150" width="100%" style="max-width:460px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="40" y1="80" x2="440" y2="80" stroke="#46567f" stroke-width="1.6"/>
+<polygon points="440,80 430,75 430,85" fill="#46567f"/>
+<line x1="180" y1="20" x2="180" y2="130" stroke="#ff8d6b" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="348" cy="80" r="5" fill="none" stroke="#ffc24b" stroke-width="2"/>
+<circle cx="204" cy="80" r="3" fill="#39d98a"/>
+<text x="150" y="16" fill="#ff8d6b" font-size="12" font-family="monospace">x=−1/3</text>
+<text x="126" y="144" fill="#ff8d6b" font-size="11" font-family="monospace">II рода (∞)</text>
+<text x="340" y="68" fill="#ffc24b" font-size="12" font-family="monospace">x=2</text>
+<text x="318" y="144" fill="#ffc24b" font-size="11" font-family="monospace">I рода (скачок π/7)</text>
+<text x="198" y="98" fill="#cdd7ee" font-size="11" font-family="monospace">0</text>
+<text x="44" y="70" fill="#39d98a" font-size="11" font-family="monospace">непрерывна всюду, кроме двух точек →</text>
+</svg>
+    <div class="cap">Две особые точки: при x=−1/3 — бесконечный разрыв (асимптота), при x=2 — конечный скачок π/7.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> x = −1/3 — разрыв 2-го рода; x = 2 — разрыв 1-го рода (скачок π/7); в остальных точках функция непрерывна.</div>
+  <div class="chk"><b>Проверка:</b> (1) в x=−1/3 один множитель бесконечен, другой конечен ≠ 0 ⟹ произведение бесконечно — верно II род. (2) В x=2 оба односторонних предела конечны (±π/14) и различны ⟹ верно I род. Знак скачка: справа больше, чем слева, π/7 > 0 — согласовано.</div>
+</section>
+
+<!-- №2 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№2 — производная (кубический корень)" data-desc="y = ∛(arctg(ln x + √x)): цепное правило в три слоя.">
+  <h2>№2. Вычислить производную</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = <sup>3</sup>√( arctg(ln x + √x) ) = ( arctg(ln x + √x) )<sup>1/3</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам (цепное правило, 3 слоя)</span>
+    <div class="step"><b>Слои:</b> внешний — степень (…)<sup>1/3</sup>; средний — arctg(…); внутренний — u = ln x + √x.</div>
+    <div class="step"><b>Шаг 1. Внешний.</b> ((arctg u)<sup>1/3</sup>)′ = <span class="frac"><span class="num">1</span><span class="den">3</span></span>(arctg u)<sup>−2/3</sup> · (arctg u)′.</div>
+    <div class="step"><b>Шаг 2. Средний.</b> (arctg u)′ = <span class="frac"><span class="num">u′</span><span class="den">1 + u²</span></span>.</div>
+    <div class="step"><b>Шаг 3. Внутренний.</b> u′ = (ln x + √x)′ = (ln x)′ + (√x)′. &nbsp;(ln x)′ = <span class="frac"><span class="num">1</span><span class="den">x</span></span>; &nbsp;(√x)′ = (x<sup>1/2</sup>)′ = <span class="frac"><span class="num">1</span><span class="den">2</span></span>x<sup>−1/2</sup> = <span class="frac"><span class="num">1</span><span class="den">2√x</span></span>. &nbsp;Итого u′ = <span class="frac"><span class="num">1</span><span class="den">x</span></span> + <span class="frac"><span class="num">1</span><span class="den">2√x</span></span>.</div>
+    <div class="step"><b>Шаг 4. Перемножаем все три слоя</b> (внешний × средний × внутренний): y′ = <span class="frac"><span class="num">1</span><span class="den">3</span></span>(arctg u)<sup>−2/3</sup> · <span class="frac"><span class="num">1</span><span class="den">1+u²</span></span> · u′, где u = ln x + √x. Расписываем:</div>
+    <div class="formula" style="font-size:15px">y′ = <span class="frac"><span class="num"><span class="frac"><span class="num">1</span><span class="den">x</span></span> + <span class="frac"><span class="num">1</span><span class="den">2√x</span></span></span><span class="den">3 · <sup>3</sup>√( arctg²(ln x + √x) ) · (1 + (ln x + √x)²)</span></span></div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = (1/x + 1/(2√x)) / [ 3·∛(arctg²(ln x+√x))·(1 + (ln x+√x)²) ].</div>
+  <div class="chk"><b>Проверка:</b> считаем «снаружи внутрь» и на каждом слое домножаем на производную начинки — три множителя, три слоя. Степень −2/3 даёт корень в знаменателе (∛arctg²), arctg даёт (1+u²) в знаменателе, внутренняя часть — скобку 1/x+1/(2√x). Размерности совпадают.</div>
+</section>
+
+<!-- №3 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№3 — лог. дифференцирование" data-desc="y = sin³x·(x+3)⁵·√(logₐx) / ∛(x+8): логарифмируем и дифференцируем.">
+  <h2>№3. Вычислить производную</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = <span class="frac"><span class="num">sin³x · (x + 3)⁵ · √(logₐ x)</span><span class="den"><sup>3</sup>√(x + 8)</span></span></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам (логарифмическое дифференцирование)</span>
+    <div class="step"><b>Почему так:</b> тут произведение и частное степеней. Напрямую дифференцировать тяжело, а логарифм превращает произведение в <b>сумму</b>, а степени — в <b>множители</b>. После логарифмирования каждое слагаемое дифференцируется легко.</div>
+    <div class="step"><b>Шаг 1. Перепишем корни как степени</b> (чтобы увидеть показатели): &nbsp;√(logₐx) = (logₐx)<sup>1/2</sup>, &nbsp;<sup>3</sup>√(x+8) = (x+8)<sup>1/3</sup> (в знаменателе — показатель −1/3).</div>
+    <div class="step">y = sin³x · (x+3)⁵ · (logₐx)<sup>1/2</sup> · (x+8)<sup>−1/3</sup>.</div>
+    <div class="step"><b>Шаг 2. Логарифмируем.</b> ln(произведения) = сумма логарифмов, ln(aᵏ) = k·ln a:</div>
+    <div class="formula" style="font-size:15px">ln y = 3 ln(sin x) + 5 ln(x+3) + <span class="frac"><span class="num">1</span><span class="den">2</span></span> ln(logₐx) − <span class="frac"><span class="num">1</span><span class="den">3</span></span> ln(x+8)</div>
+    <div class="step"><b>Шаг 3. Дифференцируем левую часть.</b> ln y — сложная функция от x (ведь y = y(x)): &nbsp;(ln y)′ = <span class="frac"><span class="num">1</span><span class="den">y</span></span>·y′ = <span class="frac"><span class="num">y′</span><span class="den">y</span></span>.</div>
+    <div class="step"><b>Шаг 4. Дифференцируем правую часть — каждое слагаемое отдельно, по действиям.</b></div>
+    <div class="step"><b>① член 3 ln(sin x).</b> Выносим 3, (ln u)′ = u′/u с u = sin x: &nbsp;3·<span class="frac"><span class="num">(sin x)′</span><span class="den">sin x</span></span> = 3·<span class="frac"><span class="num">cos x</span><span class="den">sin x</span></span> = 3 ctg x.</div>
+    <div class="step"><b>② член 5 ln(x+3).</b> u = x+3, u′ = 1: &nbsp;5·<span class="frac"><span class="num">(x+3)′</span><span class="den">x+3</span></span> = 5·<span class="frac"><span class="num">1</span><span class="den">x+3</span></span> = <span class="frac"><span class="num">5</span><span class="den">x+3</span></span>.</div>
+    <div class="step"><b>③ член ½ ln(logₐx).</b> Здесь «логарифм от логарифма» — снова (ln u)′ = u′/u, но теперь u = logₐx:</div>
+    <div class="step">= <span class="frac"><span class="num">1</span><span class="den">2</span></span>·<span class="frac"><span class="num">(logₐx)′</span><span class="den">logₐx</span></span>. &nbsp;Производная (logₐx)′ = <span class="frac"><span class="num">1</span><span class="den">x·ln a</span></span>, а само logₐx = <span class="frac"><span class="num">ln x</span><span class="den">ln a</span></span>.</div>
+    <div class="step">Подставляем: <span class="frac"><span class="num">1</span><span class="den">2</span></span>·<span class="frac"><span class="num">1/(x ln a)</span><span class="den">ln x/ln a</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span>·<span class="frac"><span class="num">1</span><span class="den">x ln a</span></span>·<span class="frac"><span class="num">ln a</span><span class="den">ln x</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span>·<span class="frac"><span class="num">1</span><span class="den">x ln x</span></span> = <span class="frac"><span class="num">1</span><span class="den">2x ln x</span></span>. &nbsp;<span style="color:var(--muted)">(ln a сократился!)</span></div>
+    <div class="step"><b>④ член −⅓ ln(x+8).</b> u = x+8, u′ = 1: &nbsp;−<span class="frac"><span class="num">1</span><span class="den">3</span></span>·<span class="frac"><span class="num">1</span><span class="den">x+8</span></span> = −<span class="frac"><span class="num">1</span><span class="den">3(x+8)</span></span>.</div>
+    <div class="step"><b>Шаг 5. Собираем правую часть:</b></div>
+    <div class="formula" style="font-size:14px"><span class="frac"><span class="num">y′</span><span class="den">y</span></span> = 3 ctg x + <span class="frac"><span class="num">5</span><span class="den">x+3</span></span> + <span class="frac"><span class="num">1</span><span class="den">2x ln x</span></span> − <span class="frac"><span class="num">1</span><span class="den">3(x+8)</span></span></div>
+    <div class="step"><b>Шаг 6. Умножаем на y</b> (возвращаем сам y из условия):</div>
+    <div class="formula" style="font-size:13.5px">y′ = <span class="frac"><span class="num">sin³x·(x+3)⁵·√(logₐx)</span><span class="den"><sup>3</sup>√(x+8)</span></span>·( 3 ctg x + <span class="frac"><span class="num">5</span><span class="den">x+3</span></span> + <span class="frac"><span class="num">1</span><span class="den">2x ln x</span></span> − <span class="frac"><span class="num">1</span><span class="den">3(x+8)</span></span> )</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = y·( 3 ctg x + 5/(x+3) + 1/(2x ln x) − 1/(3(x+8)) ), где y — исходная функция.</div>
+  <div class="chk"><b>Проверка:</b> (1) в скобке 4 слагаемых = 4 множителя в y — ничего не потеряли, знаки «+ + + −» отвечают множителям в числителе и в знаменателе. (2) Член ③ при a = e: logₑx = ln x, (½ ln ln x)′ = ½·(1/ln x)·(1/x) = 1/(2x ln x) — тот же результат. (3) Член ① через ctg: 3·cos x/sin x — пересчитал, верно.</div>
+</section>
+
+<!-- №4 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№4 — степень с переменным показателем" data-desc="y = (sin(x+2))^(1/cos x): логарифмическое дифференцирование.">
+  <h2>№4. Вычислить производную</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = ( sin(x + 2) )<sup>1/cos x</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Почему лог-дифференцирование:</b> переменная и в основании, и в показателе.</div>
+    <div class="step"><b>Шаг 1. Логарифмируем:</b> ln y = <span class="frac"><span class="num">1</span><span class="den">cos x</span></span>·ln(sin(x+2)).</div>
+    <div class="step"><b>Шаг 2. Дифференцируем правую часть как произведение</b> u·v, где u = ln(sin(x+2)), v = (cos x)<sup>−1</sup>.</div>
+    <div class="step">u′ = <span class="frac"><span class="num">cos(x+2)</span><span class="den">sin(x+2)</span></span> = ctg(x+2); &nbsp; v′ = −(cos x)<sup>−2</sup>·(−sin x) = <span class="frac"><span class="num">sin x</span><span class="den">cos²x</span></span>.</div>
+    <div class="step"><b>Шаг 3.</b> (ln y)′ = u′v + uv′ = <span class="frac"><span class="num">ctg(x+2)</span><span class="den">cos x</span></span> + ln(sin(x+2))·<span class="frac"><span class="num">sin x</span><span class="den">cos²x</span></span>.</div>
+    <div class="step"><b>Шаг 4.</b> y′ = y·(ln y)′.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = (sin(x+2))<sup>1/cos x</sup>·( <span class="frac"><span class="num">ctg(x+2)</span><span class="den">cos x</span></span> + <span class="frac"><span class="num">sin x·ln(sin(x+2))</span><span class="den">cos²x</span></span> ).</div>
+  <div class="chk"><b>Проверка:</b> (1) два слагаемых — от «производной показателя» и «производной основания», как и должно быть у степенно-показательной. (2) Производная (1/cos x) = sin x/cos²x — это sec x·tg x, верно. (3) При постоянном показателе (если бы 1/cos x = const) остался бы только первый член — логика сходится.</div>
+</section>
+
+<!-- №5 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№5 — параметрическая" data-desc="x = t·arctg t, y = t·arcctg t: найти y′ₓ = y′ₜ/x′ₜ.">
+  <h2>№5. Производная параметрической функции</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">x = t·arctg t, &nbsp;&nbsp; y = t·arcctg t. &nbsp; Найти y′<sub>x</sub>.</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Формула:</b> y′<sub>x</sub> = <span class="frac"><span class="num">y′<sub>t</sub></span><span class="den">x′<sub>t</sub></span></span>.</div>
+    <div class="step"><b>Шаг 1. x′<sub>t</sub></b> (произведение): = arctg t + t·<span class="frac"><span class="num">1</span><span class="den">1+t²</span></span> = arctg t + <span class="frac"><span class="num">t</span><span class="den">1+t²</span></span>.</div>
+    <div class="step"><b>Шаг 2. y′<sub>t</sub></b> (произведение, (arcctg t)′ = −1/(1+t²)): = arcctg t + t·(−<span class="frac"><span class="num">1</span><span class="den">1+t²</span></span>) = arcctg t − <span class="frac"><span class="num">t</span><span class="den">1+t²</span></span>.</div>
+    <div class="step"><b>Шаг 3. Делим:</b></div>
+    <div class="formula" style="font-size:15px">y′<sub>x</sub> = <span class="frac"><span class="num">arcctg t − t/(1+t²)</span><span class="den">arctg t + t/(1+t²)</span></span></div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′<sub>x</sub> = (arcctg t − t/(1+t²)) / (arctg t + t/(1+t²)).</div>
+  <div class="chk"><b>Проверка:</b> (1) обе производные найдены по правилу произведения — по два слагаемых. (2) Отличие числителя и знаменателя только в «arcctg vs arctg» и знаке у t/(1+t²) — это прямое следствие того, что производные arctg и arcctg различаются лишь знаком. Согласовано.</div>
+</section>
+
+<!-- №6 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№6 — неявная функция" data-desc="√(3x²−y²) = arcsin(x/y): дифференцируем и выражаем y′.">
+  <h2>№6. Производная неявной функции</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">√(3x² − y²) = arcsin <span class="frac"><span class="num">x</span><span class="den">y</span></span>, &nbsp; y = y(x).</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Идея:</b> дифференцируем <b>обе части</b> по x, помня, что y = y(x) (поэтому у каждого y при дифференцировании появляется множитель y′). Потом выражаем y′.</div>
+
+    <div class="step"><b>Шаг 1. Дифференцируем левую часть</b> √(3x²−y²) = (3x²−y²)<sup>1/2</sup> — сложная функция:</div>
+    <div class="step">= <span class="frac"><span class="num">1</span><span class="den">2</span></span>(3x²−y²)<sup>−1/2</sup>·(3x²−y²)′. &nbsp;Внутри: (3x²)′ = 6x, (y²)′ = 2y·y′ ⟹ (3x²−y²)′ = 6x − 2y·y′.</div>
+    <div class="step">Получаем: <span class="frac"><span class="num">6x − 2y·y′</span><span class="den">2√(3x²−y²)</span></span>. Сокращаем 2 в числителе и знаменателе: &nbsp;<b>левая часть</b> = <span class="frac"><span class="num">3x − y·y′</span><span class="den">√(3x²−y²)</span></span>.</div>
+
+    <div class="step"><b>Шаг 2. Дифференцируем правую часть</b> arcsin(x/y). Формула (arcsin u)′ = u′/√(1−u²) с u = x/y.</div>
+    <div class="step"><b>2a. Производная внутренней u = x/y</b> (частное, y = y(x)): u′ = <span class="frac"><span class="num">(x)′·y − x·(y)′</span><span class="den">y²</span></span> = <span class="frac"><span class="num">1·y − x·y′</span><span class="den">y²</span></span> = <span class="frac"><span class="num">y − x·y′</span><span class="den">y²</span></span>.</div>
+    <div class="step"><b>2b. Считаем √(1 − u²) = √(1 − x²/y²).</b> Приводим под корнем к общему знаменателю: 1 − <span class="frac"><span class="num">x²</span><span class="den">y²</span></span> = <span class="frac"><span class="num">y² − x²</span><span class="den">y²</span></span>.</div>
+    <div class="step">Извлекаем корень: √(<span class="frac"><span class="num">y²−x²</span><span class="den">y²</span></span>) = <span class="frac"><span class="num">√(y²−x²)</span><span class="den">y</span></span>. &nbsp;<span style="color:var(--muted)">Вот откуда берётся √(y²−x²) — это √(1−x²/y²) после приведения к общему знаменателю.</span></div>
+    <div class="step"><b>2c. Собираем правую часть:</b> <span class="frac"><span class="num">u′</span><span class="den">√(1−u²)</span></span> = <span class="frac"><span class="num">(y−x·y′)/y²</span><span class="den">√(y²−x²)/y</span></span> = <span class="frac"><span class="num">y − x·y′</span><span class="den">y²</span></span>·<span class="frac"><span class="num">y</span><span class="den">√(y²−x²)</span></span> = <span class="frac"><span class="num">y − x·y′</span><span class="den">y·√(y²−x²)</span></span>.</div>
+
+    <div class="step"><b>Шаг 3. Приравниваем левую и правую части:</b></div>
+    <div class="formula" style="font-size:14px"><span class="frac"><span class="num">3x − y·y′</span><span class="den">√(3x²−y²)</span></span> = <span class="frac"><span class="num">y − x·y′</span><span class="den">y·√(y²−x²)</span></span></div>
+    <div class="step"><b>Шаг 4. Избавляемся от дробей</b> — умножаем крест-накрест:</div>
+    <div class="step">(3x − y·y′)·y·√(y²−x²) = (y − x·y′)·√(3x²−y²).</div>
+    <div class="step">Раскроем скобки: &nbsp;3xy√(y²−x²) − y²·y′·√(y²−x²) = y√(3x²−y²) − x·y′·√(3x²−y²).</div>
+    <div class="step"><b>Шаг 5. Собираем всё с y′ в одну сторону, остальное — в другую:</b></div>
+    <div class="step">x·y′·√(3x²−y²) − y²·y′·√(y²−x²) = y√(3x²−y²) − 3xy√(y²−x²).</div>
+    <div class="step">Выносим y′: &nbsp;y′·( x√(3x²−y²) − y²√(y²−x²) ) = y√(3x²−y²) − 3xy√(y²−x²).</div>
+    <div class="step"><b>Шаг 6. Делим — получаем y′:</b></div>
+    <div class="formula" style="font-size:13.5px">y′ = <span class="frac"><span class="num">y√(3x²−y²) − 3xy√(y²−x²)</span><span class="den">x√(3x²−y²) − y²√(y²−x²)</span></span></div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = (y√(3x²−y²) − 3xy√(y²−x²)) / (x√(3x²−y²) − y²√(y²−x²)).</div>
+  <div class="chk"><b>Проверка:</b> (1) слева двойка из (3x²−y²)′ = 6x−2yy′ сократилась с двойкой корня — верно. (2) Корень √(y²−x²) честно получен из √(1−x²/y²) (Шаг 2b). (3) Все члены с y′ собраны слева, без y′ — справа; выносится y′ в скобку — алгебра замкнулась. Ответ выражен только через x и y, как и положено для неявной функции.</div>
+</section>
+
+<!-- №7 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№7 — касательная и нормаль" data-desc="y = (3+2x²)·e^(5x) в точке x=0: уравнения касательной и нормали + график.">
+  <h2>№7. Касательная и нормаль</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = (3 + 2x²)·e<sup>5x</sup>, &nbsp; точка x₀ = 0.</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Значение в точке.</b> f(0) = (3 + 0)·e⁰ = 3. Точка касания M(0, 3).</div>
+    <div class="step"><b>Шаг 2. Производная</b> по правилу произведения (uv)′ = u′v + uv′, где u = 3 + 2x², v = e<sup>5x</sup>.</div>
+    <div class="step">u′ = (3 + 2x²)′ = 4x; &nbsp; v′ = (e<sup>5x</sup>)′ = e<sup>5x</sup>·(5x)′ = 5e<sup>5x</sup>.</div>
+    <div class="step">f′(x) = 4x·e<sup>5x</sup> + (3 + 2x²)·5e<sup>5x</sup> = e<sup>5x</sup>·(4x + 15 + 10x²) = e<sup>5x</sup>(10x² + 4x + 15).</div>
+    <div class="step"><b>Шаг 3. Наклон в точке.</b> Подставляем x = 0: f′(0) = e⁰·(0 + 0 + 15) = 1·15 = 15.</div>
+    <div class="step"><b>Шаг 4. Касательная</b> y = f(0) + f′(0)(x − 0): &nbsp;y = 3 + 15x ⟹ <b>y = 15x + 3</b>.</div>
+    <div class="step"><b>Шаг 5. Нормаль</b> (наклон −1/f′(0) = −1/15): &nbsp;y = 3 − <span class="frac"><span class="num">1</span><span class="den">15</span></span>x ⟹ <b>y = −x/15 + 3</b>.</div>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 380 340" width="100%" style="max-width:380px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="8" y1="250" x2="372" y2="250" stroke="#46567f" stroke-width="1.3"/>
+<line x1="70" y1="8" x2="70" y2="332" stroke="#46567f" stroke-width="1.3"/>
+<polyline points="38.8,169.9 45.0,170.3 52.8,170.9 60.6,171.4 70.0,172.0 79.4,172.6 88.7,173.2 101.2,174.1" fill="none" stroke="#ff7ab6" stroke-width="2"/>
+<polyline points="63.2,273.4 65.2,244.1 67.1,214.9 69.1,185.6 71.0,156.4 73.0,127.2 74.9,97.9 76.5,74.5" fill="none" stroke="#ffc24b" stroke-width="2.2"/>
+<polyline points="38.8,249.6 48.5,248.2 54.8,244.9 60.2,239.3 64.5,221.9 67.3,203.5 69.6,177.6 71.6,144.5 73.5,94.9 75.5,20.6" fill="none" stroke="#e7ecf7" stroke-width="2.6"/>
+<circle cx="70" cy="172" r="5" fill="#39d98a"/>
+<text x="78" y="176" fill="#39d98a" font-size="12" font-family="monospace">M(0,3)</text>
+<text x="74" y="55" fill="#ffc24b" font-size="12" font-family="monospace">касат. y=15x+3</text>
+<text x="41" y="156" fill="#ff7ab6" font-size="12" font-family="monospace">нормаль</text>
+<text x="12" y="22" fill="#cdd7ee" font-size="11" font-family="monospace">касательная крутая (k=15), нормаль пологая (k=−1/15)</text>
+</svg>
+    <div class="cap">Касательная и нормаль пересекаются в M(0,3) под прямым углом: произведение наклонов 15·(−1/15) = −1.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> касательная y = 15x + 3; &nbsp;нормаль y = −x/15 + 3.</div>
+  <div class="chk"><b>Проверка:</b> (1) обе прямые проходят через M: при x=0 обе дают y=3 ✓. (2) Перпендикулярность: 15·(−1/15) = −1 ✓. (3) f′(0): 4·0·1 + 3·5·1 = 15 — пересчитал прямой подстановкой, совпало.</div>
+</section>
+
+<!-- №8 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№8 — предел (Лопиталь)" data-desc="lim(1/x − 1/arcsin x) при x→0: привести к 0/0 и применить правило.">
+  <h2>№8. Предел по правилу Лопиталя</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">lim<sub>x→0</sub> ( <span class="frac"><span class="num">1</span><span class="den">x</span></span> − <span class="frac"><span class="num">1</span><span class="den">arcsin x</span></span> )</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по правилу Лопиталя (по шагам)</span>
+    <div class="step"><b>Шаг 1. Смотрим, что за неопределённость.</b> При x → 0: 1/x → ∞ и 1/arcsin x → ∞, значит разность — вид <b>∞ − ∞</b>. Лопиталь напрямую к нему не применяют — сначала сводим к дроби.</div>
+    <div class="step"><b>Шаг 2. Общий знаменатель.</b> <span class="frac"><span class="num">1</span><span class="den">x</span></span> − <span class="frac"><span class="num">1</span><span class="den">arcsin x</span></span> = <span class="frac"><span class="num">arcsin x − x</span><span class="den">x·arcsin x</span></span>.</div>
+    <div class="step"><b>Шаг 3. Проверяем вид дроби.</b> Числитель: arcsin 0 − 0 = 0. Знаменатель: 0·arcsin 0 = 0. Значит это <span class="frac"><span class="num">0</span><span class="den">0</span></span> — теперь <b>можно применять Лопиталь</b> (производная числителя делить на производную знаменателя).</div>
+    <div class="step"><b>Шаг 4. Первое применение Лопиталя.</b> Дифференцируем отдельно верх и низ.</div>
+    <div class="step"><b>Числитель:</b> (arcsin x − x)′ = (arcsin x)′ − (x)′ = <span class="frac"><span class="num">1</span><span class="den">√(1−x²)</span></span> − 1.</div>
+    <div class="step"><b>Знаменатель</b> (произведение): (x·arcsin x)′ = (x)′·arcsin x + x·(arcsin x)′ = arcsin x + <span class="frac"><span class="num">x</span><span class="den">√(1−x²)</span></span>.</div>
+    <div class="step">Предел стал: lim<sub>x→0</sub> <span class="frac"><span class="num">1/√(1−x²) − 1</span><span class="den">arcsin x + x/√(1−x²)</span></span>.</div>
+    <div class="step"><b>Шаг 5. Подставляем x = 0.</b> Числитель: 1/1 − 1 = 0. Знаменатель: 0 + 0 = 0. Снова <span class="frac"><span class="num">0</span><span class="den">0</span></span> ⟹ применяем Лопиталь <b>ещё раз</b>.</div>
+    <div class="step"><b>Шаг 6. Второе применение. Числитель</b> (1−x²)<sup>−1/2</sup> − 1: &nbsp;производная = −<span class="frac"><span class="num">1</span><span class="den">2</span></span>(1−x²)<sup>−3/2</sup>·(−2x) = <span class="frac"><span class="num">x</span><span class="den">(1−x²)<sup>3/2</sup></span></span>.</div>
+    <div class="step"><b>Знаменатель</b> arcsin x + x(1−x²)<sup>−1/2</sup>: &nbsp;= <span class="frac"><span class="num">1</span><span class="den">√(1−x²)</span></span> + [1·(1−x²)<sup>−1/2</sup> + x·<span class="frac"><span class="num">x</span><span class="den">(1−x²)<sup>3/2</sup></span></span>] = <span class="frac"><span class="num">2</span><span class="den">√(1−x²)</span></span> + <span class="frac"><span class="num">x²</span><span class="den">(1−x²)<sup>3/2</sup></span></span>.</div>
+    <div class="step"><b>Шаг 7. Подставляем x = 0.</b> Числитель: 0/1 = 0. Знаменатель: 2/1 + 0 = 2.</div>
+    <div class="step">Предел = <span class="frac"><span class="num">0</span><span class="den">2</span></span> = <b>0</b>.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> предел равен <b>0</b>.</div>
+  <div class="chk"><b>Проверка:</b> (1) <b>Численно</b> при x = 0,1: 1/0,1 − 1/arcsin 0,1 = 10 − 1/0,100167 ≈ 10 − 9,9833 ≈ 0,017 → близко к 0; при x = 0,05 получится ещё меньше ≈ 0,004 — убывает к 0. (2) <b>Через эквивалентность</b> (для контроля): arcsin x ≈ x + x³/6, числитель ≈ x³/6, знаменатель ≈ x², отношение ≈ x/6 → 0. Оба подтверждают ответ 0.</div>
+</section>
+
+<!-- №9 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№9 — n-я производная" data-desc="y = x³·ln(5x): найти первые производные и общую формулу yⁿ для n≥4.">
+  <h2>№9. Общая формула n-й производной</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = x³·ln(5x)</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Идея:</b> общую формулу не угадывают с потолка — сначала честно считаем первые производные, ловим закономерность, а затем записываем yⁿ. Полезный факт: ln(5x) = ln 5 + ln x, поэтому (ln 5x)′ = 0 + 1/x = <span class="frac"><span class="num">1</span><span class="den">x</span></span>.</div>
+
+    <div class="step"><b>Шаг 1. y′</b> — правило произведения для x³·ln5x:</div>
+    <div class="step">y′ = (x³)′·ln5x + x³·(ln5x)′ = 3x²·ln5x + x³·<span class="frac"><span class="num">1</span><span class="den">x</span></span> = <b>3x²·ln5x + x²</b>.</div>
+
+    <div class="step"><b>Шаг 2. y″</b> — дифференцируем каждое слагаемое. Первое (3x²·ln5x) — снова произведение:</div>
+    <div class="step">(3x²·ln5x)′ = 6x·ln5x + 3x²·<span class="frac"><span class="num">1</span><span class="den">x</span></span> = 6x·ln5x + 3x. &nbsp;Второе: (x²)′ = 2x.</div>
+    <div class="step">y″ = 6x·ln5x + 3x + 2x = <b>6x·ln5x + 5x</b>.</div>
+
+    <div class="step"><b>Шаг 3. y‴.</b> (6x·ln5x)′ = 6·ln5x + 6x·<span class="frac"><span class="num">1</span><span class="den">x</span></span> = 6 ln5x + 6. &nbsp;(5x)′ = 5.</div>
+    <div class="step">y‴ = 6 ln5x + 6 + 5 = <b>6 ln5x + 11</b>.</div>
+
+    <div class="step"><b>Шаг 4. y⁗.</b> (6 ln5x)′ = 6·<span class="frac"><span class="num">1</span><span class="den">x</span></span> = <span class="frac"><span class="num">6</span><span class="den">x</span></span>, &nbsp;(11)′ = 0. &nbsp;⟹ y⁗ = <b><span class="frac"><span class="num">6</span><span class="den">x</span></span></b> = 6x<sup>−1</sup>. <span style="color:var(--muted)">Важно: логарифм исчез! Дальше дифференцируем чистую степень 6x⁻¹.</span></div>
+
+    <div class="step"><b>Шаг 5. Считаем дальше и смотрим на закономерность</b> (производная xᵏ = k·xᵏ⁻¹):</div>
+    <div class="step">y⁽⁵⁾ = (6x⁻¹)′ = 6·(−1)x⁻² = −<span class="frac"><span class="num">6</span><span class="den">x²</span></span>.</div>
+    <div class="step">y⁽⁶⁾ = (−6x⁻²)′ = −6·(−2)x⁻³ = <span class="frac"><span class="num">12</span><span class="den">x³</span></span>.</div>
+    <div class="step">y⁽⁷⁾ = (12x⁻³)′ = 12·(−3)x⁻⁴ = −<span class="frac"><span class="num">36</span><span class="den">x⁴</span></span>.</div>
+
+    <div class="step"><b>Шаг 6. Выводим формулу.</b> Начиная с y⁗ = 6x⁻¹, чтобы получить y⁽ⁿ⁾, надо продифференцировать ещё (n−4) раз. Каждый раз показатель падает на 1 и вылезает множитель. После (n−4) дифференцирований 6x⁻¹:</div>
+    <div class="formula" style="font-size:14px">y⁽ⁿ⁾ = 6·(−1)(−2)(−3)…(−(n−4))·x<sup>−1−(n−4)</sup></div>
+    <div class="step"><b>Разбираем множители:</b> чисел в произведении (n−4) штук, их модули дают 1·2·3·…·(n−4) = <b>(n−4)!</b>, а минусов (n−4) штук ⟹ знак <b>(−1)<sup>n−4</sup></b> = (−1)ⁿ. Показатель: −1−(n−4) = −(n−3).</div>
+    <div class="formula" style="font-size:15px">y⁽ⁿ⁾ = (−1)<sup>n</sup>·<span class="frac"><span class="num">6·(n − 4)!</span><span class="den">x<sup>n−3</sup></span></span>, &nbsp; n ≥ 4</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = 3x²ln5x + x²; &nbsp;y″ = 6x·ln5x + 5x; &nbsp;y‴ = 6 ln5x + 11; &nbsp;а при n ≥ 4: &nbsp;y⁽ⁿ⁾ = (−1)ⁿ·6·(n−4)!/x<sup>n−3</sup>.</div>
+  <div class="chk"><b>Проверка формулы на уже посчитанных:</b> n=4: (−1)⁴·6·0!/x¹ = 6/x = y⁗ ✓; &nbsp;n=5: (−1)⁵·6·1!/x² = −6/x² ✓; &nbsp;n=6: (+1)·6·2!/x³ = 12/x³ ✓; &nbsp;n=7: (−1)·6·3!/x⁴ = −36/x⁴ ✓. Все совпали с прямым счётом из Шага 5.</div>
+</section>
+
+<!-- №10 -->
+<section data-group="Вариант №1 · матан" data-new="1" data-t="№10 — сложная (всё вместе)" data-desc="y = (ln(arcsin²x)·∛(tg5x))^(cos2ˣ): лог-дифференцирование самого тяжёлого примера.">
+  <h2>№10. Продифференцировать</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula" style="font-size:15px">y = ( ln(arcsin²x) · <sup>3</sup>√(tg 5x) )<sup>cos 2ˣ</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам (лог-дифференцирование)</span>
+    <div class="step"><b>Обозначим:</b> основание A = ln(arcsin²x)·(tg5x)<sup>1/3</sup>, показатель B = cos 2ˣ. То есть y = A<sup>B</sup>.</div>
+    <div class="step"><b>Шаг 1. Логарифмируем:</b> ln y = B·ln A = cos2ˣ·[ ln(ln(arcsin²x)) + <span class="frac"><span class="num">1</span><span class="den">3</span></span> ln(tg5x) ].</div>
+    <div class="step"><b>Шаг 2. Формула:</b> y′ = y·(ln y)′ = y·( B′·ln A + B·(ln A)′ ).</div>
+    <div class="step"><b>Шаг 3. B′.</b> (cos2ˣ)′ = −sin2ˣ·(2ˣ)′ = −sin2ˣ·2ˣ·ln2.</div>
+    <div class="step"><b>Шаг 4. (ln A)′</b> — по слагаемым.</div>
+    <div class="step">Первое: (ln(ln(arcsin²x)))′ = <span class="frac"><span class="num">1</span><span class="den">ln(arcsin²x)</span></span>·(ln(arcsin²x))′, а (ln(arcsin²x))′ = <span class="frac"><span class="num">(arcsin²x)′</span><span class="den">arcsin²x</span></span> = <span class="frac"><span class="num">2 arcsin x·1/√(1−x²)</span><span class="den">arcsin²x</span></span> = <span class="frac"><span class="num">2</span><span class="den">arcsin x·√(1−x²)</span></span>.</div>
+    <div class="step">Итого первое слагаемое: <span class="frac"><span class="num">2</span><span class="den">arcsin x·√(1−x²)·ln(arcsin²x)</span></span>.</div>
+    <div class="step">Второе: (⅓ ln(tg5x))′ = ⅓·<span class="frac"><span class="num">(tg5x)′</span><span class="den">tg5x</span></span> = ⅓·<span class="frac"><span class="num">5/cos²5x</span><span class="den">tg5x</span></span> = <span class="frac"><span class="num">10</span><span class="den">3 sin10x</span></span> &nbsp;(т.к. cos²5x·tg5x = sin5x·cos5x = ½ sin10x).</div>
+    <div class="step"><b>Шаг 5. Собираем всё:</b></div>
+    <div class="formula" style="font-size:13.5px">y′ = y·{ −2ˣln2·sin2ˣ·[ ln(ln(arcsin²x)) + ⅓ ln(tg5x) ] + cos2ˣ·[ <span class="frac"><span class="num">2</span><span class="den">arcsin x·√(1−x²)·ln(arcsin²x)</span></span> + <span class="frac"><span class="num">10</span><span class="den">3 sin10x</span></span> ] }</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = A<sup>B</sup>·{ B′·ln A + B·(ln A)′ } с A = ln(arcsin²x)·∛(tg5x), B = cos2ˣ и выражениями выше (полная формула — в последнем шаге).</div>
+  <div class="chk"><b>Проверка:</b> (1) структура A<sup>B</sup> даёт ровно два вклада — «производная показателя × ln основания» и «показатель × производная ln основания» — оба на месте. (2) Член с tg5x упростился: cos²5x·tg5x = ½sin10x, значит ⅓·5/(½sin10x) = 10/(3 sin10x) — пересчитал дважды, совпало. (3) Член с arcsin²x: внутренняя (arcsin²x)′ = 2 arcsin x/√(1−x²), после деления на arcsin²x осталось 2/(arcsin x·√(1−x²)) — степень arcsin понизилась на 1, верно.</div>
+</section>
+
+<!-- ================= ВАРИАНТ №2 ================= -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="О варианте №2" data-desc="Те же 10 типов заданий; разбор по шагам с проверкой.">
+  <h2>Вариант №2 — разбор</h2>
+  <div class="note">Формат тот же: <b>Дано → Шаги → Ответ → Проверка</b>. Разобраны задания, которые на фото читаются уверенно (№1, 4, 6, 7, 8, 9, 10). Условия №2, №3, №5 на фото нечёткие — пришли их чётким фото или текстом, и я распишу так же подробно.</div>
+</section>
+
+<!-- Var2 №1 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№1 — непрерывность (кусочная)" data-desc="y = {e^(1/(x−1)), x≤2; x²−1, x>2}: разрывы в x=1 и x=2.">
+  <h2>№1. Исследовать на непрерывность</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula" style="font-size:15px">y = { &nbsp;e<sup>1/(x−1)</sup>, &nbsp;x ≤ 2 &nbsp;; &nbsp; x² − 1, &nbsp;x &gt; 2 &nbsp;}</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Где искать разрывы.</b> Два подозрительных места: (а) x = 1 — внутри первой ветви знаменатель 1/(x−1) обращается в ноль; (б) x = 2 — стык двух ветвей.</div>
+    <div class="step"><b>Шаг 2. Точка x = 1.</b> Смотрим односторонние пределы первой ветви e<sup>1/(x−1)</sup>:</div>
+    <div class="step">Слева (x→1−0): x−1 → 0⁻, 1/(x−1) → −∞, &nbsp;e<sup>−∞</sup> = <b>0</b>.</div>
+    <div class="step">Справа (x→1+0): x−1 → 0⁺, 1/(x−1) → +∞, &nbsp;e<sup>+∞</sup> = <b>+∞</b>.</div>
+    <div class="step">Один предел конечен (0), другой бесконечен ⟹ <b>разрыв 2-го рода</b> в x = 1.</div>
+    <div class="step"><b>Шаг 3. Точка x = 2.</b> Слева работает ветвь e<sup>1/(x−1)</sup>, справа — ветвь x²−1.</div>
+    <div class="step">Слева (x→2−0): e<sup>1/(2−1)</sup> = e<sup>1</sup> = e ≈ 2,718. &nbsp;Значение f(2) = e<sup>1/(2−1)</sup> = e (т.к. x ≤ 2 — первая ветвь).</div>
+    <div class="step">Справа (x→2+0): x² − 1 → 2² − 1 = 3.</div>
+    <div class="step">Пределы конечны, но e ≠ 3 ⟹ <b>разрыв 1-го рода (скачок)</b>, величина скачка 3 − e ≈ 0,282.</div>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 460 150" width="100%" style="max-width:460px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="40" y1="80" x2="440" y2="80" stroke="#46567f" stroke-width="1.6"/>
+<polygon points="440,80 430,75 430,85" fill="#46567f"/>
+<line x1="150" y1="20" x2="150" y2="130" stroke="#ff8d6b" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="240" cy="80" r="5" fill="none" stroke="#ffc24b" stroke-width="2"/>
+<circle cx="60" cy="80" r="3" fill="#39d98a"/>
+<text x="122" y="16" fill="#ff8d6b" font-size="12" font-family="monospace">x=1</text>
+<text x="104" y="144" fill="#ff8d6b" font-size="11" font-family="monospace">II рода (0 и +∞)</text>
+<text x="232" y="68" fill="#ffc24b" font-size="12" font-family="monospace">x=2</text>
+<text x="208" y="144" fill="#ffc24b" font-size="11" font-family="monospace">I рода (скачок 3−e)</text>
+<text x="54" y="98" fill="#cdd7ee" font-size="11" font-family="monospace">0</text>
+</svg>
+    <div class="cap">x=1 — бесконечный разрыв (справа уходит в +∞), x=2 — конечный скачок на 3−e.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> x = 1 — разрыв 2-го рода; x = 2 — разрыв 1-го рода (скачок 3 − e); в остальных точках непрерывна.</div>
+  <div class="chk"><b>Проверка:</b> (1) в x=1 справа e<sup>1/(x−1)</sup> растёт неограниченно — бесконечность подтверждена, слева 0 — верно II род. (2) В x=2 оба предела конечны (e и 3), различны — верно I род; значение f(2)=e совпадает с левым пределом (функция «непрерывна слева»). Численно слева ≈2,718, справа =3 — скачок ≈0,282.</div>
+</section>
+
+<!-- Var2 №2 placeholder -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№2 — уточнить условие" data-desc="Производная функции — условие на фото нечёткое.">
+  <h2>№2. Вычислить производную</h2>
+  <div class="warnbox"><span class="tag">Нужно уточнить условие</span>
+    <p>На фото этот номер читается неоднозначно (что-то вида y = cos⁷(…)·sin³(2ˣ·log₄x), но точно не разобрать). Пришли чёткое фото или набери условие текстом — распишу по шагам, как остальные.</p>
+  </div>
+</section>
+
+<!-- Var2 №3 placeholder -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№3 — уточнить условие" data-desc="Производная (лог-дифференцирование) — условие на фото нечёткое.">
+  <h2>№3. Вычислить производную</h2>
+  <div class="warnbox"><span class="tag">Нужно уточнить условие</span>
+    <p>Похоже на дробь с корнем, arcctg, log₄ и tg (тип «логарифмическое дифференцирование», как №3 в Варианте №1), но точные степени и аргументы с фото не читаются. Пришли чёткое фото/текст — разберу.</p>
+  </div>
+</section>
+
+<!-- Var2 №4 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№4 — степенно-показательная" data-desc="y = (ctg 2x)^(arccos x): логарифмическое дифференцирование.">
+  <h2>№4. Вычислить производную</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = ( ctg 2x )<sup>arccos x</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам (лог-дифференцирование)</span>
+    <div class="step"><b>Почему:</b> и основание, и показатель зависят от x ⟹ логарифмируем.</div>
+    <div class="step"><b>Шаг 1. Логарифмируем:</b> ln y = arccos x · ln(ctg 2x).</div>
+    <div class="step"><b>Шаг 2. Дифференцируем как произведение</b> u·v, u = arccos x, v = ln(ctg 2x). (ln y)′ = u′v + uv′.</div>
+    <div class="step"><b>Шаг 3. u′</b> = (arccos x)′ = −<span class="frac"><span class="num">1</span><span class="den">√(1−x²)</span></span>.</div>
+    <div class="step"><b>Шаг 4. v′</b> = (ln(ctg2x))′ = <span class="frac"><span class="num">(ctg2x)′</span><span class="den">ctg2x</span></span>. Здесь (ctg2x)′ = −<span class="frac"><span class="num">1</span><span class="den">sin²2x</span></span>·(2x)′ = −<span class="frac"><span class="num">2</span><span class="den">sin²2x</span></span>.</div>
+    <div class="step">v′ = <span class="frac"><span class="num">−2/sin²2x</span><span class="den">ctg2x</span></span> = −<span class="frac"><span class="num">2</span><span class="den">sin²2x</span></span>·<span class="frac"><span class="num">sin2x</span><span class="den">cos2x</span></span> = −<span class="frac"><span class="num">2</span><span class="den">sin2x·cos2x</span></span> = −<span class="frac"><span class="num">4</span><span class="den">sin4x</span></span> &nbsp;<span style="color:var(--muted)">(т.к. 2 sin2x cos2x = sin4x)</span>.</div>
+    <div class="step"><b>Шаг 5. Собираем</b> (ln y)′ = −<span class="frac"><span class="num">ln(ctg2x)</span><span class="den">√(1−x²)</span></span> − <span class="frac"><span class="num">4 arccos x</span><span class="den">sin4x</span></span>.</div>
+    <div class="step"><b>Шаг 6.</b> y′ = y·(ln y)′.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = (ctg2x)<sup>arccos x</sup>·( −ln(ctg2x)/√(1−x²) − 4 arccos x/sin4x ).</div>
+  <div class="chk"><b>Проверка:</b> (1) два слагаемых — от производной показателя и основания. (2) Упрощение sin²2x·(cos2x/sin2x) = sin2x cos2x = ½ sin4x, поэтому 2/(½sin4x)=4/sin4x — пересчитал дважды. (3) Знаки: (arccos)′ и (ctg)′ оба дают минус — согласовано.</div>
+</section>
+
+<!-- Var2 №5 placeholder -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№5 — уточнить условие" data-desc="Параметрическая функция — условие на фото нечёткое.">
+  <h2>№5. Производная параметрической функции</h2>
+  <div class="warnbox"><span class="tag">Нужно уточнить условие</span>
+    <p>Параметрические x(t), y(t) на фото читаются приблизительно (что-то вроде x = (2t²−t)/(t²+1), y = …), но точно не разобрать. Пришли чёткое фото/текст — найду y′ₓ = y′ₜ/x′ₜ по шагам.</p>
+  </div>
+</section>
+
+<!-- Var2 №6 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№6 — неявная функция" data-desc="x⁴ + y⁴ = 2xy: дифференцируем и выражаем y′.">
+  <h2>№6. Производная неявной функции</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">x⁴ + y⁴ = 2xy, &nbsp; y = y(x).</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Дифференцируем обе части по x</b> (помним y = y(x), поэтому (y⁴)′ = 4y³·y′, а 2xy — произведение).</div>
+    <div class="step">Левая часть: (x⁴)′ + (y⁴)′ = 4x³ + 4y³·y′.</div>
+    <div class="step">Правая часть: (2xy)′ = 2·[(x)′·y + x·y′] = 2(y + x·y′) = 2y + 2x·y′.</div>
+    <div class="step"><b>Шаг 2. Уравнение:</b> 4x³ + 4y³·y′ = 2y + 2x·y′.</div>
+    <div class="step"><b>Шаг 3. Собираем y′ слева, остальное справа:</b> 4y³·y′ − 2x·y′ = 2y − 4x³.</div>
+    <div class="step"><b>Шаг 4. Выносим y′:</b> y′·(4y³ − 2x) = 2y − 4x³.</div>
+    <div class="step"><b>Шаг 5. Делим</b> (сокращаем на 2):</div>
+    <div class="formula" style="font-size:15px">y′ = <span class="frac"><span class="num">2y − 4x³</span><span class="den">4y³ − 2x</span></span> = <span class="frac"><span class="num">y − 2x³</span><span class="den">2y³ − x</span></span></div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = (y − 2x³)/(2y³ − x).</div>
+  <div class="chk"><b>Проверка:</b> (1) каждое y дало множитель y′ — верно; 2xy раскрыто по правилу произведения. (2) После сбора y′ слева, остальных членов справа — вынос y′ в скобку корректен. (3) Сокращение на 2 в числителе и знаменателе даёт красивый ответ, выраженный через x и y.</div>
+</section>
+
+<!-- Var2 №7 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№7 — касательная и нормаль" data-desc="y = (1−x²)e^(3x) в точке x=1: уравнения касательной и нормали.">
+  <h2>№7. Касательная и нормаль</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = (1 − x²)·e<sup>3x</sup>, &nbsp; точка x₀ = 1.</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Значение в точке.</b> f(1) = (1 − 1²)·e³ = 0·e³ = 0. Точка касания M(1, 0).</div>
+    <div class="step"><b>Шаг 2. Производная</b> (произведение), u = 1−x², v = e<sup>3x</sup>: &nbsp;u′ = −2x, &nbsp;v′ = (e<sup>3x</sup>)′ = 3e<sup>3x</sup>.</div>
+    <div class="step">f′(x) = −2x·e<sup>3x</sup> + (1−x²)·3e<sup>3x</sup> = e<sup>3x</sup>(−2x + 3 − 3x²).</div>
+    <div class="step"><b>Шаг 3. Наклон в точке.</b> f′(1) = e³·(−2 + 3 − 3) = e³·(−2) = −2e³.</div>
+    <div class="step"><b>Шаг 4. Касательная</b> y = f(1) + f′(1)(x − 1): &nbsp;y = 0 + (−2e³)(x − 1) ⟹ <b>y = −2e³(x − 1)</b>.</div>
+    <div class="step"><b>Шаг 5. Нормаль</b> (наклон −1/f′(1) = −1/(−2e³) = 1/(2e³)): &nbsp;y = 0 + <span class="frac"><span class="num">1</span><span class="den">2e³</span></span>(x − 1) ⟹ <b>y = (x − 1)/(2e³)</b>.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> касательная y = −2e³(x − 1); &nbsp;нормаль y = (x − 1)/(2e³). &nbsp;(e³ ≈ 20,09, т.е. наклоны ≈ −40,2 и ≈ 0,025.)</div>
+  <div class="chk"><b>Проверка:</b> (1) обе прямые проходят через M(1,0): при x=1 обе дают y=0 ✓. (2) Произведение наклонов: (−2e³)·(1/(2e³)) = −1 ✓ — перпендикулярны. (3) f′(1): −2·1 + 3 − 3·1 = −2, умножить на e³ = −2e³ — пересчитал.</div>
+</section>
+
+<!-- Var2 №8 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№8 — предел (Лопиталь)" data-desc="lim(2 − x/2)^(tg(πx/4)) при x→2: вид 1^∞ через логарифм и Лопиталя.">
+  <h2>№8. Предел по правилу Лопиталя–Бернулли</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">lim<sub>x→2</sub> ( 2 − <span class="frac"><span class="num">x</span><span class="den">2</span></span> )<sup>tg(πx/4)</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Шаг 1. Что за вид.</b> При x→2: основание 2 − 2/2 = 1; показатель tg(π·2/4) = tg(π/2) = ∞. Значит вид <b>1<sup>∞</sup></b> — берём логарифм предела.</div>
+    <div class="step"><b>Шаг 2.</b> Пусть L — предел. ln L = lim<sub>x→2</sub> tg(πx/4)·ln(2 − x/2). Это вид 0·∞.</div>
+    <div class="step"><b>Шаг 3. Превращаем в дробь</b> (чтобы применить Лопиталя): ln L = lim <span class="frac"><span class="num">ln(2 − x/2)</span><span class="den">ctg(πx/4)</span></span>. При x→2: числитель ln1 = 0, знаменатель ctg(π/2) = 0 — вид <span class="frac"><span class="num">0</span><span class="den">0</span></span>.</div>
+    <div class="step"><b>Шаг 4. Лопиталь.</b> Числитель: (ln(2 − x/2))′ = <span class="frac"><span class="num">(−1/2)</span><span class="den">2 − x/2</span></span> = −<span class="frac"><span class="num">1</span><span class="den">4 − x</span></span>.</div>
+    <div class="step">Знаменатель: (ctg(πx/4))′ = −<span class="frac"><span class="num">π/4</span><span class="den">sin²(πx/4)</span></span>.</div>
+    <div class="step"><b>Шаг 5. Отношение производных:</b> <span class="frac"><span class="num">−1/(4−x)</span><span class="den">−(π/4)/sin²(πx/4)</span></span> = <span class="frac"><span class="num">4·sin²(πx/4)</span><span class="den">π·(4 − x)</span></span>.</div>
+    <div class="step"><b>Шаг 6. Подставляем x = 2:</b> sin²(π/2) = 1, 4 − 2 = 2 ⟹ <span class="frac"><span class="num">4·1</span><span class="den">π·2</span></span> = <span class="frac"><span class="num">2</span><span class="den">π</span></span>.</div>
+    <div class="step">Значит ln L = 2/π ⟹ <b>L = e<sup>2/π</sup></b>.</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> предел равен e<sup>2/π</sup> ≈ 1,89.</div>
+  <div class="chk"><b>Проверка:</b> (1) вид 1<sup>∞</sup> — логарифм обязателен, он и применён. (2) Независимая проверка заменой t = x−2: 2−x/2 = 1 − t/2, ln(1−t/2) ≈ −t/2; tg(πx/4)=tg(π/2+πt/4) = −ctg(πt/4) ≈ −4/(πt); произведение (−4/(πt))·(−t/2) = 2/π — тот же ln L. (3) Численно при x=1,99: основание 1,005, показатель tg(0,9975·π/2)≈ большой; степень ≈ e^{0,64} ≈ 1,9 — согласуется.</div>
+</section>
+
+<!-- Var2 №9 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№9 — n-я производная" data-desc="y = cos kx: вывести общую формулу yⁿ.">
+  <h2>№9. Общая формула n-й производной</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula">y = cos kx</div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам</span>
+    <div class="step"><b>Идея:</b> считаем производные и ловим закономерность. Удобно использовать, что −sin α = cos(α + π/2), т.е. каждое дифференцирование «добавляет π/2» в аргумент и множитель k.</div>
+    <div class="step"><b>Шаг 1.</b> y′ = (cos kx)′ = −k·sin kx. Запишем через косинус: −sin kx = cos(kx + π/2) ⟹ y′ = k·cos(kx + π/2).</div>
+    <div class="step"><b>Шаг 2.</b> y″ = (−k sin kx)′ = −k²·cos kx = k²·cos(kx + π) = k²·cos(kx + 2·π/2).</div>
+    <div class="step"><b>Шаг 3.</b> y‴ = (−k² cos kx)′ = k³·sin kx = k³·cos(kx + 3·π/2).</div>
+    <div class="step"><b>Шаг 4. Закономерность:</b> каждый раз появляется ещё один множитель k и ещё одно слагаемое π/2 в аргументе.</div>
+    <div class="formula" style="font-size:16px">y⁽ⁿ⁾ = kⁿ·cos( kx + n·<span class="frac"><span class="num">π</span><span class="den">2</span></span> )</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y⁽ⁿ⁾ = kⁿ·cos(kx + nπ/2).</div>
+  <div class="chk"><b>Проверка:</b> n=1: k·cos(kx+π/2) = k·(−sin kx) = −k sin kx = y′ ✓. n=2: k²cos(kx+π) = −k²cos kx = y″ ✓. n=4: k⁴cos(kx+2π) = k⁴cos kx — и правда четвёртая производная возвращает косинус с k⁴ ✓.</div>
+</section>
+
+<!-- Var2 №10 -->
+<section data-group="Вариант №2 · матан" data-new="1" data-t="№10 — сложная (всё вместе)" data-desc="y = (arcsin e^(2x)·∛(arcctg 7x))^(cos³ ln x): лог-дифференцирование.">
+  <h2>№10. Продифференцировать</h2>
+  <div class="cond"><span class="tag">Дано</span>
+    <div class="formula" style="font-size:14px">y = ( arcsin(e<sup>2x</sup>) · <sup>3</sup>√(arcctg 7x) )<sup>cos³(ln x)</sup></div>
+  </div>
+  <div class="ex"><span class="tag">Решение по шагам (лог-дифференцирование)</span>
+    <div class="step"><b>Обозначим:</b> основание A = arcsin(e<sup>2x</sup>)·(arcctg 7x)<sup>1/3</sup>, показатель B = cos³(ln x). y = A<sup>B</sup>.</div>
+    <div class="step"><b>Шаг 1. Логарифмируем:</b> ln y = B·ln A = cos³(ln x)·[ ln(arcsin e<sup>2x</sup>) + <span class="frac"><span class="num">1</span><span class="den">3</span></span> ln(arcctg 7x) ].</div>
+    <div class="step"><b>Шаг 2.</b> y′ = y·(ln y)′ = y·( B′·ln A + B·(ln A)′ ).</div>
+    <div class="step"><b>Шаг 3. B′</b>, B = (cos(ln x))³: по цепочке B′ = 3cos²(ln x)·(−sin(ln x))·<span class="frac"><span class="num">1</span><span class="den">x</span></span> = −<span class="frac"><span class="num">3 cos²(ln x)·sin(ln x)</span><span class="den">x</span></span>.</div>
+    <div class="step"><b>Шаг 4. (ln A)′</b> — по слагаемым.</div>
+    <div class="step"><b>① ln(arcsin e<sup>2x</sup>).</b> = <span class="frac"><span class="num">(arcsin e<sup>2x</sup>)′</span><span class="den">arcsin e<sup>2x</sup></span></span>. Внутри (arcsin e<sup>2x</sup>)′ = <span class="frac"><span class="num">1</span><span class="den">√(1−e<sup>4x</sup>)</span></span>·(e<sup>2x</sup>)′ = <span class="frac"><span class="num">2e<sup>2x</sup></span><span class="den">√(1−e<sup>4x</sup>)</span></span>.</div>
+    <div class="step">Значит ① = <span class="frac"><span class="num">2e<sup>2x</sup></span><span class="den">√(1−e<sup>4x</sup>)·arcsin e<sup>2x</sup></span></span>.</div>
+    <div class="step"><b>② ⅓ ln(arcctg 7x).</b> = <span class="frac"><span class="num">1</span><span class="den">3</span></span>·<span class="frac"><span class="num">(arcctg 7x)′</span><span class="den">arcctg 7x</span></span>. Внутри (arcctg 7x)′ = −<span class="frac"><span class="num">7</span><span class="den">1+49x²</span></span>.</div>
+    <div class="step">Значит ② = −<span class="frac"><span class="num">7</span><span class="den">3(1+49x²)·arcctg 7x</span></span>.</div>
+    <div class="step"><b>Шаг 5. Собираем:</b></div>
+    <div class="formula" style="font-size:12.5px">y′ = y·{ −<span class="frac"><span class="num">3cos²(ln x)sin(ln x)</span><span class="den">x</span></span>·[ln(arcsin e<sup>2x</sup>) + ⅓ ln(arcctg 7x)] + cos³(ln x)·[ <span class="frac"><span class="num">2e<sup>2x</sup></span><span class="den">√(1−e<sup>4x</sup>)·arcsin e<sup>2x</sup></span></span> − <span class="frac"><span class="num">7</span><span class="den">3(1+49x²)arcctg 7x</span></span> ] }</div>
+  </div>
+  <div class="ans"><b>Ответ:</b> y′ = A<sup>B</sup>·{ B′·ln A + B·(ln A)′ } с A, B и выражениями выше.</div>
+  <div class="chk"><b>Проверка:</b> (1) структура A<sup>B</sup> → два вклада (производная показателя × ln основания и показатель × производная ln основания). (2) ① получен цепочкой: arcsin → (e^{2x})′=2e^{2x}; (3) ② со знаком минус от (arcctg)′ = −7/(1+49x²). Все три внутренние производные совпали с таблицей.</div>
+</section>
+
+</main>
+</div>
+<script>
+const secs=[...document.querySelectorAll('section')];
+const nav=document.getElementById('nav');
+const titleEl=document.getElementById('secTitle');
+const descEl=document.getElementById('secDesc');
+const order=[], map={};
+secs.forEach((s,i)=>{const g=s.dataset.group||'Разное'; if(!map[g]){map[g]=[];order.push(g);} map[g].push(i);});
+const links=[];
+order.forEach(g=>{
+  const grp=document.createElement('div');grp.className='grp';grp.dataset.g=g;
+  const btn=document.createElement('button');btn.innerHTML='<span>'+g+'</span><span class="arw">▶</span>';
+  const items=document.createElement('div');items.className='items';
+  map[g].forEach(i=>{const a=document.createElement('a');a.textContent=secs[i].dataset.t;if(secs[i].dataset.new){const nb=document.createElement('span');nb.textContent=' NEW';nb.style.cssText='color:#39d98a;font-size:9px;font-weight:700;vertical-align:super';a.appendChild(nb);}a.onclick=()=>show(i);items.appendChild(a);links[i]=a;});
+  btn.onclick=()=>grp.classList.toggle('open');
+  grp.appendChild(btn);grp.appendChild(items);nav.appendChild(grp);
+});
+const groupEls=[...document.querySelectorAll('.grp')];
+function show(i){
+  secs.forEach((s,k)=>s.classList.toggle('show',k===i));
+  links.forEach((a,k)=>a&&a.classList.toggle('active',k===i));
+  const g=secs[i].dataset.group;
+  groupEls.forEach(el=>{ if(el.dataset.g===g) el.classList.add('open'); });
+  titleEl.textContent=secs[i].dataset.t;
+  descEl.textContent=secs[i].dataset.desc||'';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+if(groupEls[0]) groupEls[0].classList.add('open');
+show(0);
+(function(){var mb=document.getElementById('menuBtn'),bd=document.getElementById('backdrop'),as=document.querySelector('aside');function cl(){if(as)as.classList.remove('open');if(bd)bd.classList.remove('show');}if(mb)mb.onclick=function(){as.classList.add('open');bd.classList.add('show');};if(bd)bd.onclick=cl;document.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',cl);});})();
+</script>
+</body>
+</html>
