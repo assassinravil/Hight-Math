@@ -51,6 +51,10 @@
   .warnbox{background:rgba(255,141,107,.10);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
   .warnbox .tag{display:inline-block;font-size:11px;font-weight:700;color:#1a1a1a;background:var(--warn);padding:2px 9px;border-radius:20px;margin-bottom:6px}
   .note{background:rgba(91,141,239,.10);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#cdd7ee}
+  .chk{background:rgba(57,217,138,.10);border:1px solid rgba(57,217,138,.4);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:14px;color:#bff0d6}
+  .chk b{color:var(--ok)}
+  .ans{background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.5);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:15px;color:#ffe6ad}
+  .ans b{color:var(--gold)}
   .leg{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0;font-size:13.5px;color:#cdd7ee}
   .formula{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0;text-align:center;font-size:17px;overflow-x:auto}
   .step{margin:11px 0;padding:4px 0 4px 12px;border-left:2px solid var(--line);font-size:15px;overflow-x:auto}
@@ -655,7 +659,7 @@
 </section>
 
 <!-- ============ ГЛАВА 6. ДИФФЕРЕНЦИАЛ И ВЫСШИЕ ПОРЯДКИ ============ -->
-<section data-group="6 · Дифференциал и высшие порядки" data-new="1" data-t="Дифференциал: смысл и правила" data-desc="dy = f′(x₀)dx — приращение ординаты касательной; Δy vs dy на графике; инвариантность формы; правила d(uv) и т.д.">
+<section data-group="6 · Дифференциал и высшие порядки" data-t="Дифференциал: смысл и правила" data-desc="dy = f′(x₀)dx — приращение ординаты касательной; Δy vs dy на графике; инвариантность формы; правила d(uv) и т.д.">
   <h2>Дифференциал подробно</h2>
   <div class="df"><span class="tag">Определение</span>
     <p>Дифференциал — это <b>главная линейная часть</b> приращения функции: &nbsp;dy = f′(x₀)·dx &nbsp;(где dx = Δx). Полное приращение Δy = f′(x₀)Δx + o(Δx); дифференциал — это первое слагаемое.</p>
@@ -701,7 +705,7 @@
   </div>
 </section>
 
-<section data-group="6 · Дифференциал и высшие порядки" data-new="1" data-t="Производные высших порядков. Лейбниц" data-desc="y″, yⁿ; правила; формула Лейбница (uv)ⁿ; n-я производная aˣ и sin ax — с примерами.">
+<section data-group="6 · Дифференциал и высшие порядки" data-t="Производные высших порядков. Лейбниц" data-desc="y″, yⁿ; правила; формула Лейбница (uv)ⁿ; n-я производная aˣ и sin ax — с примерами.">
   <h2>Производные высших порядков</h2>
   <div class="df"><span class="tag">Определение</span>
     <p>Вторая производная — производная от первой: y″ = (y′)′. Дальше по индукции: y⁽ⁿ⁾ = (y⁽ⁿ⁻¹⁾)′.</p>
@@ -760,7 +764,7 @@
     </details></div>
 </section>
 
-<section data-group="6 · Дифференциал и высшие порядки" data-new="1" data-t="Точки экстремума (определение)" data-desc="Точки максимума и минимума функции; что такое экстремум; примеры и связь с производной.">
+<section data-group="6 · Дифференциал и высшие порядки" data-t="Точки экстремума (определение)" data-desc="Точки максимума и минимума функции; что такое экстремум; примеры и связь с производной.">
   <h2>Точки экстремума</h2>
   <div class="df"><span class="tag">Определения</span>
     <p>Точка x₀ — <b>точка максимума</b>, если в её окрестности f(x₀ + Δx) ≤ f(x₀) (значение в x₀ — самое большое рядом). Точка <b>минимума</b> — если f(x₀ + Δx) ≥ f(x₀). И те, и другие называют <b>точками экстремума</b>.</p>
@@ -773,6 +777,393 @@
     <p><b>y = 4 − x²:</b> в x₀ = 0 максимум (f(0)=4, вокруг меньше). f′(0)=0 ✓.</p>
     <p><b>y = x³:</b> f′(0)=0, но экстремума <b>нет</b> — слева функция меньше, справа больше (точка перегиба). Значит f′=0 — лишь <b>необходимое</b>, но не достаточное условие.</p>
   </div>
+</section>
+
+<!-- ============ ГЛАВА 7. ТЕОРЕМЫ О СРЕДНЕМ И ЛОПИТАЛЬ ============ -->
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Теорема Ферма" data-desc="В точке экстремума гладкой функции f′(x₀)=0; геометрия (горизонтальная касательная) + пример.">
+  <h2>Теорема Ферма</h2>
+  <div class="df"><span class="tag">Формулировка</span>
+    <p>Пусть y = f(x) определена и непрерывна в точке x₀, и x₀ — <b>точка экстремума</b> (максимума или минимума). Если в x₀ существует производная, то</p>
+    <div class="formula" style="font-size:17px">f′(x₀) = 0</div>
+  </div>
+  <div class="leg"><b>Почему (на максимуме).</b> Пусть x₀ — максимум, то есть Δy = f(x₀+Δx) − f(x₀) ≤ 0. Смотрим отношение Δy/Δx: при Δx &gt; 0 оно ≤ 0, при Δx &lt; 0 оно ≥ 0. Если производная существует, левый и правый пределы Δy/Δx равны одному числу, которое одновременно ≤ 0 и ≥ 0 ⟹ оно = 0. Значит f′(x₀) = 0.</div>
+  <div class="df"><span class="tag">Геометрический смысл</span>
+    <p>В точке экстремума касательная <b>горизонтальна</b> (параллельна оси Ox): наклон f′(x₀) = 0.</p>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="42" y1="272" x2="414" y2="272" stroke="#46567f" stroke-width="1.3"/>
+<line x1="42" y1="8" x2="42" y2="272" stroke="#46567f" stroke-width="1.3"/>
+<line x1="92.5" y1="67.2" x2="328.2" y2="67.2" stroke="#ffc24b" stroke-width="2.2"/>
+<line x1="210.4" y1="272.0" x2="210.4" y2="67.2" stroke="#cdd7ee" stroke-width="1" stroke-dasharray="4 3"/>
+<polyline points="67.3,215.2 77.6,194.5 88.0,175.3 98.4,157.8 108.8,141.7 119.2,127.3 129.6,114.4 139.9,103.0 150.3,93.3 160.7,85.0 171.1,78.4 181.5,73.2 191.9,69.7 202.2,67.7 212.6,67.2 223.0,68.4 233.4,71.0 243.8,75.3 254.1,81.0 264.5,88.4 274.9,97.3 285.3,107.8 295.7,119.8 306.1,133.4 316.4,148.5 326.8,165.2 337.2,183.4 347.6,203.2 358.0,224.6 368.4,247.5 378.7,272.0" fill="none" stroke="#e7ecf7" stroke-width="2.4"/>
+<circle cx="210.4" cy="67.2" r="5" fill="#39d98a"/>
+<text x="202" y="288" fill="#39d98a" font-size="12" font-family="monospace">x₀</text>
+<text x="218" y="61" fill="#39d98a" font-size="12" font-family="monospace">max</text>
+<text x="236" y="57" fill="#ffc24b" font-size="12" font-family="monospace">касательная ∥ Ox (f′=0)</text>
+</svg>
+    <div class="cap">На вершине касательная ложится горизонтально — её наклон f′(x₀) равен нулю.</div>
+  </div>
+  <div class="ex"><span class="tag">Пример на числах</span>
+    <div class="step"><b>Дано:</b> f(x) = −x² + 4x. <b>Найти</b> точку экстремума и проверить f′ = 0.</div>
+    <div class="step"><b>Шаг 1.</b> f′(x) = −2x + 4.</div>
+    <div class="step"><b>Шаг 2.</b> Приравниваем к нулю: −2x + 4 = 0 ⟹ x₀ = 2.</div>
+    <div class="step"><b>Шаг 3.</b> f(2) = −4 + 8 = 4 — это максимум (ветви параболы вниз).</div>
+    <div class="step"><b>Ответ:</b> в x₀ = 2 максимум, и f′(2) = −2·2 + 4 = 0 ✓ — теорема Ферма выполнена.</div>
+  </div>
+  <div class="warnbox"><span class="tag">Важно</span>
+    <p>Ферма требует <b>существования производной</b>. У y = |x| в нуле минимум, но производной нет (угол) — теорема просто не применяется.</p>
+  </div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Теорема Ролля" data-desc="Если f(a)=f(b), то между ними есть точка c с f′(c)=0; график + пример + контрпример.">
+  <h2>Теорема Ролля</h2>
+  <div class="df"><span class="tag">Формулировка</span>
+    <p>Пусть f(x) удовлетворяет трём условиям: (1) непрерывна на [a, b]; (2) дифференцируема на (a, b); (3) f(a) = f(b). Тогда найдётся точка c ∈ (a, b), такая что</p>
+    <div class="formula" style="font-size:17px">f′(c) = 0</div>
+  </div>
+  <div class="leg"><b>Почему.</b> По теореме Вейерштрасса непрерывная на [a,b] функция достигает max и min. Если оба на концах — из f(a)=f(b) следует, что функция постоянна и f′≡0. Иначе экстремум попадает внутрь (a,b), и там по теореме Ферма f′(c)=0.</div>
+  <div class="df"><span class="tag">Геометрия</span>
+    <p>Если концы на одной высоте, то где-то между ними касательная <b>горизонтальна</b>.</p>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="6" y1="144" x2="414" y2="144" stroke="#46567f" stroke-width="1.3"/>
+<line x1="223" y1="8" x2="223" y2="294" stroke="#46567f" stroke-width="1.3"/>
+<line x1="105.3" y1="145.1" x2="340.6" y2="145.1" stroke="#5b8def" stroke-width="1.6" stroke-dasharray="5 3"/>
+<line x1="159.7" y1="64.0" x2="286.4" y2="64.0" stroke="#ffc24b" stroke-width="2.2"/>
+<polyline points="78.2,186.9 87.9,171.0 97.5,156.3 107.2,142.6 116.8,130.1 126.5,118.6 136.1,108.2 145.8,99.0 155.4,90.8 165.1,83.7 174.7,77.7 184.4,72.7 194.0,68.9 203.7,66.2 213.3,64.5 223.0,64.0 232.7,64.5 242.3,66.2 252.0,68.9 261.6,72.7 271.3,77.7 280.9,83.7 290.6,90.8 300.2,99.0 309.9,108.2 319.5,118.6 329.2,130.1 338.8,142.6 348.5,156.3 358.1,171.0 367.8,186.9" fill="none" stroke="#e7ecf7" stroke-width="2.4"/>
+<circle cx="105.3" cy="145.1" r="4.5" fill="#5b8def"/>
+<circle cx="340.6" cy="145.1" r="4.5" fill="#5b8def"/>
+<circle cx="223.0" cy="64.0" r="5" fill="#39d98a"/>
+<text x="99" y="160" fill="#cdd7ee" font-size="12" font-family="monospace">a</text>
+<text x="337" y="160" fill="#cdd7ee" font-size="12" font-family="monospace">b</text>
+<text x="228" y="160" fill="#39d98a" font-size="12" font-family="monospace">c</text>
+<text x="111" y="137" fill="#5b8def" font-size="11" font-family="monospace">f(a)=f(b)</text>
+<text x="231" y="56" fill="#ffc24b" font-size="11" font-family="monospace">f′(c)=0</text>
+</svg>
+    <div class="cap">Концы на одной высоте ⟹ между ними есть «вершина» с горизонтальной касательной.</div>
+  </div>
+  <div class="ex"><span class="tag">Пример</span>
+    <div class="step"><b>Дано:</b> f(x) = x² − 4 на [−2, 2]. <b>Проверить</b> Ролля и найти c.</div>
+    <div class="step"><b>Шаг 1.</b> Условия: многочлен — непрерывен и дифференцируем везде ✓. Концы: f(−2) = 0, f(2) = 0 ⟹ f(−2) = f(b) ✓.</div>
+    <div class="step"><b>Шаг 2.</b> f′(x) = 2x. Решаем f′(c) = 0: 2c = 0 ⟹ c = 0.</div>
+    <div class="step"><b>Ответ:</b> c = 0 ∈ (−2, 2) ✓ — в нуле касательная горизонтальна.</div>
+  </div>
+  <div class="warnbox"><span class="tag">Контрпример — когда условие нарушено</span>
+    <div class="step">f(x) = ∛(x²) = x<sup>2/3</sup> на [−1, 1]: концы равны f(−1) = f(1) = 1, функция непрерывна, но в x = 0 <b>не дифференцируема</b> (касп, f′ = (2/3)x<sup>−1/3</sup> → ∞).</div>
+    <div class="step">Условие (2) нарушено ⟹ Ролля не применить, и действительно f′ нигде не равна нулю (f′ = (2/3)/∛x ≠ 0). Все три условия обязательны!</div>
+  </div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Теорема Лагранжа" data-desc="Формула конечных приращений f′(c)=(f(b)−f(a))/(b−a); касательная ∥ секущей; 2 примера.">
+  <h2>Теорема Лагранжа (о среднем значении)</h2>
+  <div class="df"><span class="tag">Формулировка</span>
+    <p>Если f(x) непрерывна на [a, b] и дифференцируема на (a, b), то найдётся c ∈ (a, b):</p>
+    <div class="formula" style="font-size:17px">f′(c) = <span class="frac"><span class="num">f(b) − f(a)</span><span class="den">b − a</span></span></div>
+    <p>(формула конечных приращений).</p>
+  </div>
+  <div class="df"><span class="tag">Геометрия</span>
+    <p>Справа — наклон <b>секущей</b> через концы (a, f(a)) и (b, f(b)). Теорема говорит: найдётся точка c, где <b>касательная параллельна этой секущей</b>.</p>
+  </div>
+  <div class="fig">
+<svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:8px auto;background:#0b1020;border-radius:12px;border:1px solid #2a3350">
+<line x1="42" y1="272" x2="414" y2="272" stroke="#46567f" stroke-width="1.3"/>
+<line x1="42" y1="8" x2="42" y2="272" stroke="#46567f" stroke-width="1.3"/>
+<line x1="75.4" y1="172.9" x2="356.1" y2="30.5" stroke="#5b8def" stroke-width="1.8" stroke-dasharray="5 3"/>
+<line x1="89.5" y1="152.3" x2="292.2" y2="51.1" stroke="#ffc24b" stroke-width="2.2"/>
+<polyline points="56.5,193.6 67.1,182.8 77.7,173.2 88.3,164.4 99.0,156.4 109.6,148.8 120.2,141.7 130.8,134.9 141.4,128.5 152.0,122.3 162.7,116.4 173.3,110.7 183.9,105.2 194.5,99.9 205.1,94.7 215.8,89.7 226.4,84.8 237.0,80.1 247.6,75.4 258.2,70.9 268.9,66.4 279.5,62.1 290.1,57.8 300.7,53.7 311.3,49.6 321.9,45.6 332.6,41.6 343.2,37.7 353.8,33.9 364.4,30.1 375.0,26.4" fill="none" stroke="#e7ecf7" stroke-width="2.4"/>
+<circle cx="85.4" cy="166.8" r="4.5" fill="#5b8def"/>
+<circle cx="346.1" cy="36.7" r="4.5" fill="#5b8def"/>
+<circle cx="190.9" cy="101.7" r="5" fill="#39d98a"/>
+<text x="81" y="288" fill="#cdd7ee" font-size="12" font-family="monospace">a</text>
+<text x="187" y="288" fill="#39d98a" font-size="12" font-family="monospace">c</text>
+<text x="342" y="288" fill="#cdd7ee" font-size="12" font-family="monospace">b</text>
+<text x="78" y="20" fill="#5b8def" font-size="11" font-family="monospace">секущая</text>
+<text x="209" y="85" fill="#ffc24b" font-size="11" font-family="monospace">касательная ∥ ей</text>
+</svg>
+    <div class="cap">Есть точка c, где касательная (золотая) параллельна секущей через концы (синяя).</div>
+  </div>
+  <div class="intu"><span class="tag">Смысл формулы</span>
+    <p>Перепишем так: <b>f(b) − f(a) = f′(c)·(b − a)</b>. То есть всё приращение функции на отрезке равно производной в некоторой <b>средней точке</b> c, умноженной на длину отрезка. Физически: если проехать путь за время [a, b], то <b>средняя скорость</b> на отрезке в какой-то момент c <b>равна мгновенной</b>.</p>
+  </div>
+  <div class="leg"><b>Как доказывают (через Ролля).</b> Вводят вспомогательную функцию F(x) = f(x) − k·x, где k = (f(b)−f(a))/(b−a). Считаем концы: F(a) = f(a) − k·a и F(b) = f(b) − k·b. Подставив k, получаем F(a) = F(b) (ровно так k и подобран). Значит к F применима теорема Ролля ⟹ ∃c ∈ (a,b): F′(c) = 0. Но F′(x) = f′(x) − k, поэтому f′(c) − k = 0 ⟹ <b>f′(c) = k</b>. Это и есть формула.</div>
+
+  <h3>Примеры (находим точку c)</h3>
+  <div class="ex"><span class="tag">Пример 1: f(x) = x² на [1, 3]</span>
+    <div class="step"><b>Дано:</b> f = x², отрезок [1, 3]. <b>Найти</b> c из формулы Лагранжа.</div>
+    <div class="step"><b>Шаг 1. Правая часть</b> (наклон секущей): <span class="frac"><span class="num">f(3) − f(1)</span><span class="den">3 − 1</span></span> = <span class="frac"><span class="num">9 − 1</span><span class="den">2</span></span> = 4.</div>
+    <div class="step"><b>Шаг 2. Производная:</b> f′(x) = 2x.</div>
+    <div class="step"><b>Шаг 3. Уравнение</b> f′(c) = 4: &nbsp;2c = 4 ⟹ c = 2.</div>
+    <div class="step"><b>Ответ:</b> c = 2, и это внутри (1, 3) ✓.</div>
+    <div class="chk"><b>Проверка:</b> f′(2) = 2·2 = 4 — равно наклону секущей ✓. Касательная в x=2 параллельна прямой через (1,1) и (3,9).</div>
+  </div>
+  <div class="ex"><span class="tag">Пример 2: f(x) = √x на [1, 4]</span>
+    <div class="step"><b>Шаг 1. Правая часть:</b> <span class="frac"><span class="num">√4 − √1</span><span class="den">4 − 1</span></span> = <span class="frac"><span class="num">2 − 1</span><span class="den">3</span></span> = <span class="frac"><span class="num">1</span><span class="den">3</span></span>.</div>
+    <div class="step"><b>Шаг 2. Производная:</b> f′(x) = (x<sup>1/2</sup>)′ = <span class="frac"><span class="num">1</span><span class="den">2√x</span></span>.</div>
+    <div class="step"><b>Шаг 3. Уравнение</b> <span class="frac"><span class="num">1</span><span class="den">2√c</span></span> = <span class="frac"><span class="num">1</span><span class="den">3</span></span>: &nbsp;2√c = 3 ⟹ √c = 1,5 ⟹ c = 2,25.</div>
+    <div class="step"><b>Ответ:</b> c = 2,25 ∈ (1, 4) ✓.</div>
+    <div class="chk"><b>Проверка:</b> f′(2,25) = 1/(2·1,5) = 1/3 — совпало с секущей ✓.</div>
+  </div>
+  <div class="ex"><span class="tag">Пример 3: f(x) = x³ на [0, 3]</span>
+    <div class="step"><b>Шаг 1. Правая часть:</b> <span class="frac"><span class="num">27 − 0</span><span class="den">3 − 0</span></span> = 9.</div>
+    <div class="step"><b>Шаг 2. Производная:</b> f′(x) = 3x².</div>
+    <div class="step"><b>Шаг 3. Уравнение</b> 3c² = 9 ⟹ c² = 3 ⟹ c = √3 ≈ 1,73 (берём положительный корень — он в отрезке).</div>
+    <div class="step"><b>Ответ:</b> c = √3 ∈ (0, 3) ✓.</div>
+  </div>
+
+  <div class="ex"><span class="tag">Зачем это нужно: доказываем неравенство |sin b − sin a| ≤ |b − a|</span>
+    <div class="step"><b>Идея:</b> применим формулу Лагранжа к f(x) = sin x на отрезке с концами a и b.</div>
+    <div class="step"><b>Шаг 1.</b> По теореме: sin b − sin a = f′(c)·(b − a) = cos c·(b − a) для некоторого c между a и b.</div>
+    <div class="step"><b>Шаг 2.</b> Берём модуль: |sin b − sin a| = |cos c|·|b − a|.</div>
+    <div class="step"><b>Шаг 3.</b> Всегда |cos c| ≤ 1, поэтому |sin b − sin a| ≤ |b − a|.</div>
+    <div class="step"><b>Вывод:</b> синус «не растягивает» расстояния — это строго доказано теоремой Лагранжа. Так её применяют для оценок и неравенств.</div>
+  </div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Теорема Коши" data-desc="Обобщённая теорема о среднем: f′(c)/φ′(c)=(f(b)−f(a))/(φ(b)−φ(a)); пример.">
+  <h2>Теорема Коши (обобщённая о среднем)</h2>
+  <div class="df"><span class="tag">Формулировка</span>
+    <p>Если f(x) и φ(x) непрерывны на [a, b], дифференцируемы на (a, b) и φ′(x) ≠ 0, то найдётся c ∈ (a, b):</p>
+    <div class="formula" style="font-size:16px"><span class="frac"><span class="num">f′(c)</span><span class="den">φ′(c)</span></span> = <span class="frac"><span class="num">f(b) − f(a)</span><span class="den">φ(b) − φ(a)</span></span></div>
+  </div>
+  <div class="intu"><span class="tag">О чём это</span>
+    <p>Лагранж сравнивает приращение одной функции с длиной отрезка. Коши сравнивает приращения <b>двух</b> функций между собой. Условие <b>φ′ ≠ 0</b> нужно, чтобы знаменатель φ(b) − φ(a) не обратился в ноль (иначе дробь не имеет смысла).</p>
+  </div>
+  <div class="note"><b>Связь с Лагранжем:</b> если взять φ(x) = x, то φ′ = 1 и φ(b) − φ(a) = b − a — формула Коши превращается в формулу Лагранжа. То есть Лагранж — это Коши с φ(x) = x.</div>
+  <div class="leg"><b>Как доказывают.</b> Вводят F(x) = f(x) − <span class="frac"><span class="num">f(b) − f(a)</span><span class="den">φ(b) − φ(a)</span></span>·(φ(x) − φ(a)). Проверяют F(a) = F(b) = 0, применяют Ролля ⟹ ∃c: F′(c) = 0 ⟹ f′(c) = <span class="frac"><span class="num">f(b)−f(a)</span><span class="den">φ(b)−φ(a)</span></span>·φ′(c), откуда и получается формула.</div>
+
+  <h3>Примеры</h3>
+  <div class="ex"><span class="tag">Пример 1: f(x) = x², φ(x) = x³ на [1, 2]</span>
+    <div class="step"><b>Шаг 1. Правая часть:</b> <span class="frac"><span class="num">f(2) − f(1)</span><span class="den">φ(2) − φ(1)</span></span> = <span class="frac"><span class="num">4 − 1</span><span class="den">8 − 1</span></span> = <span class="frac"><span class="num">3</span><span class="den">7</span></span>.</div>
+    <div class="step"><b>Шаг 2. Левая часть:</b> f′ = 2x, φ′ = 3x², поэтому <span class="frac"><span class="num">f′(c)</span><span class="den">φ′(c)</span></span> = <span class="frac"><span class="num">2c</span><span class="den">3c²</span></span> = <span class="frac"><span class="num">2</span><span class="den">3c</span></span>.</div>
+    <div class="step"><b>Шаг 3. Уравнение:</b> <span class="frac"><span class="num">2</span><span class="den">3c</span></span> = <span class="frac"><span class="num">3</span><span class="den">7</span></span> ⟹ 2·7 = 3·3·c ⟹ 14 = 9c ⟹ c = <span class="frac"><span class="num">14</span><span class="den">9</span></span> ≈ 1,556.</div>
+    <div class="step"><b>Ответ:</b> c = 14/9 ∈ (1, 2) ✓.</div>
+    <div class="chk"><b>Проверка:</b> f′(c)/φ′(c) = 2/(3·14/9) = 2·9/(42) = 18/42 = 3/7 — совпало с правой частью ✓.</div>
+  </div>
+  <div class="ex"><span class="tag">Пример 2: f(x) = sin x, φ(x) = cos x на [0, π/2]</span>
+    <div class="step"><b>Шаг 1. Правая часть:</b> <span class="frac"><span class="num">sin(π/2) − sin 0</span><span class="den">cos(π/2) − cos 0</span></span> = <span class="frac"><span class="num">1 − 0</span><span class="den">0 − 1</span></span> = −1.</div>
+    <div class="step"><b>Шаг 2. Левая часть:</b> f′ = cos x, φ′ = −sin x, поэтому <span class="frac"><span class="num">f′(c)</span><span class="den">φ′(c)</span></span> = <span class="frac"><span class="num">cos c</span><span class="den">−sin c</span></span> = −ctg c.</div>
+    <div class="step"><b>Шаг 3. Уравнение:</b> −ctg c = −1 ⟹ ctg c = 1 ⟹ c = π/4.</div>
+    <div class="step"><b>Ответ:</b> c = π/4 ∈ (0, π/2) ✓.</div>
+  </div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Правило Лопиталя (0/0 и ∞/∞)" data-desc="Когда применять, формулировка, разборы 0/0 и ∞/∞ по шагам с проверкой.">
+  <h2>Правило Лопиталя</h2>
+
+  <div class="intu"><span class="tag">Откуда берётся Лопиталь — цепочка теорем</span>
+    <p>Это не отдельная формула с неба, а вершина целой лестницы. Каждая теорема опирается на предыдущую:</p>
+    <ol>
+      <li><b>Ферма:</b> в точке экстремума f′ = 0.</li>
+      <li><b>Ролль</b> (доказан через Ферма + Вейерштрасса): если f(a) = f(b), то внутри есть c с f′(c) = 0.</li>
+      <li><b>Лагранж</b> (доказан через Ролля): f′(c) = (f(b)−f(a))/(b−a).</li>
+      <li><b>Коши</b> (обобщение Лагранжа на две функции): f′(c)/φ′(c) = (f(b)−f(a))/(φ(b)−φ(a)).</li>
+      <li><b>Лопиталь</b> (доказан через Коши): lim f/g = lim f′/g′ для 0/0 и ∞/∞.</li>
+    </ol>
+    <p>То есть Ферма → Ролль → Лагранж → Коши → <b>Лопиталь</b>. Ниже видно, как именно последний шаг получается из Коши.</p>
+  </div>
+
+  <div class="df"><span class="tag">Формулировка</span>
+    <p>Если f(x)/g(x) даёт неопределённость <span class="frac"><span class="num">0</span><span class="den">0</span></span> или <span class="frac"><span class="num">∞</span><span class="den">∞</span></span> при x → a, функции дифференцируемы около a, g′ ≠ 0, и существует предел отношения производных, то</p>
+    <div class="formula" style="font-size:16px">lim<sub>x→a</sub> <span class="frac"><span class="num">f(x)</span><span class="den">g(x)</span></span> = lim<sub>x→a</sub> <span class="frac"><span class="num">f′(x)</span><span class="den">g′(x)</span></span></div>
+  </div>
+
+  <div class="leg"><b>Доказательство для 0/0 (через Коши) — по шагам.</b>
+    <div class="step"><b>Шаг 1.</b> Раз это 0/0, доопределим (или уже так): f(a) = 0 и g(a) = 0.</div>
+    <div class="step"><b>Шаг 2.</b> Берём отрезок [a, x] и применяем к f, g <b>теорему Коши</b>: <span class="frac"><span class="num">f(x) − f(a)</span><span class="den">g(x) − g(a)</span></span> = <span class="frac"><span class="num">f′(c)</span><span class="den">g′(c)</span></span>, где c между a и x.</div>
+    <div class="step"><b>Шаг 3.</b> Но f(a) = g(a) = 0, поэтому левая часть просто <span class="frac"><span class="num">f(x)</span><span class="den">g(x)</span></span>. Значит <span class="frac"><span class="num">f(x)</span><span class="den">g(x)</span></span> = <span class="frac"><span class="num">f′(c)</span><span class="den">g′(c)</span></span>.</div>
+    <div class="step"><b>Шаг 4.</b> При x → a точка c «зажата» между a и x, поэтому c → a тоже. Переходя к пределу: lim <span class="frac"><span class="num">f(x)</span><span class="den">g(x)</span></span> = lim <span class="frac"><span class="num">f′(c)</span><span class="den">g′(c)</span></span> = lim <span class="frac"><span class="num">f′(x)</span><span class="den">g′(x)</span></span>. ∎</div>
+    <div class="step">Для ∞/∞ доказательство аналогичное (чуть техничнее), формула та же.</div>
+  </div>
+
+  <div class="warnbox"><span class="tag">Порядок действий</span>
+    <p><b>Сначала</b> убедись, что это именно 0/0 или ∞/∞ (подставь x = a). Только тогда дифференцируй <b>числитель и знаменатель по отдельности</b> (это не производная частного!). Если снова 0/0 — применяй правило ещё раз.</p>
+  </div>
+
+  <div class="ex"><span class="tag">0/0 — простой: lim<sub>x→0</sub> (eˣ − 1)/x</span>
+    <div class="step"><b>Шаг 1.</b> Подстановка: (e⁰ − 1)/0 = 0/0 — можно Лопиталь.</div>
+    <div class="step"><b>Шаг 2.</b> (eˣ − 1)′ = eˣ; (x)′ = 1 ⟹ предел = lim eˣ/1.</div>
+    <div class="step"><b>Шаг 3.</b> Подставляем x = 0: e⁰/1 = 1. <b>Ответ: 1.</b></div>
+    <div class="chk"><b>Проверка:</b> eˣ − 1 ~ x при x→0, отношение x/x = 1 — совпало.</div>
+  </div>
+
+  <div class="ex"><span class="tag">0/0 — дважды: lim<sub>x→0</sub> (1 − cos x)/x²</span>
+    <div class="step"><b>Шаг 1.</b> (1 − 1)/0 = 0/0.</div>
+    <div class="step"><b>Шаг 2.</b> Числитель (1 − cos x)′ = sin x; знаменатель (x²)′ = 2x ⟹ lim sin x/(2x).</div>
+    <div class="step"><b>Шаг 3.</b> При x = 0: 0/0 — снова. Ещё раз: (sin x)′ = cos x, (2x)′ = 2 ⟹ lim cos x/2.</div>
+    <div class="step"><b>Шаг 4.</b> При x = 0: cos 0/2 = 1/2. <b>Ответ: 1/2.</b></div>
+    <div class="chk"><b>Проверка:</b> 1 − cos x ~ x²/2, делим на x² → 1/2 — совпало.</div>
+  </div>
+
+  <div class="ex"><span class="tag">∞/∞: lim<sub>x→+∞</sub> ln x / x</span>
+    <div class="step"><b>Шаг 1.</b> При x → ∞: ∞/∞ — можно Лопиталь.</div>
+    <div class="step"><b>Шаг 2.</b> (ln x)′ = 1/x; (x)′ = 1 ⟹ lim (1/x)/1 = lim 1/x.</div>
+    <div class="step"><b>Шаг 3.</b> При x → ∞: 1/x → 0. <b>Ответ: 0.</b></div>
+    <div class="chk"><b>Проверка:</b> логарифм растёт медленнее любой степени x — отношение к x стремится к 0, логично.</div>
+  </div>
+
+  <div class="ex"><span class="tag">∞/∞ (из лекции): lim<sub>x→+∞</sub> (π/2 − arctg x) / ln(1 + 1/x²)</span>
+    <div class="step"><b>Шаг 1.</b> π/2 − arctg x → 0 и ln(1 + 1/x²) → 0 — это 0/0 (а не ∞/∞), но правило то же.</div>
+    <div class="step"><b>Шаг 2. Числитель:</b> (π/2 − arctg x)′ = −1/(1 + x²).</div>
+    <div class="step"><b>Знаменатель:</b> (ln(1 + 1/x²))′ = <span class="frac"><span class="num">1</span><span class="den">1 + 1/x²</span></span>·(−2/x³) = −<span class="frac"><span class="num">2</span><span class="den">x³ + x</span></span>.</div>
+    <div class="step"><b>Шаг 3. Отношение:</b> <span class="frac"><span class="num">−1/(1+x²)</span><span class="den">−2/(x³+x)</span></span> = <span class="frac"><span class="num">x³ + x</span><span class="den">2(1 + x²)</span></span> = <span class="frac"><span class="num">x(x²+1)</span><span class="den">2(x²+1)</span></span> = <span class="frac"><span class="num">x</span><span class="den">2</span></span>.</div>
+    <div class="step"><b>Шаг 4.</b> При x → +∞: x/2 → +∞. <b>Ответ: +∞.</b></div>
+    <div class="chk"><b>Проверка:</b> числитель π/2 − arctg x ~ 1/x (хвост арктангенса), знаменатель ln(1+1/x²) ~ 1/x²; отношение (1/x)/(1/x²) = x → ∞ — тот же результат.</div>
+  </div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Хитрые неопределённости" data-desc="0·∞, ∞−∞, 1^∞, 0⁰, ∞⁰ — как свести к 0/0 или ∞/∞; разборы по шагам с проверкой.">
+  <h2>Раскрытие «хитрых» неопределённостей</h2>
+  <div class="intu"><span class="tag">Главная мысль</span>
+    <p>Лопиталь умеет только <b>0/0</b> и <b>∞/∞</b>. Все остальные виды сначала <b>превращают</b> в один из этих двух — и только потом применяют правило. Приёмы превращения:</p>
+    <ul>
+      <li><b>0·∞</b> → записать произведение дробью: u·v = <span class="frac"><span class="num">u</span><span class="den">1/v</span></span>, получится 0/0 или ∞/∞.</li>
+      <li><b>∞ − ∞</b> → привести к общему знаменателю, получится 0/0.</li>
+      <li><b>1<sup>∞</sup>, 0⁰, ∞⁰</b> (степень с переменным показателем) → <b>прологарифмировать</b>. Схема в 3 шага ниже.</li>
+    </ul>
+  </div>
+  <div class="df"><span class="tag">Схема для степенных 1<sup>∞</sup>, 0⁰, ∞⁰</span>
+    <ol>
+      <li>Обозначить предел за L и взять логарифм: ln L = lim (показатель · ln основания).</li>
+      <li>Это станет 0·∞ → свести к дроби → посчитать Лопиталем. Получим число A.</li>
+      <li>Вернуть ответ: ln L = A ⟹ <b>L = e<sup>A</sup></b>.</li>
+    </ol>
+  </div>
+
+  <h3>Разбор 1 (вид 0·∞)</h3>
+  <div class="ex"><span class="tag">lim<sub>x→+∞</sub> x²·e<sup>−2x</sup></span>
+    <div class="step"><b>Шаг 1. Определяем вид.</b> x² → +∞, а e<sup>−2x</sup> → 0, значит произведение — это <b>0·∞</b>.</div>
+    <div class="step"><b>Шаг 2. Превращаем в дробь.</b> e<sup>−2x</sup> = 1/e<sup>2x</sup>, поэтому &nbsp;x²·e<sup>−2x</sup> = <span class="frac"><span class="num">x²</span><span class="den">e<sup>2x</sup></span></span>. Теперь вид <b>∞/∞</b> — можно Лопиталь.</div>
+    <div class="step"><b>Шаг 3. Лопиталь (1-й раз).</b> Числитель: (x²)′ = 2x. Знаменатель: (e<sup>2x</sup>)′ = 2e<sup>2x</sup>.</div>
+    <div class="step">Предел стал &nbsp;lim <span class="frac"><span class="num">2x</span><span class="den">2e<sup>2x</sup></span></span> = lim <span class="frac"><span class="num">x</span><span class="den">e<sup>2x</sup></span></span>. Подставляем ∞: снова <b>∞/∞</b>.</div>
+    <div class="step"><b>Шаг 4. Лопиталь (2-й раз).</b> Числитель: (x)′ = 1. Знаменатель: (e<sup>2x</sup>)′ = 2e<sup>2x</sup>.</div>
+    <div class="step">Предел стал &nbsp;lim <span class="frac"><span class="num">1</span><span class="den">2e<sup>2x</sup></span></span>.</div>
+    <div class="step"><b>Шаг 5. Подставляем x → +∞:</b> знаменатель → +∞, дробь → 0.</div>
+    <div class="ans" style="background:rgba(57,217,138,.12);border:1px solid rgba(57,217,138,.4);color:#bff0d6"><b>Ответ: 0.</b></div>
+    <div class="chk"><b>Проверка:</b> экспонента e<sup>2x</sup> растёт быстрее любой степени, поэтому x²/e<sup>2x</sup> → 0 — логично.</div>
+  </div>
+
+  <h3>Разбор 2 (вид ∞ − ∞)</h3>
+  <div class="ex"><span class="tag">lim<sub>x→1</sub> ( <span class="frac"><span class="num">1</span><span class="den">ln x</span></span> − <span class="frac"><span class="num">1</span><span class="den">x − 1</span></span> )</span>
+    <div class="step"><b>Шаг 1. Вид.</b> При x → 1: ln x → 0, значит 1/ln x → ∞; и 1/(x−1) → ∞. Разность — это <b>∞ − ∞</b>.</div>
+    <div class="step"><b>Шаг 2. Общий знаменатель.</b> Приводим две дроби к одной:</div>
+    <div class="formula" style="font-size:15px">= lim<sub>x→1</sub> <span class="frac"><span class="num">(x − 1) − ln x</span><span class="den">ln x·(x − 1)</span></span></div>
+    <div class="step"><b>Шаг 3. Проверяем вид.</b> При x = 1: числитель (1−1) − ln 1 = 0; знаменатель ln 1·0 = 0. Это <b>0/0</b>.</div>
+    <div class="step"><b>Шаг 4. Лопиталь (1-й раз).</b></div>
+    <div class="step">Числитель: (x − 1 − ln x)′ = 1 − <span class="frac"><span class="num">1</span><span class="den">x</span></span>.</div>
+    <div class="step">Знаменатель (произведение): (ln x·(x−1))′ = <span class="frac"><span class="num">1</span><span class="den">x</span></span>·(x−1) + ln x·1 = <span class="frac"><span class="num">x−1</span><span class="den">x</span></span> + ln x.</div>
+    <div class="step">При x = 1: числитель 1 − 1 = 0, знаменатель 0 + 0 = 0 — снова <b>0/0</b>.</div>
+    <div class="step"><b>Шаг 5. Лопиталь (2-й раз).</b></div>
+    <div class="step">Числитель: (1 − 1/x)′ = <span class="frac"><span class="num">1</span><span class="den">x²</span></span>.</div>
+    <div class="step">Знаменатель: ( (x−1)/x + ln x )′ = (1 − 1/x)′ + (ln x)′ = <span class="frac"><span class="num">1</span><span class="den">x²</span></span> + <span class="frac"><span class="num">1</span><span class="den">x</span></span>.</div>
+    <div class="step"><b>Шаг 6. Подставляем x = 1:</b> &nbsp;<span class="frac"><span class="num">1/x²</span><span class="den">1/x² + 1/x</span></span> = <span class="frac"><span class="num">1</span><span class="den">1 + 1</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span>.</div>
+    <div class="ans" style="background:rgba(57,217,138,.12);border:1px solid rgba(57,217,138,.4);color:#bff0d6"><b>Ответ: 1/2.</b></div>
+    <div class="chk"><b>Проверка:</b> около 1 ln x ≈ (x−1) − (x−1)²/2, тогда числитель x−1−ln x ≈ (x−1)²/2, знаменатель ≈ (x−1)²; отношение → 1/2 — совпало.</div>
+  </div>
+
+  <h3>Разбор 3 (вид 1<sup>∞</sup>)</h3>
+  <div class="ex"><span class="tag">lim<sub>x→0</sub> (cos x)<sup>1/x²</sup></span>
+    <div class="step"><b>Шаг 1. Вид.</b> cos 0 = 1, показатель 1/x² → +∞, значит <b>1<sup>∞</sup></b> — логарифмируем.</div>
+    <div class="step"><b>Шаг 2. Берём логарифм.</b> Пусть L — искомый предел. Тогда ln L = lim<sub>x→0</sub> <span class="frac"><span class="num">1</span><span class="den">x²</span></span>·ln(cos x) = lim<sub>x→0</sub> <span class="frac"><span class="num">ln(cos x)</span><span class="den">x²</span></span>.</div>
+    <div class="step"><b>Шаг 3. Вид дроби.</b> При x = 0: ln(cos 0) = ln 1 = 0, знаменатель 0 ⟹ <b>0/0</b>.</div>
+    <div class="step"><b>Шаг 4. Лопиталь.</b> Числитель: (ln cos x)′ = <span class="frac"><span class="num">1</span><span class="den">cos x</span></span>·(−sin x) = −tg x. Знаменатель: (x²)′ = 2x.</div>
+    <div class="step">ln L = lim<sub>x→0</sub> <span class="frac"><span class="num">−tg x</span><span class="den">2x</span></span>. Так как tg x ~ x у нуля, это = <span class="frac"><span class="num">−x</span><span class="den">2x</span></span> → −<span class="frac"><span class="num">1</span><span class="den">2</span></span>.</div>
+    <div class="step"><b>Шаг 5. Возвращаем ответ.</b> ln L = −1/2 ⟹ L = e<sup>−1/2</sup>.</div>
+    <div class="ans" style="background:rgba(57,217,138,.12);border:1px solid rgba(57,217,138,.4);color:#bff0d6"><b>Ответ: e<sup>−1/2</sup> = 1/√e ≈ 0,607.</b></div>
+    <div class="chk"><b>Проверка:</b> ln cos x ≈ −x²/2, делим на x² → −1/2 — тот же ln L.</div>
+  </div>
+
+  <h3>Разбор 4 (виды 0⁰ и ∞⁰)</h3>
+  <div class="ex"><span class="tag">0⁰: lim<sub>x→0+</sub> xˣ</span>
+    <div class="step"><b>Шаг 1.</b> Основание x → 0, показатель x → 0 ⟹ <b>0⁰</b>. Логарифмируем: ln L = lim<sub>x→0+</sub> x·ln x (вид 0·∞).</div>
+    <div class="step"><b>Шаг 2. В дробь:</b> x·ln x = <span class="frac"><span class="num">ln x</span><span class="den">1/x</span></span> — вид ∞/∞.</div>
+    <div class="step"><b>Шаг 3. Лопиталь:</b> (ln x)′ = 1/x, (1/x)′ = −1/x². Отношение = <span class="frac"><span class="num">1/x</span><span class="den">−1/x²</span></span> = −x → 0.</div>
+    <div class="step"><b>Шаг 4.</b> ln L = 0 ⟹ L = e⁰ = <b>1</b>.</div>
+  </div>
+  <div class="ex"><span class="tag">∞⁰: lim<sub>x→+∞</sub> x<sup>1/x</sup></span>
+    <div class="step"><b>Шаг 1.</b> Основание x → ∞, показатель 1/x → 0 ⟹ <b>∞⁰</b>. ln L = lim <span class="frac"><span class="num">ln x</span><span class="den">x</span></span> (вид ∞/∞).</div>
+    <div class="step"><b>Шаг 2. Лопиталь:</b> (ln x)′ = 1/x, (x)′ = 1 ⟹ lim <span class="frac"><span class="num">1/x</span><span class="den">1</span></span> = lim 1/x → 0.</div>
+    <div class="step"><b>Шаг 3.</b> ln L = 0 ⟹ L = e⁰ = <b>1</b>.</div>
+  </div>
+
+  <div class="note"><b>Шпаргалка.</b> 0·∞ → дробь; &nbsp;∞−∞ → общий знаменатель; &nbsp;степенные 1<sup>∞</sup>/0⁰/∞⁰ → логарифм: посчитать lim(показатель·ln основания) = A, ответ L = e<sup>A</sup>.</div>
+</section>
+
+<section data-group="7 · Теоремы о среднем и Лопиталь" data-new="1" data-t="Тренажёр: пределы по Лопиталю" data-desc="Средние и сложные пределы для практики — попробуй сам, потом раскрой пошаговое решение.">
+  <h2>Тренажёр: пределы по Лопиталю</h2>
+  <p style="color:var(--muted)">Сначала реши сам, потом раскрой «Решение по шагам». Сверху — средние, снизу — сложные.</p>
+
+  <h3>Средние</h3>
+  <div class="task"><p class="q">1. lim<sub>x→0</sub> <span class="frac"><span class="num">sin 3x</span><span class="den">sin 5x</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> При x = 0: sin0/sin0 = 0/0 ⟹ Лопиталь.</div>
+      <div class="step"><b>Шаг 2.</b> Числитель: (sin 3x)′ = 3cos 3x. Знаменатель: (sin 5x)′ = 5cos 5x.</div>
+      <div class="step"><b>Шаг 3.</b> lim <span class="frac"><span class="num">3cos 3x</span><span class="den">5cos 5x</span></span>, подставляем x=0: <span class="frac"><span class="num">3·1</span><span class="den">5·1</span></span> = <b>3/5</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">2. lim<sub>x→0</sub> <span class="frac"><span class="num">1 − cos 2x</span><span class="den">x²</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> (1−1)/0 = 0/0.</div>
+      <div class="step"><b>Шаг 2.</b> Числитель: (1 − cos 2x)′ = 2sin 2x. Знаменатель: (x²)′ = 2x.</div>
+      <div class="step"><b>Шаг 3.</b> lim <span class="frac"><span class="num">2sin 2x</span><span class="den">2x</span></span> = lim <span class="frac"><span class="num">sin 2x</span><span class="den">x</span></span> — снова 0/0.</div>
+      <div class="step"><b>Шаг 4.</b> Ещё раз: (sin 2x)′ = 2cos 2x, (x)′ = 1 ⟹ lim 2cos 2x = 2cos0 = <b>2</b>.</div>
+      <div class="step"><b>Проверка:</b> 1 − cos2x ~ (2x)²/2 = 2x², делим на x² → 2 ✓.</div>
+    </details></div>
+
+  <div class="task"><p class="q">3. lim<sub>x→+∞</sub> <span class="frac"><span class="num">x³</span><span class="den">eˣ</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> ∞/∞ ⟹ Лопиталь (дифференцируем, пока степень не исчезнет).</div>
+      <div class="step"><b>1-й раз:</b> (x³)′ = 3x², (eˣ)′ = eˣ ⟹ lim 3x²/eˣ — ∞/∞.</div>
+      <div class="step"><b>2-й раз:</b> 6x/eˣ — ∞/∞.</div>
+      <div class="step"><b>3-й раз:</b> 6/eˣ → 0. <b>Ответ: 0.</b></div>
+      <div class="step"><b>Вывод:</b> eˣ бьёт любую степень xⁿ (приём: Лопиталь n раз обнуляет числитель).</div>
+    </details></div>
+
+  <div class="task"><p class="q">4. lim<sub>x→0</sub> <span class="frac"><span class="num">x − sin x</span><span class="den">x³</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> (0−0)/0 = 0/0.</div>
+      <div class="step"><b>1-й раз:</b> (x − sin x)′ = 1 − cos x, (x³)′ = 3x² ⟹ lim <span class="frac"><span class="num">1 − cos x</span><span class="den">3x²</span></span> — 0/0.</div>
+      <div class="step"><b>2-й раз:</b> (1 − cos x)′ = sin x, (3x²)′ = 6x ⟹ lim <span class="frac"><span class="num">sin x</span><span class="den">6x</span></span> — 0/0.</div>
+      <div class="step"><b>3-й раз:</b> (sin x)′ = cos x, (6x)′ = 6 ⟹ lim <span class="frac"><span class="num">cos x</span><span class="den">6</span></span> = <span class="frac"><span class="num">1</span><span class="den">6</span></span>. <b>Ответ: 1/6.</b></div>
+    </details></div>
+
+  <h3>Сложные</h3>
+  <div class="task"><p class="q">5. lim<sub>x→0</sub> <span class="frac"><span class="num">tg x − x</span><span class="den">x − sin x</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> (0−0)/(0−0) = 0/0.</div>
+      <div class="step"><b>Шаг 2. Лопиталь.</b> Числитель: (tg x − x)′ = <span class="frac"><span class="num">1</span><span class="den">cos²x</span></span> − 1 = tg²x. Знаменатель: (x − sin x)′ = 1 − cos x.</div>
+      <div class="step">lim <span class="frac"><span class="num">tg²x</span><span class="den">1 − cos x</span></span> — опять 0/0.</div>
+      <div class="step"><b>Шаг 3. Через эквивалентности</b> (быстрее второго Лопиталя): tg²x ~ x², &nbsp;1 − cos x ~ <span class="frac"><span class="num">x²</span><span class="den">2</span></span>.</div>
+      <div class="step">lim <span class="frac"><span class="num">x²</span><span class="den">x²/2</span></span> = <b>2</b>.</div>
+      <div class="step"><b>Проверка:</b> tg x − x ~ x³/3, x − sin x ~ x³/6; отношение (x³/3)/(x³/6) = 2 ✓.</div>
+    </details></div>
+
+  <div class="task"><p class="q">6. lim<sub>x→0</sub> <span class="frac"><span class="num">eˣ − 1 − x</span><span class="den">x²</span></span></p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> (1 − 1 − 0)/0 = 0/0.</div>
+      <div class="step"><b>1-й раз:</b> (eˣ − 1 − x)′ = eˣ − 1, (x²)′ = 2x ⟹ lim <span class="frac"><span class="num">eˣ − 1</span><span class="den">2x</span></span> — 0/0.</div>
+      <div class="step"><b>2-й раз:</b> (eˣ − 1)′ = eˣ, (2x)′ = 2 ⟹ lim <span class="frac"><span class="num">eˣ</span><span class="den">2</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span>. <b>Ответ: 1/2.</b></div>
+      <div class="step"><b>Проверка:</b> eˣ ≈ 1 + x + x²/2, значит eˣ − 1 − x ≈ x²/2, делим на x² → 1/2 ✓.</div>
+    </details></div>
+
+  <div class="task"><p class="q">7. lim<sub>x→0+</sub> x<sup>sin x</sup> &nbsp;(степень 0⁰)</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1.</b> Основание x → 0, показатель sin x → 0 ⟹ 0⁰. Логарифмируем: ln L = lim<sub>x→0+</sub> sin x·ln x.</div>
+      <div class="step"><b>Шаг 2. В дробь:</b> sin x·ln x = <span class="frac"><span class="num">ln x</span><span class="den">1/sin x</span></span> — вид ∞/∞.</div>
+      <div class="step"><b>Шаг 3.</b> Проще через эквивалентность: sin x ~ x, поэтому sin x·ln x ~ x·ln x, а lim<sub>x→0+</sub> x·ln x = 0 (стандартный предел).</div>
+      <div class="step"><b>Шаг 4.</b> ln L = 0 ⟹ L = e⁰ = <b>1</b>.</div>
+    </details></div>
+
+  <div class="task"><p class="q">8. lim<sub>x→0</sub> ( <span class="frac"><span class="num">1</span><span class="den">x</span></span> − <span class="frac"><span class="num">1</span><span class="den">eˣ − 1</span></span> ) &nbsp;(вид ∞ − ∞)</p>
+    <details><summary>Решение по шагам</summary>
+      <div class="step"><b>Шаг 1. Общий знаменатель:</b> = lim <span class="frac"><span class="num">(eˣ − 1) − x</span><span class="den">x(eˣ − 1)</span></span>.</div>
+      <div class="step"><b>Шаг 2. Вид.</b> При x=0: числитель (1−1)−0 = 0, знаменатель 0·0 = 0 ⟹ 0/0.</div>
+      <div class="step"><b>1-й Лопиталь.</b> Числитель: (eˣ − 1 − x)′ = eˣ − 1. Знаменатель: (x(eˣ−1))′ = (eˣ−1) + x·eˣ.</div>
+      <div class="step">При x=0: 0/(0+0) = 0/0 — снова.</div>
+      <div class="step"><b>2-й Лопиталь.</b> Числитель: (eˣ − 1)′ = eˣ. Знаменатель: ((eˣ−1) + x·eˣ)′ = eˣ + (eˣ + x·eˣ) = 2eˣ + x·eˣ.</div>
+      <div class="step"><b>Подставляем x=0:</b> <span class="frac"><span class="num">e⁰</span><span class="den">2e⁰ + 0</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span>. <b>Ответ: 1/2.</b></div>
+    </details></div>
 </section>
 
 </main>
